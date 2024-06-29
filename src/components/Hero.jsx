@@ -1,24 +1,10 @@
 import { useId } from "react";
-import clsx from "clsx";
-
-import { AppDemo } from "./AppDemo";
 import { PafPhone } from "./PafPhone";
-import { AppStoreLink } from "./AppStoreLink";
-import { Button } from "./Button";
 import { Container } from "./Container";
 import { PhoneFrame } from "./PhoneFrame";
-import logoBbc from "../images/logos/bbc.svg";
-import logoCbs from "../images/logos/cbs.svg";
-import logoCnn from "../images/logos/cnn.svg";
-import logoFastCompany from "../images/logos/fast-company.svg";
-import logoForbes from "../images/logos/forbes.svg";
-import logoHuffpost from "../images/logos/huffpost.svg";
-import logoTechcrunch from "../images/logos/techcrunch.svg";
-import logoWired from "../images/logos/wired.svg";
 import PropManage from "../images/prop-manage.png";
 import HoweOwner from "../images/homeowner.png";
 import MaintMan from "../images/maintenance.png";
-import LandLord from "../images/landlord.png";
 import Contractor from "../images/contractors.png";
 
 function BackgroundIllustration(props) {
@@ -139,7 +125,7 @@ export function Hero() {
             </div>
           </div>
           <div className="relative -mt-4 lg:col-span-7 lg:mt-0 xl:col-span-6">
-            <p className="text-center text-sm font-semibold text-gray-900 lg:text-left">
+            <p className="text-center text-sm font-semibold text-gray-900 lg:text-left mb-8">
               Who can benifit from PAF?
             </p>
           </div>

@@ -24,28 +24,28 @@ const features = [
   {
     name: "Create your client",
     description:
-      "A client is the container for facilities you want to manage. As an example ABC Property Mgmt could have any number of facilities.",
+      "A client serves as the container for the facilities you wish to manage. For instance, ABC Property Management could oversee multiple facilities under a single client account.",
     icon: DeviceUserIcon,
     screen: ClientScreen,
   },
   {
     name: "Add Facilities to your client",
     description:
-      "A facility is a physical structure. It can be commercial, residential or both.",
+      "A facility refers to any physical structure you manage within our system. It can encompass a wide range of property types, including commercial buildings, residential complexes, or mixed-use properties that combine both commercial and residential spaces.",
     icon: DeviceUserIcon,
     screen: FacilityScreen,
   },
   {
     name: "Add Systems to your Facilities",
     description:
-      "Add the systems you want to provide maintenance for. HVAA, Fire Systems, Plumbing, Work Shops etc...",
+      "Add the systems you want to provide maintenance for within your facility. You can choose from a variety of application-wide system types, such as HVAC, fire systems, plumbing, workshops, and more. This flexibility allows you to tailor the management of your facility to include all the essential systems that require maintenance, ensuring comprehensive oversight and efficient operation.",
     icon: DeviceNotificationIcon,
     screen: SystemScreen,
   },
   {
-    name: "Audit and monitor the maintenace for the systems you've added",
+    name: "Audit and Monitor Maintenance for Your Systems",
     description:
-      "Once a system has a maintenace schedule defined, PAF will monitor those systems giving you an At-A-Glance view of the status of your monitored systems. The Exceptions screen allows you to drill down to the item that caused the exception and take corrective actions.",
+      "Once a maintenance schedule is defined for a system, PAF will continuously monitor it, providing you with an at-a-glance view of its status. The Exceptions screen enables you to delve into specific issues that arise, allowing you to take corrective actions promptly.",
     icon: DeviceTouchIcon,
     screen: ExceptionsScreen,
   },
@@ -188,7 +188,7 @@ function ClientScreen(props) {
         <div className="px-4 py-6">
           <div className="space-y-4">
             {[
-              { label: "Client Name", value: "Black Flower Reaalty" },
+              { label: "Client Name", value: "Black Flower Realty" },
               { label: "City", value: "Los Angeles" },
               { label: "State", value: "California" },
               { label: "Division", value: "W. Los Angeles" },
@@ -534,11 +534,11 @@ export function PrimaryFeatures() {
             Try it for yourself.
           </h2>
           <p className="mt-2 text-lg text-gray-400">
-            PAF was built for those who are responsible for the mechanical
-            maintenace of facility systems like you who want to give your
-            stakeholders the transparency they deserve. If other companies are
-            afraid to show or can't show your clients where thier dollars are
-            spen, PAF has it.
+            PredictiveAF (PAF) was designed for professionals responsible for
+            the mechanical maintenance of facility systems, like you, who aim to
+            provide stakeholders with the transparency they deserve. While other
+            companies may be unable or unwilling to show where client dollars
+            are spent, PAF makes this information readily accessible.
           </p>
         </div>
       </Container>

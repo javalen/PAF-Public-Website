@@ -8,6 +8,7 @@ import { PrimaryFeatures } from "../components/PrimaryFeatures";
 import { Header } from "../components/Header";
 import { Footer } from "../components/Footer";
 import About from "../components/About";
+import "../styles/tailwind.css";
 
 export default function Home() {
   return (

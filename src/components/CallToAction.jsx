@@ -14,12 +14,12 @@ export function CallToAction() {
       <Container className="relative">
         <div className="mx-auto max-w-md sm:text-center">
           <h2 className="text-3xl font-medium tracking-tight text-white sm:text-4xl">
-            Get started fast and easily today!
+            Get started quickly and effortlessly today!
           </h2>
           <p className="mt-4 text-lg text-gray-300">
-            It takes 30 seconds to sign up. Download the app and create a client
-            account today and we’ll have you enjoying the benifits of PAF in
-            literally seconds.
+            Sign up in just 30 seconds. Download the app, create a client
+            account, and start enjoying the benefits of PredictiveAF almost
+            immediately.
           </p>
           <div className="mt-8 flex justify-center">
             <AppStoreLink color="white" />
