@@ -7,6 +7,7 @@ import { PrimaryFeatures } from "../components/PrimaryFeatures";
 // import { SecondaryFeatures } from "@/components/SecondaryFeatures";
 import { Header } from "../components/Header";
 import { Footer } from "../components/Footer";
+import About from "../components/About";
 
 export default function Home() {
   return (
@@ -20,6 +21,7 @@ export default function Home() {
       <Pricing />
       <CallToAction />
       <Faqs />
+      <About />
       <Footer />
     </>
   );
