@@ -116,8 +116,8 @@ export function Header() {
                             <MobileNavLink href="/#about">About</MobileNavLink>
                           </div>
                           <div className="mt-8 flex flex-col gap-4">
-                            <Button href="/Register" variant="outline">
-                              Register
+                            <Button href="/register" variant="outline">
+                              Register1
                             </Button>
                             {/* <Button href="#">Download the app</Button> */}
                           </div>
@@ -133,7 +133,7 @@ export function Header() {
               variant="outline"
               className="hidden lg:block"
             >
-              Register
+              Register2
             </Button>
             {/* <Button href="#" className="hidden lg:block">
               Download
