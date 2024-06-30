@@ -12,6 +12,7 @@ import { Button } from "./Button";
 import { Container } from "./Container";
 import { NavLinks } from "./NavLinks";
 import Logo from "../assets/paf.png";
+import { Link } from "react-router-dom";
 
 function MenuIcon(props) {
   return (
@@ -115,10 +116,10 @@ export function Header() {
                             <MobileNavLink href="/#about">About</MobileNavLink>
                           </div>
                           <div className="mt-8 flex flex-col gap-4">
-                            {/* <Button href="/login" variant="outline">
-                              Log in
+                            <Button href="/Register" variant="outline">
+                              Register
                             </Button>
-                            <Button href="#">Download the app</Button> */}
+                            {/* <Button href="#">Download the app</Button> */}
                           </div>
                         </PopoverPanel>
                       </>
@@ -127,10 +128,14 @@ export function Header() {
                 </>
               )}
             </Popover>
-            {/* <Button href="/login" variant="outline" className="hidden lg:block">
-              Log in
+            <Button
+              href="/register"
+              variant="outline"
+              className="hidden lg:block"
+            >
+              Register
             </Button>
-            <Button href="#" className="hidden lg:block">
+            {/* <Button href="#" className="hidden lg:block">
               Download
             </Button> */}
           </div>

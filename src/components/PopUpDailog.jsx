@@ -43,7 +43,7 @@ export default function PopUpDialog({ open, setOpen, title, text, buttonLbl }) {
             <div className="mt-5 sm:mt-6">
               <button
                 type="button"
-                className="inline-flex w-full justify-center rounded-md bg-sky-900 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-sky-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                className="inline-flex w-full justify-center rounded-md bg-primary px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-primary/40 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:bg-primary/40"
                 onClick={() => setOpen(false)}
               >
                 {buttonLbl}
