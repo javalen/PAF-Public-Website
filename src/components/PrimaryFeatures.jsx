@@ -301,7 +301,7 @@ function ExceptionsScreen(props) {
               logo: CompExImg,
             },
             {
-              name: "Safty Exceptions",
+              name: "Safety Exceptions",
               count: "1",
               logo: SafetyExImg,
             },
