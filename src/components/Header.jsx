@@ -117,7 +117,7 @@ export function Header() {
                           </div>
                           <div className="mt-8 flex flex-col gap-4">
                             <Button href="/register" variant="outline">
-                              Register1
+                              Register
                             </Button>
                             {/* <Button href="#">Download the app</Button> */}
                           </div>
@@ -133,7 +133,7 @@ export function Header() {
               variant="outline"
               className="hidden lg:block"
             >
-              Register2
+              Register
             </Button>
             {/* <Button href="#" className="hidden lg:block">
               Download

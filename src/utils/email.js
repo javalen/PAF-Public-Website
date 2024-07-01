@@ -1,11 +1,9 @@
 import axios from "axios";
-
+const mailHost = import.meta.env.VITE_PUBLIC_EMAIL_SVR;
 const useEmail = () => {
   const sendWelcomeEmail = (client, emailTo, subject, name) => {
-    //console.log("Sending email", emailTo, subject, name);
-
     axios
-      .post(process.env.VITE_PUBLIC_EMAIL_SVR + "/send-welcome-email", {
+      .post(mailHost + "/send-welcome-email", {
         client: client,
         to: emailTo,
         subject: subject,
@@ -34,11 +32,11 @@ const useEmail = () => {
     console.log(
       "Sending email new user ",
       name,
-      process.env.EXPO_PUBLIC_EMAIL_SVR + "/send-new-user-email"
+      mailHost + "/send-new-user-email"
     );
 
     axios
-      .post(process.env.EXPO_PUBLIC_EMAIL_SVR + "/send-new-user-email", {
+      .post(mailHost + "/send-new-user-email", {
         to: emailTo,
         facility: facility,
         name: name,

@@ -30,7 +30,7 @@ const plans = [
     logomarkClassName: "fill-gray-300",
   },
   {
-    name: "Small Bussiness",
+    name: "Bussiness",
     featured: false,
     price: { Monthly: "$100", Annually: "$1099" },
     description:
@@ -42,7 +42,7 @@ const plans = [
     features: [
       "Create a single Top Level Client",
       "Create up to 5 Facilities",
-      "Create Systems",
+      "Create unlimited Systems",
       "Create Maintenance Schedules",
       "Upload Compliance documents",
       "Unlimited Access to the Control Panel",

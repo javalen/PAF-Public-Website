@@ -2,7 +2,7 @@ import { AuthLayout } from "../components/AuthLayout";
 import { Button } from "../components/Button";
 import { TextField } from "../components/Fields";
 import { pbAppClient } from "../api/pocketbase";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import useEmail from "../utils/email";
 
 export const metadata = {
@@ -248,31 +248,128 @@ const states = [
   },
 ];
 
+const termsMsg = "You must agree the Term & Conditions";
+
 export default function Register() {
   const [error, setError] = useState();
-  const [isChecked, setChecked] = useState(false);
+  const [isChecked, setChecked] = useState(true);
   const [termsRead, setTermsRead] = useState(false);
+  const [loading, setLoading] = useState(false);
   const email = useEmail();
-  const submit = async (data) => {
+
+  const submit = async (e) => {
+    e.preventDefault(true);
+    const registration = e.target.elements;
+
+    if (!isChecked) {
+      setError(termsMsg);
+      return;
+    }
+
+    setLoading(true);
+    try {
+      //Create the client first
+      if (await checkIfExist(registration.compName.value)) {
+        throw new Error("Company Name already exist");
+        return;
+      }
+
+      //Create the client
+      const client = await pbAppClient.collection("client").create({
+        name: registration.compName.value,
+      });
+
+      // Create a default division
+      const division = await pbAppClient.collection("divisions").create({
+        name: registration.division.value,
+        state: registration.division.value,
+        client_id: client.id,
+        city: registration.city.value,
+      });
+
+      //Create the user
+      const newUser = await pbAppClient.collection("users").create({
+        email: registration.email.value,
+        password: registration.password.value,
+        passwordConfirm: registration.password.value,
+        name: registration.name.value,
+        phone: registration.phone.value,
+        emailVisibility: true,
+        onboard_date: new Date().toISOString().slice(0, 19).replace("T", " "),
+      });
+
+      //Update the client table with the user info
+      const newClient = await pbAppClient
+        .collection("client")
+        .update(client.id, {
+          manager: newUser.id,
+        });
+
+      //Create a personel record with role of super user for the company
+      const record = await pbAppClient.collection("personel").create({
+        user_id: newUser.id,
+        full_name: newUser.name,
+        role: "cr",
+        user: newUser.id,
+        client: client.id,
+      });
+
+      // const authData = await pb
+      //   .collection("users")
+      //   .authWithPassword(userInfo.email, userInfo.password);
+      // setUser(authData.record);
+      email.sendWelcomeEmail(
+        newClient.name,
+        newUser.email,
+        "Welcome to PAF!",
+        newUser.name
+      );
+
+      //navigation.navigate("Login");
+      setError(false);
+    } catch (error) {
+      setLoading(false);
+      setError(error.message);
+      console.log("Error", error);
+    }
+    setLoading(false);
     try {
     } catch (error) {
       console.log("Error registering client", error);
     }
   };
+
+  const checkIfExist = async (name) => {
+    try {
+      const record = await pb
+        .collection("client")
+        .getFirstListItem(`name="${name}"`);
+      return true;
+    } catch (error) {
+      return false;
+    }
+  };
+
+  const checkTerms = () => {
+    if (termsRead) {
+      setChecked(true);
+    } else {
+      setError(termsMsg);
+    }
+  };
+  const load = async () => {
+    setError("");
+
+    setTermsRead(true);
+  };
+
+  useEffect(() => {}, []);
   return (
-    <AuthLayout
-      title="Register a new account"
-      //   subtitle={
-      //     <>
-      //       Don’t have an account?{" "}
-      //       <a href="/register" className="text-cyan-600">
-      //         Sign up
-      //       </a>{" "}
-      //       for a free trial.
-      //     </>
-      //   }
-    >
-      <form>
+    <AuthLayout title="Register a new account">
+      <form onSubmit={submit}>
+        {error && (
+          <div className="text-lg text-red-500 text-center mb-5">{error}</div>
+        )}
         <div className="space-y-6">
           <TextField label="Client Name" name="compName" type="text" required />
           <TextField label="City" name="city" type="text" required />
@@ -306,7 +403,32 @@ export default function Register() {
             type="password"
             required
           />
+          <div className="flex items-center justify-between">
+            <div className="flex items-center">
+              <input
+                id="remember-me"
+                name="remember-me"
+                type="checkbox"
+                className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600"
+              />
+              <label
+                htmlFor="remember-me"
+                className="ml-3 block text-sm leading-6 text-gray-900"
+              >
+                I agree to {termsRead.toString()}
+                <a
+                  href="https://pafadminpanel.onrender.com/terms"
+                  className="underline text-blue-600 hover:text-blue-800 visited:text-purple-600"
+                  target="t&c"
+                  onClick={load}
+                >
+                  Terms and Conditiions
+                </a>
+              </label>
+            </div>
+          </div>
         </div>
+
         <Button type="submit" color="cyan" className="mt-8 w-full">
           Register account
         </Button>
