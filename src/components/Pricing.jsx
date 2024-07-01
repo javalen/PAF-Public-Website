@@ -30,11 +30,11 @@ const plans = [
     logomarkClassName: "fill-gray-300",
   },
   {
-    name: "Bussiness",
+    name: "Business",
     featured: false,
     price: { Monthly: "$100", Annually: "$1099" },
     description:
-      "Small bussinesses is the backbone of the economy and we want to assist you in getting better by providing the tools to help your operation.",
+      "Small businesses is the backbone of the economy and we want to assist you in getting better by providing the tools to help your operation.",
     button: {
       label: "Subscribe",
       href: "/register",
@@ -57,7 +57,7 @@ const plans = [
     featured: true,
     price: { Monthly: "$499", Annually: "$4,999" },
     description:
-      "Larger bussinesses can benifit by experiencing all the benifits of PAF with the added experience of your own custom branding. With your branding PAF takes a backseat and your bussiness becomes the star",
+      "Larger businesses can benifit by experiencing all the benifits of PAF with the added experience of your own custom branding. With your branding PAF takes a backseat and your business becomes the star",
     button: {
       label: "Subscribe",
       href: "/register",
