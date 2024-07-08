@@ -8,7 +8,7 @@ export function AuthLayout({ title, subtitle, children }) {
         <a href="/" aria-label="Home">
           <img src={Logo} className="mx-auto h-20 w-auto" />
         </a>
-        <div className="relative mt-12 sm:mt-16">
+        <div className="relative mt-6 sm:mt-8">
           <CirclesBackground
             width="1090"
             height="1090"
@@ -21,7 +21,7 @@ export function AuthLayout({ title, subtitle, children }) {
             <p className="mt-3 text-center text-lg text-gray-600">{subtitle}</p>
           )}
         </div>
-        <div className="-mx-4 mt-10 flex-auto bg-white px-4 py-10 shadow-2xl shadow-gray-900/10 sm:mx-0 sm:flex-none sm:rounded-5xl sm:p-24">
+        <div className="-mx-4 mt-10 flex-auto bg-white px-4 py-10 shadow-2xl shadow-gray-900/10 sm:mx-0 sm:flex-none sm:rounded-5xl sm:p-12">
           {children}
         </div>
       </div>

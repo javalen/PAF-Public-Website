@@ -430,7 +430,11 @@ export default function Register() {
           </div>
         </div>
 
-        <Button type="submit" color="cyan" className="mt-8 w-full">
+        <Button
+          type="submit"
+          color="cyan"
+          className="mt-8 w-full  bg-primary hover:bg-primary/80"
+        >
           Register account
         </Button>
       </form>
