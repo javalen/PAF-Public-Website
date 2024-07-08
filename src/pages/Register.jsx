@@ -416,7 +416,7 @@ export default function Register() {
                 htmlFor="remember-me"
                 className="ml-3 block text-sm leading-6 text-gray-900"
               >
-                I agree to {termsRead.toString()}
+                I agree to{" "}
                 <a
                   href="https://pafadminpanel.onrender.com/terms"
                   className="underline text-blue-600 hover:text-blue-800 visited:text-purple-600"
