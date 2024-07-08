@@ -251,6 +251,7 @@ const states = [
 const termsMsg = "You must agree the Term & Conditions";
 
 export default function Register() {
+  console.log("Createing Register");
   const [error, setError] = useState();
   const [isChecked, setChecked] = useState(true);
   const [termsRead, setTermsRead] = useState(false);
