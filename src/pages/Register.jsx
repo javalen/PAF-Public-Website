@@ -435,7 +435,7 @@ export default function Register() {
           color="cyan"
           className="mt-8 w-full  bg-primary hover:bg-primary/80"
         >
-          Register account
+          Register Account
         </Button>
       </form>
     </AuthLayout>
