@@ -13,6 +13,8 @@ export function NavLinks() {
     ["Pricing", "/#pricing"],
     ["FAQs", "/#faqs"],
     ["About", "/#about"],
+    ["Quick Start", "/quickstart"],
+    ["PAF on YouTube", "https://www.youtube.com/@PredictiveAF"],
   ].map(([label, href], index) => (
     <a
       key={label}
