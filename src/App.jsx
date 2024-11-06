@@ -6,6 +6,7 @@ import Home from "./pages/Home";
 import AuthContext from "./auth/context";
 import Register from "./pages/Register";
 import QuickStart from "./pages/QuickStart";
+import Support from "./pages/Support";
 
 function App() {
   const [user, setUser] = useState();
@@ -25,6 +26,10 @@ function App() {
     {
       path: "/quickstart",
       element: <QuickStart />,
+    },
+    {
+      path: "/support",
+      element: <Support />,
     },
   ]);
   return (
