@@ -319,6 +319,19 @@ export default function Register() {
       //   .collection("users")
       //   .authWithPassword(userInfo.email, userInfo.password);
       // setUser(authData.record);
+
+      const plan = await pb
+        .collection("plans")
+        .getFirstListItem('name="Starter"', {
+          expand: "clients",
+        });
+
+      const data = {
+        clients: [...plan.clients, client.id],
+      };
+
+      const updatedPlan = await pb.collection("plans").update(plan.id, data);
+
       email.sendWelcomeEmail(
         newClient.name,
         newUser.email,

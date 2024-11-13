@@ -126,7 +126,7 @@ export function Hero() {
           </div>
           <div className="relative -mt-4 lg:col-span-7 lg:mt-0 xl:col-span-6">
             <p className="text-center text-sm font-semibold text-gray-900 lg:text-left mb-8">
-              Who can benifit from PAF?
+              Who can benefit from PAF?
             </p>
           </div>
           <div className="relative -mt-4 lg:col-span-7 lg:mt-0 xl:col-span-6 columns-2">
@@ -151,7 +151,7 @@ export function Hero() {
                 <img src={MaintMan} alt="" className="w-20 align-middle" />
               </div>
               <div className="text-center text-sm font-semibold text-gray-900">
-                Maintenace Resources
+                Maintenance Resources
               </div>
             </div>
             <div className="h-32 ">
