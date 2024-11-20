@@ -7,6 +7,7 @@ import AuthContext from "./auth/context";
 import Register from "./pages/Register";
 import QuickStart from "./pages/QuickStart";
 import Support from "./pages/Support";
+import Privacy from "./pages/Privacy";
 
 function App() {
   const [user, setUser] = useState();
@@ -30,6 +31,10 @@ function App() {
     {
       path: "/support",
       element: <Support />,
+    },
+    {
+      path: "/privacy",
+      element: <Privacy />,
     },
   ]);
   return (
