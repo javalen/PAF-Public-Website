@@ -8,11 +8,21 @@ import { MinusSmallIcon, PlusSmallIcon } from "@heroicons/react/24/outline";
 
 const faqs = [
   {
-    question: "What's the best thing about Switzerland?",
+    question:
+      "I've created a client and a facility. I see exceptions for items I don't use. How can I get rid of them?",
     answer:
-      "I don't know, but the flag is a big plus. Lorem ipsum dolor sit amet consectetur adipisicing elit. Quas cupiditate laboriosam fugiat.",
+      "An admin user can specifiy which exceptions should be tracked in the PAF web-based dashboard.",
   },
-  // More questions...
+  {
+    question: "I am on the free tier, how can I upgrade my plan?",
+    answer:
+      "An admin user can specifiy which plan best works for your organization in the PAF web-based dashboard.",
+  },
+  {
+    question: "How do I update my moblie app?",
+    answer:
+      "The mobile updates are done seemlessly behind the scenes each time you reopen the application.",
+  },
 ];
 
 const Support = () => {
