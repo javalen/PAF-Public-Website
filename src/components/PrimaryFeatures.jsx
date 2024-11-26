@@ -252,7 +252,7 @@ function SystemScreen(props) {
   return (
     <AppScreen className="w-full">
       <MotionAppScreenHeader {...(props.animated ? headerAnimation : {})}>
-        <AppScreen.Title>Create Facility</AppScreen.Title>
+        <AppScreen.Title>Create Systems</AppScreen.Title>
       </MotionAppScreenHeader>
       <MotionAppScreenBody
         {...(props.animated ? { ...bodyAnimation, custom: props.custom } : {})}
