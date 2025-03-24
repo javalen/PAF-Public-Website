@@ -1,267 +1,36 @@
 import { AuthLayout } from "../components/AuthLayout";
 import { Button } from "../components/Button";
 import { TextField } from "../components/Fields";
-import { pbAppClient } from "../api/pocketbase";
+import PocketBase from "pocketbase";
+import { pbAppClient, masterpd } from "../api/pocketbase";
 import { useEffect, useState } from "react";
 import useEmail from "../utils/email";
+import GooglePlacesAutocomplete from "react-google-places-autocomplete";
 
+const API_KEY = import.meta.env.VITE_PUBLIC_GOOGLE_PLACES_API;
 export const metadata = {
   title: "Register",
 };
 
-const states = [
-  {
-    label: "Alabama",
-    value: "AL",
-  },
-  {
-    label: "Alaska",
-    value: "AK",
-  },
-  {
-    label: "American Samoa",
-    value: "AS",
-  },
-  {
-    label: "Arizona",
-    value: "AZ",
-  },
-  {
-    label: "Arkansas",
-    value: "AR",
-  },
-  {
-    label: "California",
-    value: "CA",
-  },
-  {
-    label: "Colorado",
-    value: "CO",
-  },
-  {
-    label: "Connecticut",
-    value: "CT",
-  },
-  {
-    label: "Delaware",
-    value: "DE",
-  },
-  {
-    label: "District Of Columbia",
-    value: "DC",
-  },
-  {
-    label: "Federated States Of Micronesia",
-    value: "FM",
-  },
-  {
-    label: "Florida",
-    value: "FL",
-  },
-  {
-    label: "Georgia",
-    value: "GA",
-  },
-  {
-    label: "Guam",
-    value: "GU",
-  },
-  {
-    label: "Hawaii",
-    value: "HI",
-  },
-  {
-    label: "Idaho",
-    value: "ID",
-  },
-  {
-    label: "Illinois",
-    value: "IL",
-  },
-  {
-    label: "Indiana",
-    value: "IN",
-  },
-  {
-    label: "Iowa",
-    value: "IA",
-  },
-  {
-    label: "Kansas",
-    value: "KS",
-  },
-  {
-    label: "Kentucky",
-    value: "KY",
-  },
-  {
-    label: "Louisiana",
-    value: "LA",
-  },
-  {
-    label: "Maine",
-    value: "ME",
-  },
-  {
-    label: "Marshall Islands",
-    value: "MH",
-  },
-  {
-    label: "Maryland",
-    value: "MD",
-  },
-  {
-    label: "Massachusetts",
-    value: "MA",
-  },
-  {
-    label: "Michigan",
-    value: "MI",
-  },
-  {
-    label: "Minnesota",
-    value: "MN",
-  },
-  {
-    label: "Mississippi",
-    value: "MS",
-  },
-  {
-    label: "Missouri",
-    value: "MO",
-  },
-  {
-    label: "Montana",
-    value: "MT",
-  },
-  {
-    label: "Nebraska",
-    value: "NE",
-  },
-  {
-    label: "Nevada",
-    value: "NV",
-  },
-  {
-    label: "New Hampshire",
-    value: "NH",
-  },
-  {
-    label: "New Jersey",
-    value: "NJ",
-  },
-  {
-    label: "New Mexico",
-    value: "NM",
-  },
-  {
-    label: "New York",
-    value: "NY",
-  },
-  {
-    label: "North Carolina",
-    value: "NC",
-  },
-  {
-    label: "North Dakota",
-    value: "ND",
-  },
-  {
-    label: "Northern Mariana Islands",
-    value: "MP",
-  },
-  {
-    label: "Ohio",
-    value: "OH",
-  },
-  {
-    label: "Oklahoma",
-    value: "OK",
-  },
-  {
-    label: "Oregon",
-    value: "OR",
-  },
-  {
-    label: "Palau",
-    value: "PW",
-  },
-  {
-    label: "Pennsylvania",
-    value: "PA",
-  },
-  {
-    label: "Puerto Rico",
-    value: "PR",
-  },
-  {
-    label: "Rhode Island",
-    value: "RI",
-  },
-  {
-    label: "South Carolina",
-    value: "SC",
-  },
-  {
-    label: "South Dakota",
-    value: "SD",
-  },
-  {
-    label: "Tennessee",
-    value: "TN",
-  },
-  {
-    label: "Texas",
-    value: "TX",
-  },
-  {
-    label: "Utah",
-    value: "UT",
-  },
-  {
-    label: "Vermont",
-    value: "VT",
-  },
-  {
-    label: "Virgin Islands",
-    value: "VI",
-  },
-  {
-    label: "Virginia",
-    value: "VA",
-  },
-  {
-    label: "Washington",
-    value: "WA",
-  },
-  {
-    label: "West Virginia",
-    value: "WV",
-  },
-  {
-    label: "Wisconsin",
-    value: "WI",
-  },
-  {
-    label: "Wyoming",
-    value: "WY",
-  },
-];
-
 const termsMsg = "You must agree the Term & Conditions";
 
 export default function Register() {
-  console.log("Createing Register");
   const [error, setError] = useState();
   const [isChecked, setChecked] = useState(true);
   const [termsRead, setTermsRead] = useState(false);
   const [loading, setLoading] = useState(false);
   const email = useEmail();
+  const [address, setAddress] = useState(null);
+  const [clients, setClients] = useState([]); // ✅ Stores client list
+  const [regions, setRegions] = useState([]);
+  const [mailHost, setMailHost] = useState();
+  const [clientDb, setClientDb] = useState();
+  const [selectedRegion, setSelectedRegion] = useState();
+  const [clientHost, setClientHost] = useState();
 
   const submit = async (e) => {
     e.preventDefault(true);
     const registration = e.target.elements;
-
     if (!isChecked) {
       setError(termsMsg);
       return;
@@ -275,39 +44,67 @@ export default function Register() {
         return;
       }
 
+      //check if the user already exist
+      if (await checkIfUserExist(registration.email.value)) {
+        setError("Email already exist");
+        setLoading(false);
+        return;
+      }
+
+      //Check the address field
+      if (address === "Address") {
+        setError("Please provide a valid address");
+        setLoading(false);
+        return;
+      }
+
+      const addressTokens = tokenize(address);
+
       //Create the client
-      const client = await pbAppClient.collection("client").create({
+      const client = await clientDb.collection("client").create({
         name: registration.compName.value,
+        city: addressTokens[1],
+        state: addressTokens[2].trim().substring(0, 2),
+        address: address,
+        paid_modules: JSON.stringify({ modules: [] }),
+      });
+
+      //Add the client to the clients mapping db
+      const mstClient = await masterpd.collection("clients").create({
+        name: registration.compName.value,
+        host: clientHost,
+        client_id: client.id,
+        mail_server: mailHost,
+        region: selectedRegion,
       });
 
       // Create a default division
-      const division = await pbAppClient.collection("divisions").create({
+      const division = await clientDb.collection("divisions").create({
         name: registration.division.value,
-        state: registration.division.value,
+        state: addressTokens[2].trim().substring(0, 2),
         client_id: client.id,
-        city: registration.city.value,
+        city: addressTokens[1].trim(),
       });
 
       //Create the user
-      const newUser = await pbAppClient.collection("users").create({
+      const newUser = await clientDb.collection("users").create({
         email: registration.email.value,
         password: registration.password.value,
         passwordConfirm: registration.password.value,
         name: registration.name.value,
         phone: registration.phone.value,
         emailVisibility: true,
+        client_id: client.id,
         onboard_date: new Date().toISOString().slice(0, 19).replace("T", " "),
       });
 
       //Update the client table with the user info
-      const newClient = await pbAppClient
-        .collection("client")
-        .update(client.id, {
-          manager: newUser.id,
-        });
+      const newClient = await clientDb.collection("client").update(client.id, {
+        manager: newUser.id,
+      });
 
       //Create a personel record with role of super user for the company
-      const record = await pbAppClient.collection("personel").create({
+      const record = await clientDb.collection("personel").create({
         user_id: newUser.id,
         full_name: newUser.name,
         role: "cr",
@@ -315,28 +112,23 @@ export default function Register() {
         client: client.id,
       });
 
-      // const authData = await pb
-      //   .collection("users")
-      //   .authWithPassword(userInfo.email, userInfo.password);
-      // setUser(authData.record);
-
-      const plan = await pb
+      // Add the client to the starter plan
+      const plan = await masterpd
         .collection("plans")
-        .getFirstListItem('name="Starter"', {
-          expand: "clients",
-        });
+        .getFirstListItem('name="Starter"');
 
-      const data = {
-        clients: [...plan.clients, client.id],
-      };
-
-      const updatedPlan = await pb.collection("plans").update(plan.id, data);
+      let clietArr = plan.client_json.clients;
+      clietArr.push(newClient.id);
+      const updatedPlan = await masterpd.collection("plans").update(plan.id, {
+        client_json: JSON.stringify({ clients: clietArr }),
+      });
 
       email.sendWelcomeEmail(
         newClient.name,
         newUser.email,
         "Welcome to PAF!",
-        newUser.name
+        newUser.name,
+        clientHost
       );
 
       //navigation.navigate("Login");
@@ -352,6 +144,42 @@ export default function Register() {
       console.log("Error registering client", error);
     }
   };
+
+  const checkIfUserExist = async (email) => {
+    try {
+      //console.log("checking");
+      const record = await clientDb
+        .collection("users")
+        .getFirstListItem(`email="${email}"`);
+      //console.log("Record", record);
+      return true;
+    } catch (error) {
+      console.log("User doesn't already exist - IGNORE", error);
+      return false;
+    }
+  };
+  const onchange = (e) => {
+    setAddress(e.label);
+  };
+
+  // ✅ Function to Set API URL When Client is Selected
+  const setBackEndUrl = (selectedOption) => {
+    if (selectedOption) {
+      const cdb = new PocketBase(selectedOption.target.value);
+      setClientDb(cdb);
+      const mh = regions.find(
+        (reg) => reg.value === selectedOption.target.value
+      );
+      setMailHost(mh.mail_server);
+      setSelectedRegion(mh.label);
+      setClientHost(selectedOption.target.value);
+    }
+  };
+
+  function tokenize(str) {
+    // Simple tokenization using whitespace as delimiter
+    return str.split(",");
+  }
 
   const checkIfExist = async (name) => {
     try {
@@ -377,7 +205,28 @@ export default function Register() {
     setTermsRead(true);
   };
 
-  useEffect(() => {}, []);
+  useEffect(() => {
+    const loadData = async () => {
+      try {
+        const records = await masterpd.collection("regions").getFullList();
+
+        setRegions(records);
+      } catch (error) {
+        console.log("Error getting regions", error);
+        logger.log(new Error(clazz + " Error getting regions: " + error));
+      }
+
+      try {
+        const names = await masterpd.collection("clients").getFullList({
+          fields: "name", // ✅ Fetch only `id` and `name`
+        });
+        setClients(names);
+      } catch (error) {
+        console.error("Error fetching clients:", error);
+      }
+    };
+    loadData();
+  }, []);
   return (
     <AuthLayout title="Register a new account">
       <form onSubmit={submit}>
@@ -386,9 +235,46 @@ export default function Register() {
         )}
         <div className="space-y-6">
           <TextField label="Client Name" name="compName" type="text" required />
-          <TextField label="City" name="city" type="text" required />
+          <div className="mt-1">
+            <label className="space-y-6 font-semibold">Region</label>
+            <select
+              //value={region}
+              onChange={setBackEndUrl}
+              required
+              className="mt-2 block w-full appearance-none rounded-lg border border-gray-200 bg-white py-[calc(theme(spacing.2)-1px)] px-[calc(theme(spacing.3)-1px)] text-gray-900 placeholder:text-gray-400 focus:border-cyan-500 focus:outline-none focus:ring-cyan-500 sm:text-sm"
+            >
+              <option value="" className="text-gray-100">
+                Select a region
+              </option>
+              {regions.map((r) => (
+                <option key={r.value} value={r.value}>
+                  {r.label}
+                </option>
+              ))}
+            </select>
+          </div>
+          {/* <TextField label="City" name="city" type="text" required />
           <TextField label="State" name="state" required />
-          <TextField label="Zip Code" name="zip" type="text" required />
+          <TextField label="Zip Code" name="zip" type="text" required /> */}
+          <div className="mt-1 text-gray-500">
+            <GooglePlacesAutocomplete
+              apiKey={API_KEY}
+              selectProps={{
+                //defaultInputValue: "Address",
+                placeholder: "Address",
+                onChange: onchange,
+                styles: {
+                  control: (provided) => ({
+                    ...provided,
+                    borderRadius: "0.375rem",
+                    borderColor: "#d1d5db",
+                    "&:hover": { borderColor: "#4f46e5" },
+                  }),
+                },
+              }}
+            />
+            {!address && <p className="text-red-500">Address is required</p>}
+          </div>
           <TextField
             label="Default Division (Ex: Downtown)"
             name="division"
