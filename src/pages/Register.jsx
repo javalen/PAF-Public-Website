@@ -20,17 +20,20 @@ export default function Register() {
   const [termsRead, setTermsRead] = useState(false);
   const [loading, setLoading] = useState(false);
   const email = useEmail();
-  const [address, setAddress] = useState(null);
+  const [address, setAddress] = useState("Address");
   const [clients, setClients] = useState([]); // ✅ Stores client list
   const [regions, setRegions] = useState([]);
   const [mailHost, setMailHost] = useState();
   const [clientDb, setClientDb] = useState();
   const [selectedRegion, setSelectedRegion] = useState();
   const [clientHost, setClientHost] = useState();
+  const [success, setSuccess] = useState(false);
+  const [successObj, setSuccessObj] = useState();
 
   const submit = async (e) => {
     e.preventDefault(true);
     const registration = e.target.elements;
+    // console.log("registration", registration);
     if (!isChecked) {
       setError(termsMsg);
       return;
@@ -131,6 +134,13 @@ export default function Register() {
         clientHost
       );
 
+      setSuccessObj({
+        name: registration.name.value,
+        email: registration.email.value,
+        clientName: registration.compName.value,
+      });
+      setSuccess(true);
+
       //navigation.navigate("Login");
       setError(false);
     } catch (error) {
@@ -205,6 +215,7 @@ export default function Register() {
     setTermsRead(true);
   };
 
+  const goHome = () => navigation.navigate("/");
   useEffect(() => {
     const loadData = async () => {
       try {
@@ -229,114 +240,142 @@ export default function Register() {
   }, []);
   return (
     <AuthLayout title="Register a new account">
-      <form onSubmit={submit}>
-        {error && (
-          <div className="text-lg text-red-500 text-center mb-5">{error}</div>
-        )}
-        <div className="space-y-6">
-          <TextField label="Client Name" name="compName" type="text" required />
-          <div className="mt-1">
-            <label className="space-y-6 font-semibold">Region</label>
-            <select
-              //value={region}
-              onChange={setBackEndUrl}
-              required
-              className="mt-2 block w-full appearance-none rounded-lg border border-gray-200 bg-white py-[calc(theme(spacing.2)-1px)] px-[calc(theme(spacing.3)-1px)] text-gray-900 placeholder:text-gray-400 focus:border-cyan-500 focus:outline-none focus:ring-cyan-500 sm:text-sm"
+      {success ? (
+        <div className="min-h-screen flex flex-col items-center justify-center bg-gray-50 px-4">
+          <div className="max-w-md w-full text-center bg-white shadow-md rounded-lg p-8">
+            <h1 className="text-2xl font-semibold text-gray-800 mb-4">
+              🎉 Thank You{successObj.name ? `, ${successObj.name}` : ""}!
+            </h1>
+            <p className="text-gray-700 mb-2">
+              Your registration for{" "}
+              <span className="font-medium">{successObj.clientName}</span> was
+              successful.
+            </p>
+            <p className="text-gray-600 mb-6">
+              A confirmation email has been sent to{" "}
+              <strong>{successObj.email}</strong>.
+            </p>
+            <Button
+              type="button"
+              onClick={goHome}
+              className="w-full bg-primary hover:bg-primary/80"
             >
-              <option value="" className="text-gray-100">
-                Select a region
-              </option>
-              {regions.map((r) => (
-                <option key={r.value} value={r.value}>
-                  {r.label}
-                </option>
-              ))}
-            </select>
-          </div>
-          {/* <TextField label="City" name="city" type="text" required />
-          <TextField label="State" name="state" required />
-          <TextField label="Zip Code" name="zip" type="text" required /> */}
-          <div className="mt-1 text-gray-500">
-            <GooglePlacesAutocomplete
-              apiKey={API_KEY}
-              selectProps={{
-                //defaultInputValue: "Address",
-                placeholder: "Address",
-                onChange: onchange,
-                styles: {
-                  control: (provided) => ({
-                    ...provided,
-                    borderRadius: "0.375rem",
-                    borderColor: "#d1d5db",
-                    "&:hover": { borderColor: "#4f46e5" },
-                  }),
-                },
-              }}
-            />
-            {!address && <p className="text-red-500">Address is required</p>}
-          </div>
-          <TextField
-            label="Default Division (Ex: Downtown)"
-            name="division"
-            type="text"
-            required
-          />
-          <TextField label="Full Name" name="name" required />
-          <TextField label="Phone " name="phone" type="text" required />
-          <TextField
-            label="Email address"
-            name="email"
-            type="email"
-            autoComplete="email"
-            required
-          />
-          <TextField
-            label="Password"
-            name="password"
-            type="password"
-            autoComplete="current-password"
-            required
-          />
-          <TextField
-            label="Copnfirm Password"
-            name="passwordc"
-            type="password"
-            required
-          />
-          <div className="flex items-center justify-between">
-            <div className="flex items-center">
-              <input
-                id="remember-me"
-                name="remember-me"
-                type="checkbox"
-                className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600"
-              />
-              <label
-                htmlFor="remember-me"
-                className="ml-3 block text-sm leading-6 text-gray-900"
-              >
-                I agree to{" "}
-                <a
-                  href="https://pafadminpanel.onrender.com/terms"
-                  className="underline text-blue-600 hover:text-blue-800 visited:text-purple-600"
-                  target="t&c"
-                  onClick={load}
-                >
-                  Terms and Conditiions
-                </a>
-              </label>
-            </div>
+              Return to Home
+            </Button>
           </div>
         </div>
+      ) : (
+        <form onSubmit={submit}>
+          {error && (
+            <div className="text-lg text-red-500 text-center mb-5">{error}</div>
+          )}
+          <div className="space-y-6">
+            <TextField
+              label="Client Name"
+              name="compName"
+              type="text"
+              required
+            />
+            <div className="mt-1">
+              <label className="space-y-6 font-semibold">Region</label>
+              <select
+                //value={region}
+                onChange={setBackEndUrl}
+                required
+                className="mt-2 block w-full appearance-none rounded-lg border border-gray-200 bg-white py-[calc(theme(spacing.2)-1px)] px-[calc(theme(spacing.3)-1px)] text-gray-900 placeholder:text-gray-400 focus:border-cyan-500 focus:outline-none focus:ring-cyan-500 sm:text-sm"
+              >
+                <option value="" className="text-gray-100 font-bold">
+                  Select a region
+                </option>
+                {regions.map((r) => (
+                  <option key={r.value} value={r.value}>
+                    {r.label}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div className="mt-1 text-gray-500">
+              <GooglePlacesAutocomplete
+                apiKey={API_KEY}
+                selectProps={{
+                  //defaultInputValue: "Address",
+                  placeholder: "Address",
+                  onChange: onchange,
+                  styles: {
+                    control: (provided) => ({
+                      ...provided,
+                      borderRadius: "0.375rem",
+                      borderColor: "#d1d5db",
+                      "&:hover": { borderColor: "#4f46e5" },
+                    }),
+                  },
+                }}
+              />
+              {!address && <p className="text-red-500">Address is required</p>}
+            </div>
+            <TextField
+              label="Default Division (Ex: Downtown)"
+              name="division"
+              type="text"
+              required
+            />
+            <TextField label="Full Name" name="name" required />
+            <TextField label="Phone " name="phone" type="text" required />
+            <TextField
+              label="Email address"
+              name="email"
+              type="email"
+              autoComplete="email"
+              required
+            />
+            <TextField
+              label="Password"
+              name="password"
+              type="password"
+              autoComplete="current-password"
+              required
+            />
+            <TextField
+              label="Copnfirm Password"
+              name="passwordc"
+              type="password"
+              required
+            />
+            <div className="flex items-center justify-between">
+              <div className="flex items-center">
+                <input
+                  id="remember-me"
+                  name="remember-me"
+                  type="checkbox"
+                  className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600"
+                />
+                <label
+                  htmlFor="remember-me"
+                  className="ml-3 block text-sm leading-6 text-gray-900"
+                >
+                  I agree to{" "}
+                  <a
+                    href="https://pafadminpanel.onrender.com/terms"
+                    className="underline text-blue-600 hover:text-blue-800 visited:text-purple-600"
+                    target="t&c"
+                    onClick={load}
+                  >
+                    Terms and Conditiions
+                  </a>
+                </label>
+              </div>
+            </div>
+          </div>
 
-        <Button
-          type="submit"
-          color="cyan"
-          className="mt-8 w-full  bg-primary hover:bg-primary/80"
-        >
-          Register Account
-        </Button>
-      </form>
+          <Button
+            type="submit"
+            color="cyan"
+            className="mt-8 w-full  bg-primary hover:bg-primary/80"
+          >
+            Register Account
+          </Button>
+        </form>
+      )}
     </AuthLayout>
   );
 }
