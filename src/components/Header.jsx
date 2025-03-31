@@ -61,6 +61,14 @@ export function Header() {
             </a>
             <div className="hidden lg:flex lg:gap-10">
               <NavLinks />
+              <a
+                href="/PredictiveAF_Overview.pdf"
+                download
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Download Overview
+              </a>
             </div>
           </div>
           <div className="flex items-center gap-6">
