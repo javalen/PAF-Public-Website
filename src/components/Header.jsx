@@ -40,13 +40,59 @@ function ChevronUpIcon(props) {
   );
 }
 
-function MobileNavLink(props) {
+// function MobileNavLink(props) {
+//   return (
+//     <PopoverButton
+//       as={Link}
+//       className="block text-base leading-7 tracking-tight text-gray-700"
+//       {...props}
+//     />
+//   );
+// }
+
+function MobileNavLink({ href, children, onClick }) {
+  const isExternal = href.startsWith("http") || href.endsWith(".pdf");
+  const isHash = href.startsWith("#") || href.includes("/#");
+
+  const handleClick = (e) => {
+    if (onClick) onClick(); // close menu
+  };
+
+  if (isExternal) {
+    return (
+      <a
+        href={href}
+        target="_blank"
+        rel="noopener noreferrer"
+        onClick={handleClick}
+        className="block text-base leading-7 tracking-tight text-gray-700"
+      >
+        {children}
+      </a>
+    );
+  }
+
+  if (isHash) {
+    return (
+      <a
+        href={href}
+        onClick={handleClick}
+        className="block text-base leading-7 tracking-tight text-gray-700"
+      >
+        {children}
+      </a>
+    );
+  }
+
   return (
     <PopoverButton
       as={Link}
+      to={href}
+      onClick={handleClick}
       className="block text-base leading-7 tracking-tight text-gray-700"
-      {...props}
-    />
+    >
+      {children}
+    </PopoverButton>
   );
 }
 
@@ -74,7 +120,7 @@ export function Header() {
           </div>
           <div className="flex items-center gap-6">
             <Popover className="lg:hidden">
-              {({ open }) => (
+              {({ open, close }) => (
                 <>
                   <PopoverButton
                     className="relative z-10 -m-2 inline-flex items-center rounded-lg stroke-gray-900 p-2 hover:bg-gray-200/50 hover:stroke-gray-600 active:stroke-gray-900 ui-not-focus-visible:outline-none"
@@ -112,17 +158,33 @@ export function Header() {
                           className="absolute inset-x-0 top-0 z-0 origin-top rounded-b-2xl bg-gray-50 px-6 pb-6 pt-32 shadow-2xl shadow-gray-900/20"
                         >
                           <div className="space-y-4">
-                            <MobileNavLink href="/#features">
+                            <MobileNavLink href="/#features" onClick={close}>
                               Features
                             </MobileNavLink>
-                            {/* <MobileNavLink href="/#reviews">
-                              Reviews
-                            </MobileNavLink> */}
-                            <MobileNavLink href="/#pricing">
+                            <MobileNavLink href="/#pricing" onClick={close}>
                               Pricing
                             </MobileNavLink>
-                            <MobileNavLink href="/#faqs">FAQs</MobileNavLink>
-                            <MobileNavLink href="/#about">About</MobileNavLink>
+                            <MobileNavLink href="/#faqs" onClick={close}>
+                              FAQs
+                            </MobileNavLink>
+                            <MobileNavLink href="/#about" onClick={close}>
+                              About
+                            </MobileNavLink>
+                            <MobileNavLink href="/quickstart">
+                              Quick Start
+                            </MobileNavLink>
+                            <MobileNavLink href="https://www.youtube.com/@PredictiveAF">
+                              PAF on YouTube
+                            </MobileNavLink>
+                            <MobileNavLink href="/support">
+                              Support
+                            </MobileNavLink>
+                            <MobileNavLink href="https://calendar.app.google/p3Bi6LnTTzgfpo8M7">
+                              Request a Demo
+                            </MobileNavLink>
+                            <MobileNavLink href="https://www.predictiveaf.com/PredictiveAF_Intro_Deck.pdf">
+                              Download Overview
+                            </MobileNavLink>
                           </div>
                           <div className="mt-8 flex flex-col gap-4">
                             <Button href="/register" variant="outline">
