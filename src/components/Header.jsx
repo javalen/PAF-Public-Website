@@ -62,10 +62,11 @@ export function Header() {
             <div className="hidden lg:flex lg:gap-10">
               <NavLinks />
               <a
-                href="/PredictiveAF_Overview.pdf"
+                href="https://www.predictiveaf.com/PredictiveAF_Intro_Deck.pdf"
                 download
                 target="_blank"
                 rel="noopener noreferrer"
+                className="relative -mx-3 -my-2 rounded-lg px-3 py-2 text-sm text-gray-700 transition-colors delay-150 hover:text-gray-900 hover:delay-0"
               >
                 Download Overview
               </a>
