@@ -30,6 +30,7 @@ export default function Register() {
   const [clientHost, setClientHost] = useState();
   const [success, setSuccess] = useState(false);
   const [successObj, setSuccessObj] = useState();
+  const [formValid, setFormValid] = useState(false);
 
   const submit = async (e) => {
     e.preventDefault(true);
@@ -239,6 +240,22 @@ export default function Register() {
     };
     loadData();
   }, []);
+
+  useEffect(() => {
+    const validateForm = () => {
+      const requiredFieldsFilled =
+        address !== "Address" &&
+        clientDb &&
+        selectedRegion &&
+        mailHost &&
+        isChecked;
+
+      setFormValid(requiredFieldsFilled && termsRead);
+    };
+
+    validateForm();
+  }, [address, clientDb, selectedRegion, mailHost, isChecked, termsRead]);
+
   return (
     <AuthLayout title="Register a new account">
       {success ? (
@@ -362,7 +379,7 @@ export default function Register() {
               required
             />
             <TextField
-              label="Copnfirm Password"
+              label="Confirm Password"
               name="passwordc"
               type="password"
               required
@@ -374,6 +391,9 @@ export default function Register() {
                   name="remember-me"
                   type="checkbox"
                   className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600"
+                  disabled={!termsRead}
+                  checked={isChecked}
+                  onChange={(e) => setChecked(e.target.checked)}
                 />
                 <label
                   htmlFor="remember-me"
@@ -384,9 +404,9 @@ export default function Register() {
                     href="https://pafadminpanel-east.onrender.com/terms"
                     className="underline text-blue-600 hover:text-blue-800 visited:text-purple-600"
                     target="t&c"
-                    onClick={load}
+                    onClick={() => setTermsRead(true)}
                   >
-                    Terms and Conditiions
+                    Terms and Conditions
                   </a>
                 </label>
               </div>
@@ -396,7 +416,8 @@ export default function Register() {
           <Button
             type="submit"
             color="cyan"
-            className="mt-8 w-full  bg-primary hover:bg-primary/80"
+            className="mt-8 w-full bg-primary hover:bg-primary/80 disabled:bg-gray-300 disabled:cursor-not-allowed"
+            disabled={!formValid || loading}
           >
             Register Account
           </Button>
