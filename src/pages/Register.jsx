@@ -6,6 +6,7 @@ import { pbAppClient, masterpd } from "../api/pocketbase";
 import { useEffect, useState } from "react";
 import useEmail from "../utils/email";
 import GooglePlacesAutocomplete from "react-google-places-autocomplete";
+import InputMask from "react-input-mask";
 
 const API_KEY = import.meta.env.VITE_PUBLIC_GOOGLE_PLACES_API;
 export const metadata = {
@@ -320,7 +321,32 @@ export default function Register() {
               required
             />
             <TextField label="Full Name" name="name" required />
-            <TextField label="Phone " name="phone" type="text" required />
+            <div>
+              <label
+                htmlFor="phone"
+                className="block text-sm font-medium text-gray-700 mb-1"
+              >
+                Phone
+              </label>
+              <InputMask
+                mask="(999) 999-9999"
+                maskChar=" "
+                alwaysShowMask={false}
+              >
+                {(inputProps) => (
+                  <input
+                    {...inputProps}
+                    type="text"
+                    name="phone"
+                    id="phone"
+                    required
+                    className="block w-full appearance-none rounded-lg border border-gray-200 bg-white py-2 px-3 text-sm text-gray-700 placeholder:text-gray-400 focus:border-cyan-500 focus:outline-none focus:ring-cyan-500"
+                    placeholder="(123) 456-7890"
+                  />
+                )}
+              </InputMask>
+            </div>
+
             <TextField
               label="Email address"
               name="email"
