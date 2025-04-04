@@ -355,7 +355,7 @@ export default function Register() {
                 >
                   I agree to{" "}
                   <a
-                    href="https://pafadminpanel.onrender.com/terms"
+                    href="https://pafadminpanel-east.onrender.com/terms"
                     className="underline text-blue-600 hover:text-blue-800 visited:text-purple-600"
                     target="t&c"
                     onClick={load}
