@@ -273,6 +273,10 @@ export default function Register() {
               A confirmation email has been sent to{" "}
               <strong>{successObj.email}</strong>.
             </p>
+            <p>
+              Check your spam folder if you don't see it within 30 minutes. If
+              you still can't find it, contact us at support@predictiveaf.com
+            </p>
             <Button
               type="button"
               onClick={goHome}
