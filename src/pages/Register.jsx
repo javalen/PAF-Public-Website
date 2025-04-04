@@ -71,7 +71,8 @@ export default function Register() {
         city: addressTokens[1],
         state: addressTokens[2].trim().substring(0, 2),
         address: address,
-        paid_modules: JSON.stringify({ modules: [] }),
+        // Trial Users will have all modules until they opt out
+        paid_modules: JSON.stringify({ modules: ["Documents", "Ticketing"] }),
       });
 
       //Add the client to the clients mapping db
