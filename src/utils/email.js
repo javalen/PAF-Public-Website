@@ -1,7 +1,7 @@
 import axios from "axios";
-const mailHost = import.meta.env.VITE_PUBLIC_EMAIL_SVR;
+//const mailHost = import.meta.env.VITE_PUBLIC_EMAIL_SVR;
 const useEmail = () => {
-  const sendWelcomeEmail = (client, emailTo, subject, name, host) => {
+  const sendWelcomeEmail = (mailHost, client, emailTo, subject, name, host) => {
     axios
       .post(mailHost + "/send-welcome-email", {
         client: client,
@@ -11,9 +11,10 @@ const useEmail = () => {
         host: host,
       })
       .then((response) => {
-        alert(
-          "Account Created Successully. Please check your email to verify your account before logging in."
-        );
+        console.log("Email sent successfully....");
+        // alert(
+        //   "Account Created Successully. Please check your email to verify your account before logging in."
+        // );
       })
       .catch((error) => {
         alert("Error sending email");
@@ -22,6 +23,7 @@ const useEmail = () => {
   };
 
   const sendNewPersonelEmail = (
+    mailHost,
     client,
     emailTo,
     facility,

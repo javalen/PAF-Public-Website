@@ -31,6 +31,7 @@ export default function Register() {
   const [success, setSuccess] = useState(false);
   const [successObj, setSuccessObj] = useState();
   const [formValid, setFormValid] = useState(false);
+  const [aiServer, setAiServer] = useState();
 
   const submit = async (e) => {
     e.preventDefault(true);
@@ -82,6 +83,7 @@ export default function Register() {
         client_id: client.id,
         mail_server: mailHost,
         region: selectedRegion,
+        ai_server: aiServer,
       });
 
       // Create a default division
@@ -130,6 +132,7 @@ export default function Register() {
       });
 
       email.sendWelcomeEmail(
+        mailHost,
         newClient.name,
         newUser.email,
         "Welcome to PAF!",
@@ -183,6 +186,7 @@ export default function Register() {
       const mh = regions.find(
         (reg) => reg.value === selectedOption.target.value
       );
+      setAiServer(mh.ai_server);
       setMailHost(mh.mail_server);
       setSelectedRegion(mh.label);
       setClientHost(selectedOption.target.value);
