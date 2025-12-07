@@ -5,6 +5,8 @@ import { Logomark } from "./Logo";
 import { NavLinks } from "./NavLinks";
 import qrCode from "../images/qr-code.svg";
 import Logo from "../assets/paf.png";
+import PlayStoreQR from "../assets/play-store-qr.png";
+import iOSStoreQR from "../assets/ios-qr.png";
 import PopUpDialog from "./PopUpDailog";
 import { useState } from "react";
 import { pbWebClient } from "../api/pocketbase";
@@ -58,21 +60,51 @@ export function Footer() {
               <NavLinks />
             </nav>
           </div>
-          <div className="group relative -mx-4 flex items-center self-stretch p-4 transition-colors hover:bg-gray-100 sm:self-auto sm:rounded-2xl lg:mx-0 lg:self-auto lg:p-6">
-            <div className="relative flex h-24 w-24 flex-none items-center justify-center">
-              <QrCodeBorder className="absolute inset-0 h-full w-full stroke-gray-300 transition-colors group-hover:stroke-cyan-500" />
-              <img src={qrCode} alt="" unoptimized="true" />
-            </div>
-            <div className="ml-8 lg:w-64">
-              <p className="text-base font-semibold text-gray-900">
-                <a href="#">
-                  <span className="absolute inset-0 sm:rounded-2xl" />
-                  Download the app
+          <div className="w-full flex flex-col items-center mt-8">
+            {/* Title */}
+            <h2 className="text-xl font-semibold text-gray-900 mb-6 text-center">
+              Download the Mobile App
+            </h2>
+
+            {/* QR blocks */}
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-8">
+              {/* Android */}
+              <div className="group flex flex-col items-center p-4 transition hover:bg-gray-100 rounded-2xl">
+                <a
+                  href="https://play.google.com/store/apps/details?id=com.predictiveaf.mobile&pcampaignid=web_share"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex flex-col items-center"
+                >
+                  <img
+                    src={PlayStoreQR}
+                    alt="Download on Google Play"
+                    className="h-32 w-32 rounded-md shadow-md mb-3"
+                  />
+                  <span className="text-base font-semibold text-gray-900 text-center">
+                    Android
+                  </span>
                 </a>
-              </p>
-              <p className="mt-1 text-sm text-gray-700">
-                Scan the QR code to download the app from the App Store.
-              </p>
+              </div>
+
+              {/* iOS — update URL when ready */}
+              <div className="group flex flex-col items-center p-4 transition hover:bg-gray-100 rounded-2xl">
+                <a
+                  href="#"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex flex-col items-center"
+                >
+                  <img
+                    src={iOSStoreQR}
+                    alt="Download on iOS App Store"
+                    className="h-32 w-32 rounded-md shadow-md mb-3"
+                  />
+                  <span className="text-base font-semibold text-gray-900 text-center">
+                    iOS
+                  </span>
+                </a>
+              </div>
             </div>
           </div>
         </div>
