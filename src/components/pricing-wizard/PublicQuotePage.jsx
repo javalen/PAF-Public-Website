@@ -47,7 +47,7 @@ export default function PublicQuotePage() {
         setError(e.message || "Unable to load quote");
       }
     })();
-  }, [token]);
+  }, [id]);
 
   if (error) {
     return (
