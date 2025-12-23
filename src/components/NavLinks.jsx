@@ -9,7 +9,7 @@ export function NavLinks() {
 
   return [
     ["Features", "/#features"],
-    ["Pricing", "/#pricing"],
+    //["Pricing", "/#pricing"],
     ["FAQs", "/#faqs"],
     ["About", "/#about"],
     ["Quick Start", "/quickstart"],

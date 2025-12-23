@@ -40,21 +40,11 @@ function ChevronUpIcon(props) {
   );
 }
 
-// function MobileNavLink(props) {
-//   return (
-//     <PopoverButton
-//       as={Link}
-//       className="block text-base leading-7 tracking-tight text-gray-700"
-//       {...props}
-//     />
-//   );
-// }
-
 function MobileNavLink({ href, children, onClick }) {
   const isExternal = href.startsWith("http") || href.endsWith(".pdf");
   const isHash = href.startsWith("#") || href.includes("/#");
 
-  const handleClick = (e) => {
+  const handleClick = () => {
     if (onClick) onClick(); // close menu
   };
 
@@ -105,8 +95,18 @@ export function Header() {
             <a href="/" aria-label="Home">
               <img src={Logo} className="h-20 w-auto" />
             </a>
+
             <div className="hidden lg:flex lg:gap-10">
               <NavLinks />
+
+              {/* NEW: Pricing Wizard link */}
+              <Link
+                to="/pricing"
+                className="relative -mx-3 -my-2 rounded-lg px-3 py-2 text-sm text-gray-700 transition-colors delay-150 hover:text-gray-900 hover:delay-0"
+              >
+                Pricing Wizard
+              </Link>
+
               <a
                 href="https://www.predictiveaf.com/PredictiveAF_Intro_Deck.pdf"
                 download
@@ -118,6 +118,7 @@ export function Header() {
               </a>
             </div>
           </div>
+
           <div className="flex items-center gap-6">
             <Popover className="lg:hidden">
               {({ open, close }) => (
@@ -134,6 +135,7 @@ export function Header() {
                       )
                     }
                   </PopoverButton>
+
                   <AnimatePresence initial={false}>
                     {open && (
                       <>
@@ -145,6 +147,7 @@ export function Header() {
                           exit={{ opacity: 0 }}
                           className="fixed inset-0 z-0 bg-gray-300/60 backdrop-blur"
                         />
+
                         <PopoverPanel
                           static
                           as={motion.div}
@@ -161,31 +164,47 @@ export function Header() {
                             <MobileNavLink href="/#features" onClick={close}>
                               Features
                             </MobileNavLink>
-                            <MobileNavLink href="/#pricing" onClick={close}>
+                            {/* <MobileNavLink href="/#pricing" onClick={close}>
                               Pricing
+                            </MobileNavLink> */}
+
+                            {/* NEW: Pricing Wizard link (mobile) */}
+                            <MobileNavLink href="/pricing" onClick={close}>
+                              Pricing Wizard
                             </MobileNavLink>
+
                             <MobileNavLink href="/#faqs" onClick={close}>
                               FAQs
                             </MobileNavLink>
                             <MobileNavLink href="/#about" onClick={close}>
                               About
                             </MobileNavLink>
-                            <MobileNavLink href="/quickstart">
+                            <MobileNavLink href="/quickstart" onClick={close}>
                               Quick Start
                             </MobileNavLink>
-                            <MobileNavLink href="https://www.youtube.com/@PredictiveAF">
+                            <MobileNavLink
+                              href="https://www.youtube.com/@PredictiveAF"
+                              onClick={close}
+                            >
                               PAF on YouTube
                             </MobileNavLink>
-                            <MobileNavLink href="/support">
+                            <MobileNavLink href="/support" onClick={close}>
                               Support
                             </MobileNavLink>
-                            <MobileNavLink href="https://calendar.app.google/p3Bi6LnTTzgfpo8M7">
+                            <MobileNavLink
+                              href="https://calendar.app.google/p3Bi6LnTTzgfpo8M7"
+                              onClick={close}
+                            >
                               Request a Demo
                             </MobileNavLink>
-                            <MobileNavLink href="https://www.predictiveaf.com/PredictiveAF_Intro_Deck.pdf">
+                            <MobileNavLink
+                              href="https://www.predictiveaf.com/PredictiveAF_Intro_Deck.pdf"
+                              onClick={close}
+                            >
                               Download Overview
                             </MobileNavLink>
                           </div>
+
                           <div className="mt-8 flex flex-col gap-4">
                             <Button href="/register" variant="outline">
                               Register
@@ -199,6 +218,7 @@ export function Header() {
                 </>
               )}
             </Popover>
+
             <Button
               href="/register"
               variant="outline"
@@ -206,6 +226,7 @@ export function Header() {
             >
               Register
             </Button>
+
             {/* <Button href="#" className="hidden lg:block">
               Download
             </Button> */}
