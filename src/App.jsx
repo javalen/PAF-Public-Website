@@ -26,7 +26,7 @@ function App() {
 
     // NEW: Public pricing wizard + shareable quote page
     { path: "/pricing", element: <PricingWizard /> },
-    { path: "/pricing/quote/:token", element: <PublicQuotePage /> },
+    { path: "/pricing/quote/:id", element: <PublicQuotePage /> },
   ]);
 
   return (
