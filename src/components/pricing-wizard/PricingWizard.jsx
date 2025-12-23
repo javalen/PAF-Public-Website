@@ -610,7 +610,7 @@ export default function PricingWizard() {
                           </div>
 
                           <Button
-                            className="w-full rounded-xl"
+                            className="w-full mt-2 rounded-xl bg-[#7690b5] hover:bg-[#4c6486] text-white"
                             onClick={() =>
                               window.open(
                                 "https://calendar.app.google/p3Bi6LnTTzgfpo8M7",
