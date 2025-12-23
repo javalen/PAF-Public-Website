@@ -5,10 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 import { Button } from "../ui/button";
 import { Separator } from "../ui/separator";
 
-/**
- * Public Quote Page
- * GET → /api/pricing/quote/public/:token
- */
+const pWHost = import.meta.env.VITE_PAF_PRICING_WIZARD;
 
 function money(n) {
   return new Intl.NumberFormat("en-US", {
@@ -18,16 +15,33 @@ function money(n) {
 }
 
 export default function PublicQuotePage() {
-  const { token } = useParams();
+  const { token } = useParams(); // token is actually quote id in your current setup
   const [data, setData] = useState(null);
   const [error, setError] = useState("");
 
   useEffect(() => {
     (async () => {
       try {
-        const res = await fetch(`/api/pricing/quote/public/${token}`);
-        const json = await res.json();
-        if (!res.ok || !json?.ok) throw new Error(json?.error);
+        if (!pWHost) throw new Error("Missing VITE_PAF_PRICING_WIZARD env var");
+
+        const url = `${pWHost.replace(/\/+$/, "")}/api/pricing/quote/${token}`;
+        const res = await fetch(url, {
+          headers: { Accept: "application/json" },
+        });
+
+        // If the API returns HTML, this makes it obvious instead of crashing JSON.parse
+        const text = await res.text();
+        let json;
+        try {
+          json = JSON.parse(text);
+        } catch {
+          throw new Error(
+            `Expected JSON but got HTML/text. Check routing/proxy. URL: ${url}`
+          );
+        }
+
+        if (!res.ok || !json?.ok)
+          throw new Error(json?.error || "Quote not found");
         setData(json);
       } catch (e) {
         setError(e.message || "Unable to load quote");
@@ -38,13 +52,16 @@ export default function PublicQuotePage() {
   if (error) {
     return (
       <div className="max-w-3xl mx-auto p-6">
-        <Card>
+        <Card className="rounded-2xl">
           <CardHeader>
             <CardTitle>Error</CardTitle>
           </CardHeader>
-          <CardContent>
+          <CardContent className="space-y-3">
             <p className="text-sm">{error}</p>
-            <Button className="mt-4" href="/pricing">
+            <Button
+              className="rounded-xl"
+              onClick={() => (window.location.href = "/pricing")}
+            >
               New Quote
             </Button>
           </CardContent>
@@ -53,9 +70,7 @@ export default function PublicQuotePage() {
     );
   }
 
-  if (!data) {
-    return <div className="p-6 text-sm">Loading…</div>;
-  }
+  if (!data) return <div className="p-6 text-sm">Loading…</div>;
 
   return (
     <div className="max-w-4xl mx-auto p-4">
@@ -86,9 +101,16 @@ export default function PublicQuotePage() {
                   <div className="text-sm">
                     Add-ons: {money(o.addOnsMonthly)}
                   </div>
+
                   <Button
-                    className="w-full mt-2"
-                    onClick={() => (window.location.href = "/contact")}
+                    className="w-full mt-2 rounded-xl"
+                    onClick={() =>
+                      window.open(
+                        "https://calendar.app.google/p3Bi6LnTTzgfpo8M7",
+                        "_blank",
+                        "noopener,noreferrer"
+                      )
+                    }
                   >
                     Book Demo
                   </Button>
@@ -97,14 +119,14 @@ export default function PublicQuotePage() {
             ))}
           </div>
 
-          {data.ai_summary && (
+          {data.ai_summary?.headline && (
             <Card className="rounded-xl">
               <CardHeader>
                 <CardTitle>{data.ai_summary.headline}</CardTitle>
               </CardHeader>
               <CardContent>
                 <ul className="list-disc pl-5 text-sm space-y-1">
-                  {data.ai_summary.bullets?.map((b, i) => (
+                  {(data.ai_summary.bullets || []).map((b, i) => (
                     <li key={i}>{b}</li>
                   ))}
                 </ul>
