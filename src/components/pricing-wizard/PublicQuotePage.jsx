@@ -15,7 +15,7 @@ function money(n) {
 }
 
 export default function PublicQuotePage() {
-  const { token } = useParams(); // token is actually quote id in your current setup
+  const { id } = useParams(); // token is actually quote id in your current setup
   const [data, setData] = useState(null);
   const [error, setError] = useState("");
 
@@ -24,7 +24,7 @@ export default function PublicQuotePage() {
       try {
         if (!pWHost) throw new Error("Missing VITE_PAF_PRICING_WIZARD env var");
 
-        const url = `${pWHost.replace(/\/+$/, "")}/api/pricing/quote/${token}`;
+        const url = `${pWHost.replace(/\/+$/, "")}/api/pricing/quote/${id}`;
         const res = await fetch(url, {
           headers: { Accept: "application/json" },
         });
