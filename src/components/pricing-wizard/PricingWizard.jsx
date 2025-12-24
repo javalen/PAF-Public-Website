@@ -774,7 +774,7 @@ export default function PricingWizard() {
 
                   <div className="flex justify-center pt-2">
                     <Button
-                      className="rounded-xl px-6"
+                      className=" mt-2 rounded-xl bg-[#7690b5] hover:bg-[#4c6486] text-white"
                       onClick={generate}
                       disabled={submitting}
                     >
@@ -804,7 +804,7 @@ export default function PricingWizard() {
                     <div className="flex gap-2">
                       {result.share_url && (
                         <Button
-                          className="rounded-xl"
+                          className="mt-2 rounded-xl bg-[#7690b5] hover:bg-[#4c6486] text-white"
                           variant="outline"
                           onClick={copyShareLink}
                         >
@@ -813,7 +813,7 @@ export default function PricingWizard() {
                       )}
                       {result.share_url && (
                         <Button
-                          className="rounded-xl"
+                          className="mt-2 rounded-xl bg-[#7690b5] hover:bg-[#4c6486] text-white"
                           onClick={() =>
                             window.open(
                               result.share_url,
@@ -913,7 +913,7 @@ export default function PricingWizard() {
             <Button
               type="button"
               variant="outline"
-              className="rounded-xl"
+              className=" mt-2 rounded-xl bg-[#7690b5] hover:bg-[#4c6486] text-white"
               onClick={back}
               disabled={step === 1 || submitting}
             >
@@ -923,7 +923,7 @@ export default function PricingWizard() {
             {step < 6 && (
               <Button
                 type="button"
-                className="rounded-xl"
+                className="mt-2 rounded-xl bg-[#7690b5] hover:bg-[#4c6486] text-white"
                 onClick={next}
                 disabled={submitting}
               >
@@ -934,7 +934,7 @@ export default function PricingWizard() {
             {step === 6 && (
               <Button
                 type="button"
-                className="rounded-xl"
+                className="mt-2 rounded-xl bg-[#7690b5] hover:bg-[#4c6486] text-white"
                 onClick={() => setStep(7)}
                 disabled={submitting}
               >
