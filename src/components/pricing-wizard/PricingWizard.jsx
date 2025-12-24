@@ -191,6 +191,53 @@ export default function PricingWizard() {
     }
   };
 
+  function titleCase(s) {
+    return String(s || "")
+      .replace(/_/g, " ")
+      .replace(/\b\w/g, (m) => m.toUpperCase());
+  }
+
+  function summarizeSelectedSystems(systems) {
+    const list = [];
+    if (!systems) return list;
+    for (const [k, v] of Object.entries(systems)) {
+      if (!v?.enabled) continue;
+      const bucket = v.count_bucket ? ` (${v.count_bucket})` : "";
+      list.push(`${titleCase(k)}${bucket}`);
+    }
+    return list;
+  }
+
+  function summarizeAddOns(add_ons) {
+    const map = {
+      ai_system_intelligence: "AI System Intelligence",
+      living_reserve_study: "Living Reserve Study",
+      vendor_performance: "Vendor Performance Tracking",
+      board_reporting_pack: "Board Reporting Pack",
+      multi_property_rollup: "Multi-property Rollup",
+      iot_monitoring: "IoT Monitoring (sensors)",
+    };
+    const list = [];
+    for (const [k, label] of Object.entries(map)) {
+      if (add_ons?.[k]) list.push(label);
+    }
+    return list;
+  }
+
+  function summarizeCompliance(compliance) {
+    const map = {
+      track_vendor_w9: "Vendor W-9 tracking",
+      track_vendor_coi: "COI tracking",
+      track_inspections: "Inspection tracking",
+      track_permits: "Permit tracking",
+    };
+    const list = [];
+    for (const [k, label] of Object.entries(map)) {
+      if (compliance?.[k]) list.push(label);
+    }
+    return list;
+  }
+
   return (
     <div className="max-w-4xl mx-auto p-4">
       <div className="flex justify-center items-center">
@@ -518,22 +565,227 @@ export default function PricingWizard() {
           {step === 7 && (
             <div className="space-y-4">
               {!result ? (
-                <div className="text-center space-y-3">
-                  <div className="text-lg font-semibold">
-                    Ready to generate your quote
+                <div className="space-y-4">
+                  <div className="text-center space-y-2">
+                    <div className="text-lg font-semibold">
+                      Review your selections
+                    </div>
+                    <div className="text-sm text-muted-foreground">
+                      We’ll generate three options and a shareable link based on
+                      what you selected.
+                    </div>
                   </div>
-                  <div className="text-sm text-muted-foreground">
-                    We’ll produce three options and a shareable link.
+
+                  {/* Summary grid */}
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                    <Card className="rounded-2xl">
+                      <CardHeader className="pb-2">
+                        <CardTitle className="text-base">Property</CardTitle>
+                      </CardHeader>
+                      <CardContent className="text-sm space-y-2">
+                        <div className="flex items-center justify-between">
+                          <span className="text-muted-foreground">Units</span>
+                          <span className="font-medium">{values.units}</span>
+                        </div>
+                        <div className="flex items-center justify-between">
+                          <span className="text-muted-foreground">
+                            Buildings
+                          </span>
+                          <span className="font-medium">
+                            {values.buildings}
+                          </span>
+                        </div>
+                        <div className="flex items-center justify-between">
+                          <span className="text-muted-foreground">Type</span>
+                          <span className="font-medium">
+                            {titleCase(values.property_type)}
+                          </span>
+                        </div>
+                        <div className="flex items-center justify-between">
+                          <span className="text-muted-foreground">
+                            Year Built
+                          </span>
+                          <span className="font-medium">
+                            {values.year_built ? values.year_built : "—"}
+                          </span>
+                        </div>
+                      </CardContent>
+                    </Card>
+
+                    <Card className="rounded-2xl">
+                      <CardHeader className="pb-2">
+                        <CardTitle className="text-base">
+                          Recommended fit
+                        </CardTitle>
+                      </CardHeader>
+                      <CardContent className="text-sm space-y-2">
+                        <div className="flex items-center justify-between">
+                          <span className="text-muted-foreground">
+                            Hands-off level
+                          </span>
+                          <span className="font-medium">
+                            {titleCase(values.hands_off_level)}
+                          </span>
+                        </div>
+                        <div className="flex items-center justify-between">
+                          <span className="text-muted-foreground">
+                            Current method
+                          </span>
+                          <span className="font-medium">
+                            {titleCase(values.current_method)}
+                          </span>
+                        </div>
+                        <div className="mt-2 rounded-xl border p-3 bg-muted/20">
+                          <div className="text-xs text-muted-foreground">
+                            You’re generating a quote for a{" "}
+                            <span className="font-medium">
+                              {values.buildings}-building, {values.units}-unit{" "}
+                              {titleCase(values.property_type)}
+                            </span>
+                            .
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
+
+                    <Card className="rounded-2xl">
+                      <CardHeader className="pb-2">
+                        <CardTitle className="text-base">Billing</CardTitle>
+                      </CardHeader>
+                      <CardContent className="text-sm space-y-2">
+                        <div className="flex items-center justify-between">
+                          <span className="text-muted-foreground">Billing</span>
+                          <span className="font-medium">
+                            {values.billing?.annual
+                              ? "Annual (discounted)"
+                              : "Monthly"}
+                          </span>
+                        </div>
+                        <div className="text-xs text-muted-foreground">
+                          You’ll see three options (Good / Better / Best) with a
+                          setup fee and optional annual discount.
+                        </div>
+                      </CardContent>
+                    </Card>
                   </div>
-                  <Button
-                    className="rounded-xl"
-                    onClick={generate}
-                    disabled={submitting}
-                  >
-                    {submitting ? "Generating..." : "Generate Quote"}
-                  </Button>
+
+                  {/* Details */}
+                  <Card className="rounded-2xl">
+                    <CardHeader className="pb-2">
+                      <CardTitle className="text-base">
+                        What you selected
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
+                      <div className="space-y-2">
+                        <div className="font-medium">Systems</div>
+                        {summarizeSelectedSystems(values.systems).length ? (
+                          <ul className="list-disc pl-5 space-y-1">
+                            {summarizeSelectedSystems(values.systems).map(
+                              (s) => (
+                                <li key={s}>{s}</li>
+                              )
+                            )}
+                          </ul>
+                        ) : (
+                          <div className="text-muted-foreground">
+                            None selected
+                          </div>
+                        )}
+                      </div>
+
+                      <div className="space-y-2">
+                        <div className="font-medium">Compliance</div>
+                        {summarizeCompliance(values.compliance).length ? (
+                          <ul className="list-disc pl-5 space-y-1">
+                            {summarizeCompliance(values.compliance).map((s) => (
+                              <li key={s}>{s}</li>
+                            ))}
+                          </ul>
+                        ) : (
+                          <div className="text-muted-foreground">
+                            None selected
+                          </div>
+                        )}
+                      </div>
+
+                      <div className="space-y-2">
+                        <div className="font-medium">Add-ons</div>
+                        {summarizeAddOns(values.add_ons).length ? (
+                          <ul className="list-disc pl-5 space-y-1">
+                            {summarizeAddOns(values.add_ons).map((s) => (
+                              <li key={s}>{s}</li>
+                            ))}
+                          </ul>
+                        ) : (
+                          <div className="text-muted-foreground">
+                            None selected
+                          </div>
+                        )}
+
+                        {values.add_ons?.iot_monitoring && (
+                          <div className="mt-2 text-xs text-muted-foreground">
+                            Sensor count:{" "}
+                            <span className="font-medium">
+                              {values.iot?.sensor_count || 0}
+                            </span>
+                          </div>
+                        )}
+                      </div>
+                    </CardContent>
+                  </Card>
+
+                  {/* Lead (optional) */}
+                  <Card className="rounded-2xl">
+                    <CardHeader className="pb-2">
+                      <CardTitle className="text-base">
+                        Delivery (optional)
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent className="text-sm">
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+                        <div className="flex items-center justify-between rounded-xl border p-3">
+                          <span className="text-muted-foreground">Name</span>
+                          <span className="font-medium">
+                            {values.lead?.name || "—"}
+                          </span>
+                        </div>
+                        <div className="flex items-center justify-between rounded-xl border p-3">
+                          <span className="text-muted-foreground">Email</span>
+                          <span className="font-medium">
+                            {values.lead?.email || "—"}
+                          </span>
+                        </div>
+                        <div className="flex items-center justify-between rounded-xl border p-3">
+                          <span className="text-muted-foreground">Company</span>
+                          <span className="font-medium">
+                            {values.lead?.company || "—"}
+                          </span>
+                        </div>
+                        <div className="flex items-center justify-between rounded-xl border p-3">
+                          <span className="text-muted-foreground">Phone</span>
+                          <span className="font-medium">
+                            {values.lead?.phone || "—"}
+                          </span>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+
+                  <div className="flex justify-center pt-2">
+                    <Button
+                      className="rounded-xl px-6"
+                      onClick={generate}
+                      disabled={submitting}
+                    >
+                      {submitting
+                        ? "Generating..."
+                        : "Generate My Custom Proposal"}
+                    </Button>
+                  </div>
                 </div>
               ) : (
+                // keep your existing "result" UI exactly as-is
                 <div className="space-y-4">
                   <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
                     <div>
@@ -552,7 +804,7 @@ export default function PricingWizard() {
                     <div className="flex gap-2">
                       {result.share_url && (
                         <Button
-                          className="w-full mt-2 rounded-xl bg-[#7690b5] hover:bg-[#4c6486] text-white"
+                          className="rounded-xl"
                           variant="outline"
                           onClick={copyShareLink}
                         >
@@ -561,7 +813,7 @@ export default function PricingWizard() {
                       )}
                       {result.share_url && (
                         <Button
-                          className="w-full mt-2 rounded-xl bg-[#7690b5] hover:bg-[#4c6486] text-white"
+                          className="rounded-xl"
                           onClick={() =>
                             window.open(
                               result.share_url,
@@ -597,9 +849,13 @@ export default function PricingWizard() {
                             <div>Base: {money(o.base)}</div>
                             <div>Systems: {money(o.systemsAdder)}</div>
                             <div>Add-ons: {money(o.addOnsMonthly)}</div>
-                            <div className="text-muted-foreground">
-                              Tier multiplier: ×{o.tierMultiplier}
-                            </div>
+                            {o.componentMultipliers && (
+                              <div className="text-muted-foreground">
+                                Multipliers: base ×{o.componentMultipliers.base}
+                                , systems ×{o.componentMultipliers.systems},
+                                add-ons ×{o.componentMultipliers.addons}
+                              </div>
+                            )}
                           </div>
 
                           <div className="text-sm">
@@ -610,7 +866,7 @@ export default function PricingWizard() {
                           </div>
 
                           <Button
-                            className="w-full mt-2 rounded-xl bg-[#7690b5] hover:bg-[#4c6486] text-white"
+                            className="w-full rounded-xl"
                             onClick={() =>
                               window.open(
                                 "https://calendar.app.google/p3Bi6LnTTzgfpo8M7",
