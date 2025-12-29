@@ -20,17 +20,15 @@ function clamp(n, min, max) {
 
 function getOciMeta(score) {
   const s = clamp(Number(score || 0), 0, 100);
+
+  // Keep your original band labels, but flip colors to red->green progression.
   if (s <= 30)
-    return {
-      band: "light",
-      label: "Light operations",
-      color: "bg-emerald-500",
-    };
+    return { band: "light", label: "Light operations", color: "bg-red-500" };
   if (s <= 60)
     return {
       band: "standard",
       label: "Standard property",
-      color: "bg-green-600",
+      color: "bg-orange-500",
     };
   if (s <= 85)
     return {
@@ -41,7 +39,7 @@ function getOciMeta(score) {
   return {
     band: "enterprise",
     label: "Enterprise engineering",
-    color: "bg-red-500",
+    color: "bg-emerald-500",
   };
 }
 
