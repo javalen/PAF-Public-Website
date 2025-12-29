@@ -22,6 +22,7 @@ import {
  * Public wizard page for predictiveaf.com
  * - Uses shadcn/ui + tailwind
  * - Calls POST /api/pricing/quote to generate quote + share link
+ * - NOW: OCI Gauge + Fairness Explainer + Recommended glow
  */
 
 const pWHost = import.meta.env.VITE_PAF_PRICING_WIZARD;
@@ -97,6 +98,130 @@ function money(n) {
     style: "currency",
     currency: "USD",
   }).format(Number(n || 0));
+}
+
+function clamp(n, min, max) {
+  return Math.max(min, Math.min(max, n));
+}
+
+function getOciMeta(score) {
+  const s = clamp(Number(score || 0), 0, 100);
+  if (s <= 30)
+    return {
+      band: "light",
+      label: "Light operations",
+      color: "bg-emerald-500",
+    };
+  if (s <= 60)
+    return {
+      band: "standard",
+      label: "Standard property",
+      color: "bg-green-600",
+    };
+  if (s <= 85)
+    return {
+      band: "professional",
+      label: "Professional facilities",
+      color: "bg-amber-500",
+    };
+  return {
+    band: "enterprise",
+    label: "Enterprise engineering",
+    color: "bg-red-500",
+  };
+}
+
+function OCIGauge({ score }) {
+  const target = clamp(Number(score || 0), 0, 100);
+
+  // animated value that eases from 0 -> target
+  const [display, setDisplay] = React.useState(0);
+
+  React.useEffect(() => {
+    let raf = 0;
+    const start = performance.now();
+    const from = 0;
+    const to = target;
+
+    // duration in ms (tweak if you want)
+    const duration = 900;
+
+    const easeOutCubic = (t) => 1 - Math.pow(1 - t, 3);
+
+    const tick = (now) => {
+      const elapsed = now - start;
+      const p = clamp(elapsed / duration, 0, 1);
+      const eased = easeOutCubic(p);
+      const val = Math.round(from + (to - from) * eased);
+
+      setDisplay(val);
+
+      if (p < 1) raf = requestAnimationFrame(tick);
+    };
+
+    // reset then animate
+    setDisplay(0);
+    raf = requestAnimationFrame(tick);
+
+    return () => cancelAnimationFrame(raf);
+  }, [target]);
+
+  const meta = getOciMeta(display);
+
+  return (
+    <div className="w-full max-w-2xl mx-auto">
+      <div className="flex items-center justify-between mb-2">
+        <div className="text-sm font-semibold text-slate-700">
+          Operational Complexity Index (OCI)
+        </div>
+        <div className="text-xs font-semibold text-slate-500">
+          {meta.label} • {display}/100
+        </div>
+      </div>
+
+      <div className="relative h-4 rounded-full overflow-hidden bg-slate-200">
+        <div
+          className={`h-full ${meta.color} transition-[width] duration-150 ease-out`}
+          style={{ width: `${display}%` }}
+        />
+      </div>
+
+      <div className="flex justify-between text-xs mt-2 text-slate-400">
+        <span>Light</span>
+        <span>Standard</span>
+        <span>Professional</span>
+        <span>Enterprise</span>
+      </div>
+    </div>
+  );
+}
+
+function FairnessExplainer() {
+  return (
+    <div className="w-full max-w-2xl mx-auto bg-slate-50 border border-slate-200 rounded-2xl p-5">
+      <div className="font-semibold text-slate-900 mb-2">
+        Why this price is fair
+      </div>
+      <p className="text-sm text-slate-600 leading-relaxed">
+        PAF does <span className="font-semibold">not</span> charge per system,
+        per asset, or per user. Pricing scales by your{" "}
+        <span className="font-semibold">
+          Operational Complexity Index (OCI)
+        </span>{" "}
+        — a measure of real workload: inspections, compliance, documents,
+        vendors, reporting, and automation.
+      </p>
+
+      <div className="grid grid-cols-2 gap-2 text-sm mt-4 text-slate-700">
+        <div>✔ Unlimited systems</div>
+        <div>✔ Unlimited documents</div>
+        <div>✔ Unlimited users</div>
+        <div>✔ AI monitoring included</div>
+        <div>✔ Compliance automation</div>
+        <div>✔ Scales with workload</div>
+      </div>
+    </div>
+  );
 }
 
 async function createQuote(payload) {
@@ -238,6 +363,10 @@ export default function PricingWizard() {
     return list;
   }
 
+  const ociValue = result?.oci ?? result?.score ?? null;
+  const recommendedTier =
+    result?.recommended_tier || result?.recommendedTier || null;
+
   return (
     <div className="max-w-4xl mx-auto p-4">
       <div className="flex justify-center items-center">
@@ -253,8 +382,8 @@ export default function PricingWizard() {
           {/* STEP 1 */}
           {step === 1 && (
             <div className="space-y-4">
-              <div className="text-lg font-semibold">Who are you?</div>
-              <Label>Role</Label>
+              <div className="text-lg font-semibold">What is your role?</div>
+
               <Select
                 value={values.client_type}
                 onValueChange={(v) => form.setValue("client_type", v)}
@@ -283,7 +412,7 @@ export default function PricingWizard() {
 
               <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
                 <div>
-                  <Label>Independant Facilities</Label>
+                  <Label>Number of Facilities</Label>
                   <Input
                     className="rounded-xl"
                     type="number"
@@ -291,7 +420,7 @@ export default function PricingWizard() {
                   />
                 </div>
                 <div>
-                  <Label>Units</Label>
+                  <Label>Total number of Units</Label>
                   <Input
                     className="rounded-xl"
                     type="number"
@@ -299,7 +428,7 @@ export default function PricingWizard() {
                   />
                 </div>
                 <div>
-                  <Label>Year built (optional)</Label>
+                  <Label>Approximate Year built (optional)</Label>
                   <Input
                     className="rounded-xl"
                     type="number"
@@ -785,7 +914,6 @@ export default function PricingWizard() {
                   </div>
                 </div>
               ) : (
-                // keep your existing "result" UI exactly as-is
                 <div className="space-y-4">
                   <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
                     <div>
@@ -794,10 +922,15 @@ export default function PricingWizard() {
                       </div>
                       <div className="text-sm text-muted-foreground">
                         Recommended tier:{" "}
-                        <span className="font-medium">
-                          {result.recommended_tier}
-                        </span>{" "}
-                        • Score {result.score}/100
+                        <span className="font-medium">{recommendedTier}</span>{" "}
+                        {ociValue !== null && (
+                          <>
+                            • OCI{" "}
+                            <span className="font-medium">
+                              {Number(ociValue)}/100
+                            </span>
+                          </>
+                        )}
                       </div>
                     </div>
 
@@ -828,58 +961,103 @@ export default function PricingWizard() {
                     </div>
                   </div>
 
+                  {/* OCI funnel */}
+                  {ociValue !== null && (
+                    <Card className="rounded-2xl">
+                      <CardContent className="pt-6 space-y-4">
+                        <OCIGauge score={ociValue} />
+                        <FairnessExplainer />
+                      </CardContent>
+                    </Card>
+                  )}
+
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-                    {(result.options || []).map((o) => (
-                      <Card key={o.label} className="rounded-2xl">
-                        <CardHeader className="space-y-1">
-                          <CardTitle className="text-lg">{o.label}</CardTitle>
-                          <div className="text-sm text-muted-foreground">
-                            {o.tier}
-                          </div>
-                        </CardHeader>
+                    {(result.options || []).map((o) => {
+                      const isRecommended =
+                        String(o.tier || "").toLowerCase() ===
+                        String(recommendedTier || "").toLowerCase();
 
-                        <CardContent className="space-y-3">
-                          <div className="text-2xl font-semibold">
-                            {money(o.monthly)}/mo
-                          </div>
+                      return (
+                        <Card
+                          key={o.label}
+                          className={[
+                            "rounded-2xl relative overflow-hidden",
+                            isRecommended ? "border-slate-900 shadow-lg" : "",
+                          ].join(" ")}
+                        >
+                          {/* soft glow */}
+                          {isRecommended && (
+                            <div className="absolute -inset-6 bg-gradient-to-r from-slate-900/15 via-slate-900/5 to-slate-900/15 blur-2xl pointer-events-none" />
+                          )}
 
-                          <Separator />
-
-                          <div className="text-sm space-y-1">
-                            <div>Base: {money(o.base)}</div>
-                            <div>Systems: {money(o.systemsAdder)}</div>
-                            <div>Add-ons: {money(o.addOnsMonthly)}</div>
-                            {o.componentMultipliers && (
-                              <div className="text-muted-foreground">
-                                Multipliers: base ×{o.componentMultipliers.base}
-                                , systems ×{o.componentMultipliers.systems},
-                                add-ons ×{o.componentMultipliers.addons}
+                          <CardHeader className="space-y-1 relative">
+                            <div className="flex items-start justify-between gap-2">
+                              <div>
+                                <CardTitle className="text-lg">
+                                  {o.label}
+                                </CardTitle>
+                                <div className="text-sm text-muted-foreground">
+                                  {o.tier}
+                                </div>
                               </div>
-                            )}
-                          </div>
 
-                          <div className="text-sm">
-                            Setup:{" "}
-                            <span className="font-medium">
-                              {money(o.setupFee)}
-                            </span>
-                          </div>
+                              {isRecommended && (
+                                <span className="text-xs font-semibold px-2 py-1 rounded-full bg-slate-900 text-white animate-pulse">
+                                  Recommended
+                                </span>
+                              )}
+                            </div>
+                          </CardHeader>
 
-                          <Button
-                            className="w-full rounded-xl"
-                            onClick={() =>
-                              window.open(
-                                "https://calendar.app.google/p3Bi6LnTTzgfpo8M7",
-                                "_blank",
-                                "noopener,noreferrer"
-                              )
-                            }
-                          >
-                            Request Demo
-                          </Button>
-                        </CardContent>
-                      </Card>
-                    ))}
+                          <CardContent className="space-y-3 relative">
+                            <div className="text-2xl font-semibold">
+                              {money(o.monthly)}/mo
+                            </div>
+
+                            <Separator />
+
+                            <div className="text-sm space-y-1">
+                              <div>Base: {money(o.base)}</div>
+                              <div>Systems: {money(o.systemsAdder)}</div>
+                              <div>Add-ons: {money(o.addOnsMonthly)}</div>
+                              {o.componentMultipliers && (
+                                <div className="text-muted-foreground">
+                                  Multipliers: base ×
+                                  {o.componentMultipliers.base}, systems ×
+                                  {o.componentMultipliers.systems}, add-ons ×
+                                  {o.componentMultipliers.addons}
+                                </div>
+                              )}
+                            </div>
+
+                            <div className="text-sm">
+                              Setup:{" "}
+                              <span className="font-medium">
+                                {money(o.setupFee)}
+                              </span>
+                            </div>
+
+                            <Button
+                              className={[
+                                "w-full rounded-xl",
+                                isRecommended
+                                  ? "bg-slate-900 hover:bg-slate-800 text-white"
+                                  : "",
+                              ].join(" ")}
+                              onClick={() =>
+                                window.open(
+                                  "https://calendar.app.google/p3Bi6LnTTzgfpo8M7",
+                                  "_blank",
+                                  "noopener,noreferrer"
+                                )
+                              }
+                            >
+                              Request Demo
+                            </Button>
+                          </CardContent>
+                        </Card>
+                      );
+                    })}
                   </div>
 
                   {result.ai_summary && (
