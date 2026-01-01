@@ -106,6 +106,12 @@ export default function Register() {
         onboard_date: new Date().toISOString().slice(0, 19).replace("T", " "),
       });
 
+      // Update the client table on the primary db
+      await pb.collection("clients").update(mstClient.id, {
+        cr_name: newUser.name,
+        cr_email: newUser.email,
+      });
+
       //Update the client table with the user info
       const newClient = await clientDb.collection("client").update(client.id, {
         manager: newUser.id,
