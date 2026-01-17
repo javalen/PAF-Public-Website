@@ -10,6 +10,7 @@ import { TextField } from "../components/Fields";
 import { useEffect, useRef, useState } from "react";
 import GooglePlacesAutocomplete from "react-google-places-autocomplete";
 import InputMask from "react-input-mask";
+import useEmail from "../utils/email";
 
 const API_KEY = import.meta.env.VITE_PUBLIC_GOOGLE_PLACES_API;
 
@@ -32,6 +33,7 @@ const termsMsg = "You must agree the Term & Conditions";
 
 export default function Register() {
   const formRef = useRef(null);
+  const email = useEmail();
 
   const [error, setError] = useState("");
   const [isChecked, setChecked] = useState(false);
@@ -52,6 +54,8 @@ export default function Register() {
   const [failed, setFailed] = useState(false);
   const [failMessage, setFailMessage] = useState("");
 
+  const [mailHost, setMailHost] = useState();
+
   const onchange = (e) => {
     setAddressTouched(true);
     setAddress(e?.label || "Address");
@@ -69,6 +73,7 @@ export default function Register() {
     }
 
     const mh = regions.find((reg) => reg.value === host);
+    setMailHost(mh.mail_server);
     setSelectedRegionLabel(mh?.label || "");
     setClientHost(host);
     validateForm();
@@ -200,6 +205,15 @@ export default function Register() {
           "Registration failed.";
         throw new Error(msg);
       }
+
+      email.sendWelcomeEmail(
+        mailHost,
+        registration.compName.value,
+        registration.email.value,
+        "Welcome to PAF!",
+        registration.name.value,
+        clientHost,
+      );
 
       setSuccessObj({
         name: registration.name.value,
