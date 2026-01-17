@@ -1,14 +1,31 @@
+// Register.jsx (DROP-IN)
+// ✅ Uses PAF-Clients-Svr POST /register (server-side PB writes)
+// ✅ Removes PocketBase + masterpd + region admin creds from browser
+// ✅ Keeps region dropdown + address + terms flow
+// ✅ Frontend only validates + calls server
+
 import { AuthLayout } from "../components/AuthLayout";
 import { Button } from "../components/Button";
 import { TextField } from "../components/Fields";
-import PocketBase from "pocketbase";
-import { pbAppClient, masterpd } from "../api/pocketbase";
 import { useEffect, useRef, useState } from "react";
-import useEmail from "../utils/email";
 import GooglePlacesAutocomplete from "react-google-places-autocomplete";
 import InputMask from "react-input-mask";
 
 const API_KEY = import.meta.env.VITE_PUBLIC_GOOGLE_PLACES_API;
+
+// ✅ Your Clients Server
+const CLIENTS_SVR_URL = (
+  import.meta.env.VITE_CLIENTS_SVR_URL ||
+  import.meta.env.VITE_CLIENTS_SERVER_URL ||
+  ""
+).replace(/\/$/, "");
+
+// ✅ API key for requireApiKey middleware
+const CLIENTS_SVR_KEY =
+  import.meta.env.VITE_CLIENTS_SVR_KEY ||
+  import.meta.env.VITE_CLIENTS_API_KEY ||
+  import.meta.env.VITE_API_KEY ||
+  "";
 export const metadata = { title: "Register" };
 
 const termsMsg = "You must agree the Term & Conditions";
@@ -16,32 +33,24 @@ const termsMsg = "You must agree the Term & Conditions";
 export default function Register() {
   const formRef = useRef(null);
 
-  const [error, setError] = useState();
+  const [error, setError] = useState("");
   const [isChecked, setChecked] = useState(false);
   const [termsRead, setTermsRead] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  const email = useEmail();
   const [address, setAddress] = useState("Address");
-  const [clients, setClients] = useState([]);
   const [regions, setRegions] = useState([]);
-  const [mailHost, setMailHost] = useState();
-  const [clientDb, setClientDb] = useState();
-  const [selectedRegion, setSelectedRegion] = useState();
-  const [clientHost, setClientHost] = useState();
-  const [success, setSuccess] = useState(false);
-  const [successObj, setSuccessObj] = useState();
+  const [selectedRegionLabel, setSelectedRegionLabel] = useState("");
+  const [clientHost, setClientHost] = useState("");
   const [formValid, setFormValid] = useState(false);
-  const [aiServer, setAiServer] = useState();
   const [addressTouched, setAddressTouched] = useState(false);
   const [submitted, setSubmitted] = useState(false);
-  // ✅ NEW: failure state (separate from inline error)
+
+  const [success, setSuccess] = useState(false);
+  const [successObj, setSuccessObj] = useState();
+
   const [failed, setFailed] = useState(false);
   const [failMessage, setFailMessage] = useState("");
-  const mstrUser = import.meta.env.VITE_MSTR_USER;
-  const mstrPass = import.meta.env.VITE_MSTR_PASS;
-  const rgnUser = import.meta.env.VITE_RGN_USER;
-  const rgnPass = import.meta.env.VITE_RGN_PASS;
 
   const onchange = (e) => {
     setAddressTouched(true);
@@ -49,50 +58,20 @@ export default function Register() {
   };
 
   const setBackEndUrl = async (selectedOption) => {
-    if (selectedOption?.target?.value) {
-      const cdb = new PocketBase(selectedOption.target.value);
-      await cdb.admins.authWithPassword(rgnUser, rgnPass);
-      setClientDb(cdb);
+    setError("");
 
-      const mh = regions.find(
-        (reg) => reg.value === selectedOption.target.value
-      );
-      setAiServer(mh?.ai_server);
-      setMailHost(mh?.mail_server);
-      setSelectedRegion(mh?.label);
-      setClientHost(selectedOption.target.value);
-    } else {
-      setClientDb(undefined);
-      setAiServer(undefined);
-      setMailHost(undefined);
-      setSelectedRegion(undefined);
-      setClientHost(undefined);
+    const host = selectedOption?.target?.value || "";
+    if (!host) {
+      setSelectedRegionLabel("");
+      setClientHost("");
+      validateForm();
+      return;
     }
-  };
 
-  function tokenize(str) {
-    return str.split(",");
-  }
-
-  // ⚠️ NOTE: pb isn't defined in your snippet. Keep if you have it globally; otherwise swap it.
-  const checkIfExist = async (name) => {
-    try {
-      const record = await clientDb
-        .collection("client")
-        .getFirstListItem(`name="${name}"`);
-      return true;
-    } catch (error) {
-      return false;
-    }
-  };
-
-  const checkIfUserExist = async (email) => {
-    try {
-      await clientDb.collection("users").getFirstListItem(`email="${email}"`);
-      return true;
-    } catch (error) {
-      return false;
-    }
+    const mh = regions.find((reg) => reg.value === host);
+    setSelectedRegionLabel(mh?.label || "");
+    setClientHost(host);
+    validateForm();
   };
 
   const validateForm = () => {
@@ -106,9 +85,8 @@ export default function Register() {
 
     const requiredStateReady =
       address !== "Address" &&
-      !!clientDb &&
-      !!selectedRegion &&
-      !!mailHost &&
+      !!clientHost &&
+      !!selectedRegionLabel &&
       termsRead &&
       isChecked;
 
@@ -116,50 +94,37 @@ export default function Register() {
   };
 
   useEffect(() => {
-    const loadData = async () => {
+    const loadRegions = async () => {
       try {
-        await masterpd.admins.authWithPassword(mstrUser, mstrPass);
-        const records = await masterpd.collection("regions").getFullList();
-        setRegions(records);
-      } catch (error) {
-        console.log("Error getting regions", error);
-      }
+        if (!CLIENTS_SVR_URL) throw new Error("Missing VITE_CLIENTS_SVR_URL");
+        if (!CLIENTS_SVR_KEY) throw new Error("Missing VITE_CLIENTS_SVR_KEY");
 
-      try {
-        const names = await masterpd
-          .collection("clients")
-          .getFullList({ fields: "name" });
-        setClients(names);
-      } catch (error) {
-        console.error("Error fetching clients:", error);
+        const resp = await fetch(`${CLIENTS_SVR_URL}/regions`, {
+          headers: { "X-API-KEY": CLIENTS_SVR_KEY },
+        });
+
+        const data = await resp.json().catch(() => null);
+        if (!resp.ok || !data?.ok) {
+          throw new Error(data?.error || "Failed to load regions");
+        }
+
+        setRegions(Array.isArray(data.records) ? data.records : []);
+      } catch (e) {
+        console.error("Error getting regions:", e);
+        setError(
+          e?.message ||
+            "Unable to load regions right now. Please try again later.",
+        );
       }
     };
-    loadData();
+
+    loadRegions();
   }, []);
 
   useEffect(() => {
     validateForm();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [
-    address,
-    clientDb,
-    selectedRegion,
-    mailHost,
-    isChecked,
-    termsRead,
-    loading,
-  ]);
-
-  // ✅ safe delete helper
-  const safeDelete = async (pbInstance, collectionName, id) => {
-    if (!pbInstance || !collectionName || !id) return;
-    try {
-      await pbInstance.collection(collectionName).delete(id);
-    } catch (e) {
-      // don't throw during rollback
-      console.warn(`Rollback delete failed: ${collectionName}(${id})`, e);
-    }
-  };
+  }, [address, clientHost, selectedRegionLabel, isChecked, termsRead, loading]);
 
   const submit = async (e) => {
     e.preventDefault();
@@ -169,6 +134,7 @@ export default function Register() {
     setFailMessage("");
 
     validateForm();
+
     if (!termsRead || !isChecked) {
       setError(termsMsg);
       return;
@@ -177,118 +143,63 @@ export default function Register() {
       setError("Please complete all required fields.");
       return;
     }
+    if (address === "Address") {
+      setError("Please provide a valid address.");
+      return;
+    }
+    if (!clientHost) {
+      setError("Please select a region.");
+      return;
+    }
+    if (!CLIENTS_SVR_URL || !CLIENTS_SVR_KEY) {
+      setError(
+        "Registration service is not configured (missing VITE_CLIENTS_SVR_URL or VITE_CLIENTS_SVR_KEY).",
+      );
+      return;
+    }
 
     const registration = e.target.elements;
 
-    // ✅ Track created records for rollback
-    const created = {
-      clientId: null, // clientDb.client
-      mstClientId: null, // masterpd.clients
-      divisionId: null, // clientDb.divisions
-      userId: null, // clientDb.users
-      personelId: null, // clientDb.personel
-      planUpdated: false, // if you want to optionally attempt reversal (see note below)
-    };
+    const password = registration.password.value || "";
+    const passwordc = registration.passwordc.value || "";
+    if (password !== passwordc) {
+      setError("Passwords do not match");
+      return;
+    }
 
     setLoading(true);
     try {
-      if (await checkIfExist(registration.compName.value)) {
-        throw new Error("Company Name already exist");
-      }
-
-      if (await checkIfUserExist(registration.email.value)) {
-        throw new Error("Email already exist");
-      }
-
-      if (address === "Address") {
-        throw new Error("Please provide a valid address");
-      }
-
-      if (registration.password.value !== registration.passwordc.value) {
-        throw new Error("Passwords do not match");
-      }
-
-      const addressTokens = tokenize(address);
-
-      const client = await clientDb.collection("client").create({
-        name: registration.compName.value,
-        city: addressTokens[1],
-        state: addressTokens[2].trim().substring(0, 2),
-        address: address,
-        paid_modules: JSON.stringify({ modules: ["Documents", "Ticketing"] }),
-      });
-      created.clientId = client.id;
-
-      const mstClient = await masterpd.collection("clients").create({
-        name: registration.compName.value,
-        host: clientHost,
-        client_id: client.id,
-        mail_server: mailHost,
-        region: selectedRegion,
-        ai_server: aiServer,
-      });
-      created.mstClientId = mstClient.id;
-
-      const division = await clientDb.collection("divisions").create({
-        name: registration.division.value,
-        state: addressTokens[2].trim().substring(0, 2),
-        client_id: client.id,
-        city: addressTokens[1].trim(),
-      });
-      created.divisionId = division.id;
-
-      const newUser = await clientDb.collection("users").create({
-        email: registration.email.value,
-        password: registration.password.value,
-        passwordConfirm: registration.password.value,
+      const payload = {
+        regionHost: clientHost,
+        compName: registration.compName.value,
+        division: registration.division.value,
         name: registration.name.value,
+        email: registration.email.value,
         phone: registration.phone.value,
-        emailVisibility: true,
-        client_id: client.id,
-        onboard_date: new Date().toISOString().slice(0, 19).replace("T", " "),
-      });
-      created.userId = newUser.id;
+        address,
+        password,
+      };
 
-      // Update the client table on the primary db
-      await masterpd.collection("clients").update(mstClient.id, {
-        cr_name: newUser.name,
-        cr_email: newUser.email,
-      });
-
-      const newClient = await clientDb.collection("client").update(client.id, {
-        manager: newUser.id,
+      const resp = await fetch(`${CLIENTS_SVR_URL}/register`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "X-API-KEY": CLIENTS_SVR_KEY,
+        },
+        body: JSON.stringify(payload),
       });
 
-      const personel = await clientDb.collection("personel").create({
-        user_id: newUser.id,
-        full_name: newUser.name,
-        role: "cr",
-        user: newUser.id,
-        client: client.id,
-      });
-      created.personelId = personel.id;
+      const data = await resp.json().catch(() => null);
 
-      const plan = await masterpd
-        .collection("plans")
-        .getFirstListItem('name="Starter"');
-
-      let clietArr = plan.client_json.clients;
-      clietArr.push(newClient.id);
-
-      await masterpd.collection("plans").update(plan.id, {
-        client_json: JSON.stringify({ clients: clietArr }),
-      });
-      created.planUpdated = true;
-
-      // send welcome email (if this fails, rollback will trigger too)
-      await email.sendWelcomeEmail(
-        mailHost,
-        newClient.name,
-        newUser.email,
-        "Welcome to PAF!",
-        newUser.name,
-        clientHost
-      );
+      if (!resp.ok || !data?.ok) {
+        // prefer server-provided message; fall back to generic
+        const msg =
+          data?.error ||
+          data?.details?.message ||
+          data?.details ||
+          "Registration failed.";
+        throw new Error(msg);
+      }
 
       setSuccessObj({
         name: registration.name.value,
@@ -296,39 +207,23 @@ export default function Register() {
         clientName: registration.compName.value,
       });
       setSuccess(true);
-      setError(false);
     } catch (err) {
       console.error("Registration failed:", err);
-
-      // ✅ Rollback in reverse order
-      await safeDelete(clientDb, "personel", created.personelId);
-      await safeDelete(clientDb, "users", created.userId);
-      await safeDelete(clientDb, "divisions", created.divisionId);
-      await safeDelete(masterpd, "clients", created.mstClientId);
-      await safeDelete(clientDb, "client", created.clientId);
-
-      // (Optional) Plan rollback:
-      // Because you don't store the previous plan.client_json here,
-      // we can't safely undo it without refetching & removing newClient.id.
-      // If you want, I can add a safe plan rollback that:
-      // 1) re-fetches Starter
-      // 2) removes created.clientId (or newClient.id) from the array
-      // 3) updates plan back.
-
       setFailed(true);
       setFailMessage(
         err?.message ||
-          "Registration failed due to an unexpected error. No changes were saved."
+          "Registration failed due to an unexpected error. No changes were saved.",
       );
-
-      // keep inline error too if you want it above the form
       setError(err?.message || "Registration failed.");
     } finally {
       setLoading(false);
     }
   };
 
-  const goHome = () => navigation.navigate("/");
+  const goHome = () => {
+    // your app previously used navigation.navigate("/"); in a web app this is usually:
+    window.location.href = "/";
+  };
 
   const retry = () => {
     setFailed(false);
@@ -342,20 +237,21 @@ export default function Register() {
         <div className="min-h-screen flex flex-col items-center justify-center bg-gray-50 px-4">
           <div className="max-w-md w-full text-center bg-white shadow-md rounded-lg p-8">
             <h1 className="text-2xl font-semibold text-gray-800 mb-4">
-              🎉 Thank You{successObj.name ? `, ${successObj.name}` : ""}!
+              🎉 Thank You{successObj?.name ? `, ${successObj.name}` : ""}!
             </h1>
             <p className="text-gray-700 mb-2">
               Your registration for{" "}
-              <span className="font-medium">{successObj.clientName}</span> was
+              <span className="font-medium">{successObj?.clientName}</span> was
               successful.
             </p>
             <p className="text-gray-600 mb-6">
               A confirmation email has been sent to{" "}
-              <strong>{successObj.email}</strong>.
+              <strong>{successObj?.email}</strong>.
             </p>
             <p>
-              Check your spam folder if you don't see it within 30 minutes. If
-              you still can't find it, contact us at support@predictiveaf.com
+              Check your spam folder if you don&apos;t see it within 30 minutes.
+              If you still can&apos;t find it, contact us at
+              support@predictiveaf.com
             </p>
             <Button
               type="button"
@@ -529,6 +425,7 @@ export default function Register() {
                     href="https://pafadminpanel-east.onrender.com/terms"
                     className="underline text-blue-600 hover:text-blue-800 visited:text-purple-600"
                     target="t&c"
+                    rel="noreferrer"
                     onClick={() => {
                       setTermsRead(true);
                       setChecked(false);
