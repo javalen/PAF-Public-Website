@@ -1,13 +1,12 @@
 // Register.jsx (DROP-IN)
+// ✅ Persists all inputs across failure screen + retry
+// ✅ Controlled form (no more losing values)
 // ✅ Uses PAF-Clients-Svr POST /register (server-side PB writes)
-// ✅ Removes PocketBase + masterpd + region admin creds from browser
-// ✅ Keeps region dropdown + address + terms flow
-// ✅ Frontend only validates + calls server
 
 import { AuthLayout } from "../components/AuthLayout";
 import { Button } from "../components/Button";
 import { TextField } from "../components/Fields";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import GooglePlacesAutocomplete from "react-google-places-autocomplete";
 import InputMask from "react-input-mask";
 import useEmail from "../utils/email";
@@ -27,6 +26,7 @@ const CLIENTS_SVR_KEY =
   import.meta.env.VITE_CLIENTS_API_KEY ||
   import.meta.env.VITE_API_KEY ||
   "";
+
 export const metadata = { title: "Register" };
 
 const termsMsg = "You must agree the Term & Conditions";
@@ -36,16 +36,12 @@ export default function Register() {
   const email = useEmail();
 
   const [error, setError] = useState("");
-  const [isChecked, setChecked] = useState(false);
-  const [termsRead, setTermsRead] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  const [address, setAddress] = useState("Address");
   const [regions, setRegions] = useState([]);
-  const [selectedRegionLabel, setSelectedRegionLabel] = useState("");
-  const [clientHost, setClientHost] = useState("");
+  const [mailHost, setMailHost] = useState();
+
   const [formValid, setFormValid] = useState(false);
-  const [addressTouched, setAddressTouched] = useState(false);
   const [submitted, setSubmitted] = useState(false);
 
   const [success, setSuccess] = useState(false);
@@ -54,48 +50,65 @@ export default function Register() {
   const [failed, setFailed] = useState(false);
   const [failMessage, setFailMessage] = useState("");
 
-  const [mailHost, setMailHost] = useState();
+  // ✅ Draft holds ALL form values so they survive "failed" view and retry
+  const [draft, setDraft] = useState({
+    compName: "",
+    division: "",
+    name: "",
+    phone: "",
+    email: "",
+    password: "",
+    passwordc: "",
+    addressLabel: "Address",
+    // keep the actual GooglePlaces option so we can show it again
+    addressOption: null,
+    addressTouched: false,
 
-  const onchange = (e) => {
-    setAddressTouched(true);
-    setAddress(e?.label || "Address");
-  };
+    // region
+    clientHost: "",
+    selectedRegionLabel: "",
 
-  const setBackEndUrl = async (selectedOption) => {
-    setError("");
+    // terms
+    termsRead: false,
+    isChecked: false,
+  });
 
-    const host = selectedOption?.target?.value || "";
-    if (!host) {
-      setSelectedRegionLabel("");
-      setClientHost("");
-      validateForm();
-      return;
-    }
+  const updateDraft = (patch) =>
+    setDraft((d) => ({
+      ...d,
+      ...patch,
+    }));
 
-    const mh = regions.find((reg) => reg.value === host);
-    setMailHost(mh.mail_server);
-    setSelectedRegionLabel(mh?.label || "");
-    setClientHost(host);
-    validateForm();
-  };
+  const selectedRegion = useMemo(() => {
+    if (!draft.clientHost) return null;
+    return regions.find((r) => r.value === draft.clientHost) || null;
+  }, [regions, draft.clientHost]);
 
   const validateForm = () => {
-    const formEl = formRef.current;
-    if (!formEl) return;
-
-    const htmlValid = formEl.checkValidity();
-    const pw = formEl.elements?.password?.value || "";
-    const pwc = formEl.elements?.passwordc?.value || "";
+    const pw = draft.password || "";
+    const pwc = draft.passwordc || "";
     const passwordsMatch = pw.length > 0 && pw === pwc;
 
     const requiredStateReady =
-      address !== "Address" &&
-      !!clientHost &&
-      !!selectedRegionLabel &&
-      termsRead &&
-      isChecked;
+      draft.addressLabel !== "Address" &&
+      !!draft.clientHost &&
+      !!draft.selectedRegionLabel &&
+      draft.termsRead &&
+      draft.isChecked;
 
-    setFormValid(Boolean(htmlValid && passwordsMatch && requiredStateReady));
+    // Basic required inputs (mirrors your required attr usage)
+    const requiredInputsReady =
+      !!draft.compName?.trim() &&
+      !!draft.division?.trim() &&
+      !!draft.name?.trim() &&
+      !!draft.phone?.trim() &&
+      !!draft.email?.trim() &&
+      !!draft.password &&
+      !!draft.passwordc;
+
+    setFormValid(
+      Boolean(passwordsMatch && requiredStateReady && requiredInputsReady),
+    );
   };
 
   useEffect(() => {
@@ -109,9 +122,8 @@ export default function Register() {
         });
 
         const data = await resp.json().catch(() => null);
-        if (!resp.ok || !data?.ok) {
+        if (!resp.ok || !data?.ok)
           throw new Error(data?.error || "Failed to load regions");
-        }
 
         setRegions(Array.isArray(data.records) ? data.records : []);
       } catch (e) {
@@ -126,10 +138,52 @@ export default function Register() {
     loadRegions();
   }, []);
 
+  // keep mailHost and selectedRegionLabel in sync when clientHost/regions change
+  useEffect(() => {
+    if (!draft.clientHost) {
+      updateDraft({ selectedRegionLabel: "" });
+      setMailHost(undefined);
+      return;
+    }
+
+    const mh = regions.find((reg) => reg.value === draft.clientHost);
+    updateDraft({ selectedRegionLabel: mh?.label || "" });
+    setMailHost(mh?.mail_server);
+  }, [draft.clientHost, regions]); // eslint-disable-line react-hooks/exhaustive-deps
+
   useEffect(() => {
     validateForm();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [address, clientHost, selectedRegionLabel, isChecked, termsRead, loading]);
+  }, [
+    draft.compName,
+    draft.division,
+    draft.name,
+    draft.phone,
+    draft.email,
+    draft.password,
+    draft.passwordc,
+    draft.addressLabel,
+    draft.clientHost,
+    draft.selectedRegionLabel,
+    draft.isChecked,
+    draft.termsRead,
+    loading,
+  ]);
+
+  const onchangeAddress = (option) => {
+    updateDraft({
+      addressTouched: true,
+      addressOption: option || null,
+      addressLabel: option?.label || "Address",
+    });
+    setError("");
+  };
+
+  const onSelectRegion = (e) => {
+    setError("");
+    const host = e?.target?.value || "";
+    updateDraft({ clientHost: host });
+  };
 
   const submit = async (e) => {
     e.preventDefault();
@@ -140,19 +194,19 @@ export default function Register() {
 
     validateForm();
 
-    if (!termsRead || !isChecked) {
+    // ✅ snapshot current state (already in draft, but keeps intent explicit)
+    const snapshot = { ...draft };
+    setDraft(snapshot);
+
+    if (!snapshot.termsRead || !snapshot.isChecked) {
       setError(termsMsg);
       return;
     }
-    if (!formRef.current?.checkValidity()) {
-      setError("Please complete all required fields.");
-      return;
-    }
-    if (address === "Address") {
+    if (snapshot.addressLabel === "Address") {
       setError("Please provide a valid address.");
       return;
     }
-    if (!clientHost) {
+    if (!snapshot.clientHost) {
       setError("Please select a region.");
       return;
     }
@@ -163,11 +217,7 @@ export default function Register() {
       return;
     }
 
-    const registration = e.target.elements;
-
-    const password = registration.password.value || "";
-    const passwordc = registration.passwordc.value || "";
-    if (password !== passwordc) {
+    if ((snapshot.password || "") !== (snapshot.passwordc || "")) {
       setError("Passwords do not match");
       return;
     }
@@ -175,14 +225,14 @@ export default function Register() {
     setLoading(true);
     try {
       const payload = {
-        regionHost: clientHost,
-        compName: registration.compName.value,
-        division: registration.division.value,
-        name: registration.name.value,
-        email: registration.email.value,
-        phone: registration.phone.value,
-        address,
-        password,
+        regionHost: snapshot.clientHost,
+        compName: snapshot.compName,
+        division: snapshot.division,
+        name: snapshot.name,
+        email: snapshot.email,
+        phone: snapshot.phone,
+        address: snapshot.addressLabel,
+        password: snapshot.password,
       };
 
       const resp = await fetch(`${CLIENTS_SVR_URL}/register`, {
@@ -197,7 +247,6 @@ export default function Register() {
       const data = await resp.json().catch(() => null);
 
       if (!resp.ok || !data?.ok) {
-        // prefer server-provided message; fall back to generic
         const msg =
           data?.error ||
           data?.details?.message ||
@@ -208,17 +257,17 @@ export default function Register() {
 
       email.sendWelcomeEmail(
         mailHost,
-        registration.compName.value,
-        registration.email.value,
+        snapshot.compName,
+        snapshot.email,
         "Welcome to PAF!",
-        registration.name.value,
-        clientHost,
+        snapshot.name,
+        snapshot.clientHost,
       );
 
       setSuccessObj({
-        name: registration.name.value,
-        email: registration.email.value,
-        clientName: registration.compName.value,
+        name: snapshot.name,
+        email: snapshot.email,
+        clientName: snapshot.compName,
       });
       setSuccess(true);
     } catch (err) {
@@ -235,14 +284,15 @@ export default function Register() {
   };
 
   const goHome = () => {
-    // your app previously used navigation.navigate("/"); in a web app this is usually:
     window.location.href = "/";
   };
 
+  // ✅ Retry keeps draft values; only clears error UI
   const retry = () => {
     setFailed(false);
     setFailMessage("");
     setError("");
+    // keep submitted=true so required messages can still show if needed
   };
 
   return (
@@ -277,7 +327,7 @@ export default function Register() {
           </div>
         </div>
       ) : failed ? (
-        <div className="min-h-screen flex flex-col items-center justify-center bg-gray-50 px-4">
+        <div className="flex flex-col items-center justify-center bg-gray-50 px-4 ">
           <div className="max-w-md w-full bg-white shadow-md rounded-lg p-8">
             <h1 className="text-2xl font-semibold text-gray-800 mb-3">
               😞 Registration Failed
@@ -291,14 +341,14 @@ export default function Register() {
               <Button
                 type="button"
                 onClick={retry}
-                className="w-full bg-primary hover:bg-primary/80"
+                className="w-full bg-[#4c6c99] hover:bg-[#5391e9]/80 rounded-md"
               >
                 Try Again
               </Button>
               <Button
                 type="button"
                 onClick={goHome}
-                className="w-full bg-slate-200 hover:bg-slate-300"
+                className="w-full bg-[#4c6c99] hover:bg-[#5391e9]/80 rounded-md"
               >
                 Return Home
               </Button>
@@ -306,12 +356,7 @@ export default function Register() {
           </div>
         </div>
       ) : (
-        <form
-          ref={formRef}
-          onSubmit={submit}
-          onInput={validateForm}
-          onChange={validateForm}
-        >
+        <form ref={formRef} onSubmit={submit}>
           {error && (
             <div className="text-lg text-red-500 text-center mb-5">{error}</div>
           )}
@@ -322,12 +367,15 @@ export default function Register() {
               name="compName"
               type="text"
               required
+              value={draft.compName}
+              onChange={(e) => updateDraft({ compName: e.target.value })}
             />
 
             <div className="mt-1">
               <label className="space-y-6 font-semibold">Region</label>
               <select
-                onChange={setBackEndUrl}
+                onChange={onSelectRegion}
+                value={draft.clientHost}
                 required
                 className="mt-2 block w-full appearance-none rounded-lg border border-gray-200 bg-white py-[calc(theme(spacing.2)-1px)] px-[calc(theme(spacing.3)-1px)] text-gray-900 placeholder:text-gray-400 focus:border-cyan-500 focus:outline-none focus:ring-cyan-500 sm:text-sm"
               >
@@ -347,8 +395,9 @@ export default function Register() {
                 apiKey={API_KEY}
                 selectProps={{
                   placeholder: "Address",
-                  onChange: onchange,
-                  onFocus: () => setAddressTouched(true),
+                  value: draft.addressOption, // ✅ restores selected address
+                  onChange: onchangeAddress,
+                  onFocus: () => updateDraft({ addressTouched: true }),
                   styles: {
                     control: (provided) => ({
                       ...provided,
@@ -359,9 +408,10 @@ export default function Register() {
                   },
                 }}
               />
-              {(submitted || addressTouched) && address === "Address" && (
-                <p className="text-red-500">Address is required</p>
-              )}
+              {(submitted || draft.addressTouched) &&
+                draft.addressLabel === "Address" && (
+                  <p className="text-red-500">Address is required</p>
+                )}
             </div>
 
             <TextField
@@ -369,8 +419,16 @@ export default function Register() {
               name="division"
               type="text"
               required
+              value={draft.division}
+              onChange={(e) => updateDraft({ division: e.target.value })}
             />
-            <TextField label="Full Name" name="name" required />
+            <TextField
+              label="Full Name"
+              name="name"
+              required
+              value={draft.name}
+              onChange={(e) => updateDraft({ name: e.target.value })}
+            />
 
             <div>
               <label
@@ -383,6 +441,8 @@ export default function Register() {
                 mask="(999) 999-9999"
                 maskChar=" "
                 alwaysShowMask={false}
+                value={draft.phone}
+                onChange={(e) => updateDraft({ phone: e.target.value })}
               >
                 {(inputProps) => (
                   <input
@@ -404,6 +464,8 @@ export default function Register() {
               type="email"
               autoComplete="email"
               required
+              value={draft.email}
+              onChange={(e) => updateDraft({ email: e.target.value })}
             />
             <TextField
               label="Password"
@@ -411,12 +473,16 @@ export default function Register() {
               type="password"
               autoComplete="new-password"
               required
+              value={draft.password}
+              onChange={(e) => updateDraft({ password: e.target.value })}
             />
             <TextField
               label="Confirm Password"
               name="passwordc"
               type="password"
               required
+              value={draft.passwordc}
+              onChange={(e) => updateDraft({ passwordc: e.target.value })}
             />
 
             <div className="flex items-center justify-between">
@@ -426,9 +492,9 @@ export default function Register() {
                   name="terms"
                   type="checkbox"
                   className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600"
-                  disabled={!termsRead}
-                  checked={isChecked}
-                  onChange={(e) => setChecked(e.target.checked)}
+                  disabled={!draft.termsRead}
+                  checked={draft.isChecked}
+                  onChange={(e) => updateDraft({ isChecked: e.target.checked })}
                 />
                 <label
                   htmlFor="terms"
@@ -441,8 +507,7 @@ export default function Register() {
                     target="t&c"
                     rel="noreferrer"
                     onClick={() => {
-                      setTermsRead(true);
-                      setChecked(false);
+                      updateDraft({ termsRead: true, isChecked: false });
                       setError("");
                     }}
                   >
