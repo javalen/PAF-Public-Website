@@ -2,6 +2,7 @@
 // ✅ Persists all inputs across failure screen + retry
 // ✅ Controlled form (no more losing values)
 // ✅ Uses PAF-Clients-Svr POST /register (server-side PB writes)
+// ✅ NEW: portal shortname (slug) saved to master + region client tables
 
 import { AuthLayout } from "../components/AuthLayout";
 import { Button } from "../components/Button";
@@ -13,14 +14,12 @@ import useEmail from "../utils/email";
 
 const API_KEY = import.meta.env.VITE_PUBLIC_GOOGLE_PLACES_API;
 
-// ✅ Your Clients Server
 const CLIENTS_SVR_URL = (
   import.meta.env.VITE_CLIENTS_SVR_URL ||
   import.meta.env.VITE_CLIENTS_SERVER_URL ||
   ""
 ).replace(/\/$/, "");
 
-// ✅ API key for requireApiKey middleware
 const CLIENTS_SVR_KEY =
   import.meta.env.VITE_CLIENTS_SVR_KEY ||
   import.meta.env.VITE_CLIENTS_API_KEY ||
@@ -30,6 +29,18 @@ const CLIENTS_SVR_KEY =
 export const metadata = { title: "Register" };
 
 const termsMsg = "You must agree the Term & Conditions";
+
+function normalizeShortname(s = "") {
+  return String(s || "")
+    .trim()
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "");
+}
+
+function isValidShortname(s) {
+  const sn = normalizeShortname(s);
+  return /^[a-z0-9]{3,32}$/.test(sn);
+}
 
 export default function Register() {
   const formRef = useRef(null);
@@ -50,25 +61,25 @@ export default function Register() {
   const [failed, setFailed] = useState(false);
   const [failMessage, setFailMessage] = useState("");
 
-  // ✅ Draft holds ALL form values so they survive "failed" view and retry
   const [draft, setDraft] = useState({
     compName: "",
+    shortname: "",
+    shortnameTouched: false,
+
     division: "",
     name: "",
     phone: "",
     email: "",
     password: "",
     passwordc: "",
+
     addressLabel: "Address",
-    // keep the actual GooglePlaces option so we can show it again
     addressOption: null,
     addressTouched: false,
 
-    // region
     clientHost: "",
     selectedRegionLabel: "",
 
-    // terms
     termsRead: false,
     isChecked: false,
   });
@@ -96,9 +107,10 @@ export default function Register() {
       draft.termsRead &&
       draft.isChecked;
 
-    // Basic required inputs (mirrors your required attr usage)
     const requiredInputsReady =
       !!draft.compName?.trim() &&
+      !!draft.shortname?.trim() &&
+      isValidShortname(draft.shortname) &&
       !!draft.division?.trim() &&
       !!draft.name?.trim() &&
       !!draft.phone?.trim() &&
@@ -138,7 +150,6 @@ export default function Register() {
     loadRegions();
   }, []);
 
-  // keep mailHost and selectedRegionLabel in sync when clientHost/regions change
   useEffect(() => {
     if (!draft.clientHost) {
       updateDraft({ selectedRegionLabel: "" });
@@ -151,11 +162,20 @@ export default function Register() {
     setMailHost(mh?.mail_server);
   }, [draft.clientHost, regions]); // eslint-disable-line react-hooks/exhaustive-deps
 
+  // ✅ auto-suggest shortname from compName until user edits it
+  useEffect(() => {
+    if (draft.shortnameTouched) return;
+    const suggested = normalizeShortname(draft.compName);
+    updateDraft({ shortname: suggested });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [draft.compName]);
+
   useEffect(() => {
     validateForm();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     draft.compName,
+    draft.shortname,
     draft.division,
     draft.name,
     draft.phone,
@@ -194,7 +214,6 @@ export default function Register() {
 
     validateForm();
 
-    // ✅ snapshot current state (already in draft, but keeps intent explicit)
     const snapshot = { ...draft };
     setDraft(snapshot);
 
@@ -216,7 +235,10 @@ export default function Register() {
       );
       return;
     }
-
+    if (!isValidShortname(snapshot.shortname)) {
+      setError("Portal shortname must be 3–32 lowercase letters/numbers only.");
+      return;
+    }
     if ((snapshot.password || "") !== (snapshot.passwordc || "")) {
       setError("Passwords do not match");
       return;
@@ -227,6 +249,7 @@ export default function Register() {
       const payload = {
         regionHost: snapshot.clientHost,
         compName: snapshot.compName,
+        shortname: normalizeShortname(snapshot.shortname),
         division: snapshot.division,
         name: snapshot.name,
         email: snapshot.email,
@@ -251,6 +274,7 @@ export default function Register() {
           data?.error ||
           data?.details?.message ||
           data?.details ||
+          data?.message ||
           "Registration failed.";
         throw new Error(msg);
       }
@@ -268,6 +292,7 @@ export default function Register() {
         name: snapshot.name,
         email: snapshot.email,
         clientName: snapshot.compName,
+        portalUrl: `${window.location.origin}/p/${normalizeShortname(snapshot.shortname)}`,
       });
       setSuccess(true);
     } catch (err) {
@@ -287,13 +312,17 @@ export default function Register() {
     window.location.href = "/";
   };
 
-  // ✅ Retry keeps draft values; only clears error UI
   const retry = () => {
     setFailed(false);
     setFailMessage("");
     setError("");
-    // keep submitted=true so required messages can still show if needed
   };
+
+  const portalPreview = useMemo(() => {
+    const sn = normalizeShortname(draft.shortname);
+    if (!sn) return "";
+    return `${window.location.origin}/p/${sn}`;
+  }, [draft.shortname]);
 
   return (
     <AuthLayout title="Register a new account">
@@ -308,10 +337,23 @@ export default function Register() {
               <span className="font-medium">{successObj?.clientName}</span> was
               successful.
             </p>
-            <p className="text-gray-600 mb-6">
+            <p className="text-gray-600 mb-4">
               A confirmation email has been sent to{" "}
               <strong>{successObj?.email}</strong>.
             </p>
+
+            {successObj?.portalUrl ? (
+              <p className="text-gray-700 mb-6">
+                Portal URL:{" "}
+                <a
+                  className="underline text-blue-600"
+                  href={successObj.portalUrl}
+                >
+                  {successObj.portalUrl}
+                </a>
+              </p>
+            ) : null}
+
             <p>
               Check your spam folder if you don&apos;t see it within 30 minutes.
               If you still can&apos;t find it, contact us at
@@ -371,6 +413,38 @@ export default function Register() {
               onChange={(e) => updateDraft({ compName: e.target.value })}
             />
 
+            <TextField
+              label="Portal Shortname (URL)"
+              name="shortname"
+              type="text"
+              required
+              value={draft.shortname}
+              onChange={(e) =>
+                updateDraft({
+                  shortnameTouched: true,
+                  shortname: e.target.value,
+                })
+              }
+            />
+            <div className="text-sm text-gray-600 -mt-4">
+              Use 3–32 lowercase letters/numbers only. Example:{" "}
+              <b>clientsouth</b>
+              {portalPreview ? (
+                <>
+                  <br />
+                  Your portal URL will be:{" "}
+                  <span className="font-semibold">{portalPreview}</span>
+                </>
+              ) : null}
+              {(submitted || draft.shortnameTouched) &&
+              draft.shortname &&
+              !isValidShortname(draft.shortname) ? (
+                <div className="text-red-500 mt-1">
+                  Invalid shortname format.
+                </div>
+              ) : null}
+            </div>
+
             <div className="mt-1">
               <label className="space-y-6 font-semibold">Region</label>
               <select
@@ -395,7 +469,7 @@ export default function Register() {
                 apiKey={API_KEY}
                 selectProps={{
                   placeholder: "Address",
-                  value: draft.addressOption, // ✅ restores selected address
+                  value: draft.addressOption,
                   onChange: onchangeAddress,
                   onFocus: () => updateDraft({ addressTouched: true }),
                   styles: {
@@ -422,6 +496,7 @@ export default function Register() {
               value={draft.division}
               onChange={(e) => updateDraft({ division: e.target.value })}
             />
+
             <TextField
               label="Full Name"
               name="name"
@@ -467,6 +542,7 @@ export default function Register() {
               value={draft.email}
               onChange={(e) => updateDraft({ email: e.target.value })}
             />
+
             <TextField
               label="Password"
               name="password"
@@ -476,6 +552,7 @@ export default function Register() {
               value={draft.password}
               onChange={(e) => updateDraft({ password: e.target.value })}
             />
+
             <TextField
               label="Confirm Password"
               name="passwordc"
