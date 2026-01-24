@@ -9,6 +9,7 @@ import { Header } from "../components/Header";
 import { Footer } from "../components/Footer";
 import About from "../components/About";
 import "../styles/tailwind.css";
+import { Mission } from "../components/Mission";
 
 export default function Home() {
   return (
@@ -23,6 +24,8 @@ export default function Home() {
       <CallToAction />
       <Faqs />
       <About />
+      <Mission />
+
       <Footer />
     </>
   );
