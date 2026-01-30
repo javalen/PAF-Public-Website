@@ -350,10 +350,7 @@ export function Header() {
                               Download Overview
                             </MobileNavLink>
 
-                            <MobileNavLink
-                              href="/news-letter/html/index.html"
-                              onClick={close}
-                            >
+                            <MobileNavLink href="/news-letter" onClick={close}>
                               Newsletters
                             </MobileNavLink>
                           </div>
