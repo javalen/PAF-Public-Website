@@ -12,6 +12,7 @@ import Privacy from "./pages/Privacy";
 // NEW: Pricing Wizard routes (public)
 import PricingWizard from "./components/pricing-wizard/PricingWizard";
 import PublicQuotePage from "./components/pricing-wizard/PublicQuotePage";
+import NewsletterViewer from "./pages/NewsletterViewer";
 
 function App() {
   const [user, setUser] = useState();
@@ -27,6 +28,8 @@ function App() {
     // NEW: Public pricing wizard + shareable quote page
     { path: "/pricing", element: <PricingWizard /> },
     { path: "/pricing/quote/:id", element: <PublicQuotePage /> },
+    { path: "/news-letter", element: <NewsletterViewer /> },
+    { path: "/news-letter/view/:slug", element: <NewsletterViewer /> },
   ]);
 
   return (
