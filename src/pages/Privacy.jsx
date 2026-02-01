@@ -2,21 +2,20 @@ export default function Privacy() {
   return (
     <div className="p-28">
       <div className="font-bold text-center">
-        PredictiveAF, LLC Privacy Statement
+        Predictaf, LLC Privacy Statement
       </div>
       <div className="mt-5">
-        PredictiveAF, LLC (“PredictiveAF,” “we,” “our,” or “us”) values the
-        privacy of individuals who use the PredictiveAF website, mobile
-        application, software, and related services (collectively, the
-        “Application”). This Privacy Policy (the “Policy”) describes the
-        information that we gather from visitors, users, and others who access
-        or use the Application (“Users,” “you,” or “your”), how we use and
-        disclose such information, and the steps we take to protect such
-        information. By using the Application, you consent to the privacy
-        practices described in this Policy. This Policy is incorporated into and
-        is subject to the PredictiveAF Terms of Use, as updated from
-        time-to-time. Capitalized terms used but not defined in this Policy have
-        the meaning given to them in the Terms of Use.
+        Predictaf, LLC (Predictaf,” “we,” “our,” or “us”) values the privacy of
+        individuals who use the Predictaf website, mobile application, software,
+        and related services (collectively, the “Application”). This Privacy
+        Policy (the “Policy”) describes the information that we gather from
+        visitors, users, and others who access or use the Application (“Users,”
+        “you,” or “your”), how we use and disclose such information, and the
+        steps we take to protect such information. By using the Application, you
+        consent to the privacy practices described in this Policy. This Policy
+        is incorporated into and is subject to the Predictaf Terms of Use, as
+        updated from time-to-time. Capitalized terms used but not defined in
+        this Policy have the meaning given to them in the Terms of Use.
       </div>
       <div className="mt-3">
         I. This Privacy Policy is provided to help you understand
@@ -26,7 +25,7 @@ export default function Privacy() {
         </div>
         <div className="ml-5 mt-5">
           b. the applicable rights you have regarding your Personal Information;
-          and how PredictiveAF protects your Personal Information.
+          and how Predictaf protects your Personal Information.
         </div>
         <div className="ml-5 mt-5">
           c. Personal Information does not include, and this Privacy Policy does
@@ -120,17 +119,17 @@ export default function Privacy() {
             devices to collect information when you use the Application.
           </div>
           <div className="ml-5 mt-5">
-            iii. PredictiveAF does not control any cookies or other data
-            collection tools that may be placed on the Application by a third
-            party, and this Policy does not cover the use of such cookies and/or
-            other data collection tools by any third party. We encourage you to
-            read the privacy policies of such third parties to find out more
-            about the information that may be collected by them and the choices
-            you have regarding the collection, use, and sharing of such
-            information. You may be able to “opt out” of the collection and use
-            of information through cookies or other tracking technology by
-            actively managing the settings on your browser or mobile device. We
-            do not honor “Do Not Track” signals from your browser.
+            iii. Predictaf does not control any cookies or other data collection
+            tools that may be placed on the Application by a third party, and
+            this Policy does not cover the use of such cookies and/or other data
+            collection tools by any third party. We encourage you to read the
+            privacy policies of such third parties to find out more about the
+            information that may be collected by them and the choices you have
+            regarding the collection, use, and sharing of such information. You
+            may be able to “opt out” of the collection and use of information
+            through cookies or other tracking technology by actively managing
+            the settings on your browser or mobile device. We do not honor “Do
+            Not Track” signals from your browser.
           </div>
         </div>
       </div>
@@ -201,9 +200,9 @@ export default function Privacy() {
             <div className="mt-5 ml-5">
               4. if we believe in good faith that doing so is reasonably
               necessary or appropriate to protect the rights, property, or
-              safety of PredictiveAF, our users, our employees, copyright
-              owners, third parties, or the public, including without limitation
-              to protect PredictiveAF or our users from fraudulent, abusive,
+              safety of Predictaf, our users, our employees, copyright owners,
+              third parties, or the public, including without limitation to
+              protect Predictaf or our users from fraudulent, abusive,
               inappropriate, or unlawful use of the Application;
             </div>
             <div className="mt-5 ml-5">
@@ -214,7 +213,7 @@ export default function Privacy() {
               6. in connection with, or during negotiations of, any merger, sale
               of company assets, financing, or acquisition, or in any other
               situation where information may be disclosed or transferred as one
-              of the business assets of PredictiveAF;
+              of the business assets of Predictaf;
             </div>
             <div className="mt-5 ml-5">
               7. Nothing herein restricts the sharing of aggregated or

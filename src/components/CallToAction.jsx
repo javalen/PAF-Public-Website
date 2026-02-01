@@ -18,7 +18,7 @@ export function CallToAction() {
           </h2>
           <p className="mt-4 text-lg text-gray-300">
             Sign up in just 30 seconds. Download the app, create a client
-            account, and start enjoying the benefits of PredictiveAF almost
+            account, and start enjoying the benefits of Predictaf almost
             immediately.
           </p>
           <div className="mt-8 flex justify-center">

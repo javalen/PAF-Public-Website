@@ -96,12 +96,12 @@ export function Hero() {
         <div className="lg:grid lg:grid-cols-12 lg:gap-x-8 lg:gap-y-20">
           <div className="relative z-10 mx-auto max-w-2xl lg:col-span-7 lg:max-w-none lg:pt-6 xl:col-span-6">
             <h1 className="text-4xl font-medium tracking-tight text-gray-900">
-              How can PredictiveAF help you?
+              How can Predictaf help you?
             </h1>
             <p className="mt-6 text-lg text-gray-600">
-              PredictiveAF is a comprehensive mobile application that enables
-              users to monitor, manage, and analyze data from mechanical systems
-              in commercial and residential buildings. The app aims to enhance
+              Predictaf is a comprehensive mobile application that enables users
+              to monitor, manage, and analyze data from mechanical systems in
+              commercial and residential buildings. The app aims to enhance
               operational efficiency, predictive maintenance, and overall system
               performance through real-time data insights and analytics.
             </p>
@@ -131,7 +131,7 @@ export function Hero() {
           </div>
           <div className="relative -mt-4 lg:col-span-7 lg:mt-0 xl:col-span-6">
             <p className="text-center text-sm font-semibold text-gray-900  mb-8">
-              Who can benefit from PAF?
+              Who can benefit from Predictaf?
             </p>
           </div>
           <div className="relative -mt-4 lg:col-span-7 lg:mt-0 xl:col-span-6 grid grid-cols-1 sm:grid-cols-2 gap-y-10 gap-x-6">

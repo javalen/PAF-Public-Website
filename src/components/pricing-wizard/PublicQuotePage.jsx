@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { useParams } from "react-router-dom";
-import Logo from "../../assets/paf.png";
+import Logo from "../../assets/predictafP.png";
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 import { Button } from "../ui/button";
 import { Separator } from "../ui/separator";
@@ -157,7 +157,7 @@ export default function PublicQuotePage() {
           json = JSON.parse(text);
         } catch {
           throw new Error(
-            `Expected JSON but got HTML/text. Check routing/proxy. URL: ${url}`
+            `Expected JSON but got HTML/text. Check routing/proxy. URL: ${url}`,
           );
         }
 
@@ -293,7 +293,7 @@ export default function PublicQuotePage() {
                           window.open(
                             "https://calendar.app.google/p3Bi6LnTTzgfpo8M7",
                             "_blank",
-                            "noopener,noreferrer"
+                            "noopener,noreferrer",
                           )
                         }
                       >

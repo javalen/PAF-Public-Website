@@ -2,7 +2,7 @@ import React, { useMemo, useState } from "react";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import Logo from "../../assets/paf.png";
+import Logo from "../../assets/predictafP.png";
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 import { Button } from "../ui/button";
 import { Checkbox } from "../ui/checkbox";
@@ -47,7 +47,7 @@ const Schema = z.object({
   property_type: z.enum(["condo", "apartments", "mixed_use", "commercial"]),
   year_built: z.preprocess(
     (v) => (v === "" || v === null || typeof v === "undefined" ? undefined : v),
-    z.coerce.number().min(1800).max(2100).optional()
+    z.coerce.number().min(1800).max(2100).optional(),
   ),
 
   systems: z.record(
@@ -55,7 +55,7 @@ const Schema = z.object({
     z.object({
       enabled: z.boolean(),
       count_bucket: z.enum(["1-2", "3-5", "6+"]).optional(),
-    })
+    }),
   ),
 
   compliance: z.object({
@@ -372,7 +372,7 @@ export default function PricingWizard() {
       </div>
       <Card className="rounded-2xl">
         <CardHeader className="space-y-2">
-          <CardTitle className="text-2xl">PAF Pricing Wizard</CardTitle>
+          <CardTitle className="text-2xl">Predictaf Pricing Wizard</CardTitle>
           <div className="text-sm text-muted-foreground">Step {step} of 7</div>
         </CardHeader>
 
@@ -476,7 +476,7 @@ export default function PricingWizard() {
                           onCheckedChange={(c) =>
                             form.setValue(
                               `systems.${s.key}.enabled`,
-                              Boolean(c)
+                              Boolean(c),
                             )
                           }
                         />
@@ -811,7 +811,7 @@ export default function PricingWizard() {
                             {summarizeSelectedSystems(values.systems).map(
                               (s) => (
                                 <li key={s}>{s}</li>
-                              )
+                              ),
                             )}
                           </ul>
                         ) : (
@@ -949,7 +949,7 @@ export default function PricingWizard() {
                             window.open(
                               result.share_url,
                               "_blank",
-                              "noopener,noreferrer"
+                              "noopener,noreferrer",
                             )
                           }
                         >
@@ -1046,7 +1046,7 @@ export default function PricingWizard() {
                                 window.open(
                                   "https://calendar.app.google/p3Bi6LnTTzgfpo8M7",
                                   "_blank",
-                                  "noopener,noreferrer"
+                                  "noopener,noreferrer",
                                 )
                               }
                             >

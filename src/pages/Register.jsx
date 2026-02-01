@@ -283,7 +283,7 @@ export default function Register() {
         mailHost,
         snapshot.compName,
         snapshot.email,
-        "Welcome to PAF!",
+        "Welcome to Predictaf!",
         snapshot.name,
         snapshot.clientHost,
       );

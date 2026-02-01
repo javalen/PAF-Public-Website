@@ -4,7 +4,7 @@ import { TextField } from "./Fields";
 import { Logomark } from "./Logo";
 import { NavLinks } from "./NavLinks";
 import qrCode from "../images/qr-code.svg";
-import Logo from "../assets/paf.png";
+import Logo from "../assets/predictafP.png";
 import PlayStoreQR from "../assets/play-store-qr.png";
 import iOSStoreQR from "../assets/ios-qr.png";
 import PopUpDialog from "./PopUpDailog";
@@ -52,7 +52,7 @@ export function Footer() {
             <div className="flex items-center text-gray-900">
               <img src={Logo} className="w-24" alt="" />
               <div className="ml-4">
-                <p className="text-base font-semibold">PredictiveAF</p>
+                <p className="text-base font-semibold">Predictaf</p>
                 <p className="mt-1 text-sm">Empowering Your Success</p>
               </div>
             </div>

@@ -10,7 +10,7 @@ const links = [
   { label: "About", href: "/#about" },
   { label: "Quick Start", href: "/quickstart" },
   {
-    label: "PAF on YouTube",
+    label: "Predictaf on YouTube",
     href: "https://www.youtube.com/@PredictiveAF",
     external: true,
   },

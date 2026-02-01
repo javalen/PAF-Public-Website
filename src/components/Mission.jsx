@@ -17,10 +17,10 @@ export function Mission() {
           </h1>
 
           <p className="text-lg sm:text-xl text-gray-700 leading-relaxed font-medium mb-4">
-            PredictiveAF (PAF) empowers HOA, COA, and POA communities to protect
-            property values, reduce risk, and prevent costly surprises by
-            transforming maintenance, compliance, and capital planning into a
-            proactive, transparent, and intelligent system.
+            Predictaf empowers HOA, COA, and POA communities to protect property
+            values, reduce risk, and prevent costly surprises by transforming
+            maintenance, compliance, and capital planning into a proactive,
+            transparent, and intelligent system.
           </p>
 
           <p className="text-base sm:text-lg text-gray-600 leading-relaxed">

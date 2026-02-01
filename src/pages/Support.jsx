@@ -11,12 +11,12 @@ const faqs = [
     question:
       "I've created a client and a facility. I see exceptions for items I don't use. How can I get rid of them?",
     answer:
-      "An admin user can specifiy which exceptions should be tracked in the PAF web-based dashboard.",
+      "An admin user can specifiy which exceptions should be tracked in the Predictaf web-based dashboard.",
   },
   {
     question: "I am on the free tier, how can I upgrade my plan?",
     answer:
-      "An admin user can specifiy which plan best works for your organization in the PAF web-based dashboard.",
+      "An admin user can specifiy which plan best works for your organization in the Predictaf web-based dashboard.",
   },
   {
     question: "How do I update my moblie app?",

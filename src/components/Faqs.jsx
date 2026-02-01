@@ -3,22 +3,17 @@ import { Container } from "./Container";
 const faqs = [
   [
     {
-      question: "What does PAF mean?",
-      answer: "PredictiveAF is short for Predictive Automated Facilities.",
+      question: "What is Predictaf?",
+      answer:
+        "Predictaf brings digital transparency to all stakeholders in your property management business. With Predictaf, you can define user roles and permissions, ensuring that each user can only perform tasks relevant to their role. This role-based access allows facility owners to have a view-only overview of their properties and subsystems, offering a comprehensive snapshot at a glance. With role-based authorization, you have complete control over who can do what, putting the power in your hands.",
     },
   ],
   [
     {
-      question: "What is PAF?",
+      question:
+        "How does Predictaf differ from other property management software?",
       answer:
-        "PredictiveAF brings digital transparency to all stakeholders in your property management business. With PredictiveAF, you can define user roles and permissions, ensuring that each user can only perform tasks relevant to their role. This role-based access allows facility owners to have a view-only overview of their properties and subsystems, offering a comprehensive snapshot at a glance. With role-based authorization, you have complete control over who can do what, putting the power in your hands.",
-    },
-  ],
-  [
-    {
-      question: "How does PAF differ from other property management software?",
-      answer:
-        "Most property management software focuses on business financials, tenant relationships, and work orders. PredictiveAF (PAF), however, is purpose-built for mechanical systems. It automates the maintenance of these systems, enabling property management companies to enhance property upkeep and instantly access maintenance information.",
+        "Most property management software focuses on business financials, tenant relationships, and work orders. Predictaf, however, is purpose-built for mechanical systems. It automates the maintenance of these systems, enabling property management companies to enhance property upkeep and instantly access maintenance information.",
     },
   ],
 ];

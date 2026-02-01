@@ -122,8 +122,8 @@ function Chart({
           if (pathRef.current && typeof pathLength === "number") {
             pathWidth.set(
               pathRef.current.getPointAtLength(
-                pathLength * pathRef.current.getTotalLength()
-              ).x
+                pathLength * pathRef.current.getTotalLength(),
+              ).x,
             );
           }
         }}
@@ -169,7 +169,7 @@ export function AppDemo() {
         <div className="p-4">
           <div className="flex gap-2">
             <div className="text-xs leading-6 text-gray-500">
-              PredictiveAF LLC.
+              Predictaf LLC.
             </div>
             <div className="text-sm text-gray-900"></div>
           </div>
@@ -183,7 +183,7 @@ export function AppDemo() {
                 <div
                   className={clsx(
                     "ml-auto text-sm tabular-nums tracking-tight",
-                    percentageChange >= 0 ? "text-cyan-500" : "text-gray-500"
+                    percentageChange >= 0 ? "text-cyan-500" : "text-gray-500",
                   )}
                 >
                   {`${

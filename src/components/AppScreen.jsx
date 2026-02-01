@@ -1,6 +1,6 @@
 import { forwardRef } from "react";
 import clsx from "clsx";
-import Logo1 from "../assets/paf.png";
+import Logo1 from "../assets/predictafP.png";
 
 function Logo(props) {
   return (
@@ -9,7 +9,7 @@ function Logo(props) {
         <img src={Logo1} className="w-1/2" />
       </div>
       <div className="">
-        <label className="text-white">PredictiveAF</label>
+        <label className="text-white">Predictaf</label>
       </div> */}
     </>
   );
@@ -82,7 +82,7 @@ AppScreen.Subtitle = forwardRef(function AppScreenSubtitle({ children }, ref) {
 
 AppScreen.Body = forwardRef(function AppScreenBody(
   { children, className },
-  ref
+  ref,
 ) {
   return (
     <div ref={ref} className={clsx("mt-6 flex-auto  bg-white", className)}>

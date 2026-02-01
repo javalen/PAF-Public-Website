@@ -34,7 +34,7 @@ const QuickStart = () => {
                 </DisclosureButton>
               </dt>
               <DisclosurePanel as="dd" className="mt-2 pr-12">
-                The android PredictiveAF Mobile app can be downloaded from the
+                The android Predictaf Mobile app can be downloaded from the
                 Google Play Store or the App Store for IOS
               </DisclosurePanel>
             </Disclosure>
@@ -65,12 +65,12 @@ const QuickStart = () => {
                   <span className="font-semibold">
                     Register via the mobile app:
                   </span>{" "}
-                  open the PredictiveAF Mobile app, click the register button
-                  and complete the form.
+                  open the Predictaf Mobile app, click the register button and
+                  complete the form.
                 </p>
                 <p className="m-3">
                   <span className="font-semibold">
-                    Register via PredictiveAF website:
+                    Register via Predictaf website:
                   </span>{" "}
                   Go to{" "}
                   <a href="/register" className="text-blue-700">
@@ -87,7 +87,7 @@ const QuickStart = () => {
                 <p className="mt-3">
                   The mobile app has a web based application that allows the
                   Client manager (the individual who created the client) special
-                  access. Using the PAFAppManger website you can:
+                  access. Using the Predictaf AppManger website you can:
                   <ul className="m-3 text-sm leading-6">
                     <li>&bull; View facility reports</li>
                     <li>&bull; Manage facilities</li>
@@ -103,8 +103,8 @@ const QuickStart = () => {
 
                 <p className="m-3">
                   After account verification an additional email will be sent
-                  containing a link to your PAF dashboard. Be sure to bookmark
-                  it for easy access in the future.
+                  containing a link to your Predictaf dashboard. Be sure to
+                  bookmark it for easy access in the future.
                 </p>
               </DisclosurePanel>
             </Disclosure>

@@ -1,7 +1,7 @@
 import { AuthLayout } from "../components/AuthLayout";
 import { Button } from "../components/Button";
 import { TextField } from "../components/Fields";
-import Logo from "../assets/paf.png";
+import Logo from "../assets/predictafP.png";
 
 export const metadata = {
   title: "Sign In",

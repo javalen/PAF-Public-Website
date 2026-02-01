@@ -1,5 +1,5 @@
 import { CirclesBackground } from ".//CirclesBackground";
-import Logo from "../assets/paf.png";
+import Logo from "../assets/predictafP.png";
 
 export function AuthLayout({ title, subtitle, children }) {
   return (

@@ -3,7 +3,7 @@
 import { useId, useRef, useState } from "react";
 import clsx from "clsx";
 import { motion, useInView, useMotionValue } from "framer-motion";
-import BodyImg from "../assets/login.jpg";
+import BodyImg from "../assets/login-new.jpg";
 
 import { AppScreen } from "./AppScreen";
 

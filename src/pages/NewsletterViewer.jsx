@@ -54,7 +54,7 @@ export default function NewsletterViewer() {
 
   // viewer state
   const [html, setHtml] = useState("");
-  const [title, setTitle] = useState("PredictiveAF Insider");
+  const [title, setTitle] = useState("Predictaf Insider");
   const [viewLoading, setViewLoading] = useState(true);
   const [viewError, setViewError] = useState("");
 
@@ -218,14 +218,14 @@ export default function NewsletterViewer() {
         if (!res.ok || !data?.ok) throw new Error(data?.error || "Not found");
 
         const issue = data.newsletter || {};
-        const subject = issue.subject || "PredictiveAF Insider";
+        const subject = issue.subject || "Predictaf Insider";
         const rawHtml = issue.html || issue.text || ""; // supports either field name
 
         if (!mounted) return;
 
         setTitle(subject);
         setHtml(extractBodyHtml(rawHtml));
-        document.title = `${subject} | PredictiveAF Insider`;
+        document.title = `${subject} | Predictaf Insider`;
       } catch (e) {
         if (mounted) setViewError("Newsletter not found.");
       } finally {
@@ -261,10 +261,14 @@ export default function NewsletterViewer() {
               </div>
 
               {/* Logo */}
-              <img src="/paf.png" alt="PredictiveAF" style={styles.headImg} />
+              <img
+                src="/predictafP.png"
+                alt="Predictaf"
+                style={styles.headImg}
+              />
 
               {/* Title */}
-              <h1 style={styles.h1}>PredictiveAF Insider</h1>
+              <h1 style={styles.h1}>Predictaf Insider</h1>
 
               {/* Subtitle */}
               <div style={styles.sub}>Newsletter Archive</div>
@@ -315,7 +319,7 @@ export default function NewsletterViewer() {
           </div>
 
           <footer style={styles.footer}>
-            Powered by <strong>PredictiveAF</strong> • Intelligent Maintenance.
+            Powered by <strong>Predictaf</strong> • Intelligent Maintenance.
             Predictable Operations.
           </footer>
         </div>
@@ -337,7 +341,7 @@ export default function NewsletterViewer() {
       <div style={{ ...styles.wrap, paddingTop: 24 }}>
         <div style={styles.card}>
           <div style={styles.viewerTop}>
-            <strong>{title || "PredictiveAF Insider"}</strong>
+            <strong>{title || "Predictaf Insider"}</strong>
             <Link to="/news-letter" style={styles.backLink}>
               ← Archive
             </Link>

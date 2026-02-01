@@ -11,7 +11,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { Button } from "./Button";
 import { Container } from "./Container";
 import { NavLinks } from "./NavLinks";
-import Logo from "../assets/paf.png";
+import Logo from "../assets/predictafP.png";
 import { Link } from "react-router-dom";
 
 /* -------------------- ICONS -------------------- */
@@ -194,7 +194,7 @@ function ResourcesMenu() {
                     >
                       <div className="font-semibold">Newsletters</div>
                       <div className="text-xs text-gray-500">
-                        PredictiveAF Insider archive
+                        Predictaf Insider archive
                       </div>
                     </a>
 
@@ -218,7 +218,7 @@ function ResourcesMenu() {
                       className="rounded-xl px-3 py-2 text-sm text-gray-800 hover:bg-gray-50"
                       onClick={() => close()}
                     >
-                      <div className="font-semibold">PAF on YouTube</div>
+                      <div className="font-semibold">Predictaf on YouTube</div>
                       <div className="text-xs text-gray-500">
                         Demos & walkthroughs
                       </div>

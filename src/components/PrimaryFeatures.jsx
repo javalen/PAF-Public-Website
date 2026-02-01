@@ -45,7 +45,7 @@ const features = [
   {
     name: "Audit and Monitor Maintenance for Your Systems",
     description:
-      "Once a maintenance schedule is defined for a system, PAF will continuously monitor it, providing you with an at-a-glance view of its status. The Exceptions screen enables you to delve into specific issues that arise, allowing you to take corrective actions promptly.",
+      "Once a maintenance schedule is defined for a system, Predictaf will continuously monitor it, providing you with an at-a-glance view of its status. The Exceptions screen enables you to delve into specific issues that arise, allowing you to take corrective actions promptly.",
     icon: DeviceTouchIcon,
     screen: ExceptionsScreen,
   },
@@ -203,7 +203,7 @@ function ClientScreen(props) {
               </div>
             ))}
           </div>
-          <div className="mt-6 rounded-lg bg-sky-800 px-3 py-2 text-center text-sm font-semibold text-white">
+          <div className="mt-6 rounded-lg bg-[#334155] px-3 py-2 text-center text-sm font-semibold text-white">
             Register Client
           </div>
         </div>
@@ -240,7 +240,7 @@ function FacilityScreen(props) {
             </div>
           ))}
         </div>
-        <div className=" rounded-lg bg-sky-800 px-3 py-2 text-center text-sm font-semibold text-white">
+        <div className=" rounded-lg bg-[#334155] px-3 py-2 text-center text-sm font-semibold text-white">
           Add Facility
         </div>
       </MotionAppScreenBody>
@@ -276,7 +276,7 @@ function SystemScreen(props) {
             </div>
           ))}
         </div>
-        <div className=" rounded-lg bg-sky-800 px-3 py-2 text-center text-sm font-semibold text-white">
+        <div className=" rounded-lg bg-[#334155] px-3 py-2 text-center text-sm font-semibold text-white">
           Add HVAC
         </div>
       </MotionAppScreenBody>
@@ -358,7 +358,7 @@ function FeaturesDesktop() {
       setChangeCount((changeCount) => changeCount + 1);
     },
     100,
-    { leading: true }
+    { leading: true },
   );
 
   return (
@@ -418,7 +418,7 @@ function FeaturesDesktop() {
                       custom={{ isForwards, changeCount }}
                     />
                   </TabPanel>
-                ) : null
+                ) : null,
               )}
             </AnimatePresence>
           </TabPanels>
@@ -446,7 +446,7 @@ function FeaturesMobile() {
       {
         root: slideContainerRef.current,
         threshold: 0.6,
-      }
+      },
     );
 
     for (let slide of slideRefs.current) {
@@ -502,7 +502,7 @@ function FeaturesMobile() {
             key={featureIndex}
             className={clsx(
               "relative h-0.5 w-4 rounded-full",
-              featureIndex === activeIndex ? "bg-gray-300" : "bg-gray-500"
+              featureIndex === activeIndex ? "bg-gray-300" : "bg-gray-500",
             )}
             aria-label={`Go to slide ${featureIndex + 1}`}
             onClick={() => {
@@ -534,11 +534,11 @@ export function PrimaryFeatures() {
             Try it for yourself.
           </h2>
           <p className="mt-2 text-lg text-gray-400">
-            PredictiveAF (PAF) was designed for professionals responsible for
-            the mechanical maintenance of facility systems, like you, who aim to
+            Predictaf was designed for professionals responsible for the
+            mechanical maintenance of facility systems, like you, who aim to
             provide stakeholders with the transparency they deserve. While other
             companies may be unable or unwilling to show where client dollars
-            are spent, PAF makes this information readily accessible.
+            are spent, Predictaf makes this information readily accessible.
           </p>
         </div>
       </Container>

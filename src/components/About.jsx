@@ -10,7 +10,7 @@ const About = () => {
     >
       <Container>
         <h1 className="text-4xl font-bold mb-4 text-center text-gray-800">
-          About PredictiveAF
+          About Predictaf
         </h1>
 
         <section className="mb-6">
@@ -18,7 +18,7 @@ const About = () => {
             Who We Are
           </h2>
           <p className="text-gray-600 leading-relaxed">
-            At PredictiveAF, we are a team of dedicated professionals passionate
+            At Predictaf, we are a team of dedicated professionals passionate
             about redefining the standards of property management. Our expertise
             spans across various fields, including mechanical systems, software
             development, and customer support, allowing us to create a
@@ -31,10 +31,10 @@ const About = () => {
             What We Do
           </h2>
           <p className="text-gray-600 leading-relaxed">
-            PredictiveAF is a purpose-built software designed specifically for
+            Predictaf is a purpose-built software designed specifically for
             managing mechanical systems within your properties. Unlike
             traditional property management software that primarily focuses on
-            financials, tenant relationships, and work orders, PredictiveAF
+            financials, tenant relationships, and work orders, Predictaf
             automates the maintenance of mechanical systems. This automation not
             only boosts property upkeep but also ensures that critical
             maintenance information is readily accessible.
@@ -71,19 +71,19 @@ const About = () => {
 
         <section>
           <h2 className="text-2xl font-semibold mb-2 text-gray-700">
-            Why Choose PredictiveAF?
+            Why Choose Predictaf?
           </h2>
           <p className="text-gray-600 leading-relaxed">
             Our software is designed with your needs in mind. We understand the
             complexities of property management and the importance of
-            maintaining mechanical systems. With PredictiveAF, you gain a
-            powerful tool that simplifies maintenance processes, enhances
-            transparency, and gives you complete control over your operations.
+            maintaining mechanical systems. With Predictaf, you gain a powerful
+            tool that simplifies maintenance processes, enhances transparency,
+            and gives you complete control over your operations.
           </p>
           <p className="text-gray-600 leading-relaxed">
             Join us in transforming property management and experience the
             benefits of a streamlined, automated approach to mechanical systems
-            maintenance. With PredictiveAF, the power to manage your properties
+            maintenance. With Predictaf, the power to manage your properties
             efficiently and effectively is at your fingertips.
           </p>
         </section>
