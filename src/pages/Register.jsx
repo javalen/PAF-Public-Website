@@ -342,18 +342,6 @@ export default function Register() {
               <strong>{successObj?.email}</strong>.
             </p>
 
-            {successObj?.portalUrl ? (
-              <p className="text-gray-700 mb-6">
-                Portal URL:{" "}
-                <a
-                  className="underline text-blue-600"
-                  href={successObj.portalUrl}
-                >
-                  {successObj.portalUrl}
-                </a>
-              </p>
-            ) : null}
-
             <p>
               Check your spam folder if you don&apos;t see it within 30 minutes.
               If you still can&apos;t find it, contact us at
