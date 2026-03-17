@@ -350,7 +350,7 @@ export default function Register() {
             <Button
               type="button"
               onClick={goHome}
-              className="w-full bg-primary hover:bg-primary/80"
+              className="w-full bg-blue-500 hover:bg-blue-600"
             >
               Return to Home
             </Button>
