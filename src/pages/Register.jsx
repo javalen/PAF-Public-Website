@@ -1,9 +1,3 @@
-// Register.jsx (DROP-IN)
-// ✅ Persists all inputs across failure screen + retry
-// ✅ Controlled form (no more losing values)
-// ✅ Uses PAF-Clients-Svr POST /register (server-side PB writes)
-// ✅ NEW: portal shortname (slug) saved to master + region client tables
-
 import { AuthLayout } from "../components/AuthLayout";
 import { Button } from "../components/Button";
 import { TextField } from "../components/Fields";
@@ -61,6 +55,12 @@ export default function Register() {
   const [failed, setFailed] = useState(false);
   const [failMessage, setFailMessage] = useState("");
 
+  const [shortnameStatus, setShortnameStatus] = useState({
+    checking: false,
+    available: null,
+    message: "",
+  });
+
   const [draft, setDraft] = useState({
     compName: "",
     shortname: "",
@@ -83,6 +83,57 @@ export default function Register() {
     termsRead: false,
     isChecked: false,
   });
+
+  const checkShortnameAvailability = async (value) => {
+    const sn = normalizeShortname(value);
+
+    if (!isValidShortname(sn)) {
+      setShortnameStatus({
+        checking: false,
+        available: false,
+        message: "Invalid format",
+      });
+      return;
+    }
+
+    try {
+      setShortnameStatus({
+        checking: true,
+        available: null,
+        message: "Checking...",
+      });
+
+      const resp = await fetch(
+        `${CLIENTS_SVR_URL}/client-shortname-exists?shortname=${sn}`,
+        {
+          headers: { "X-API-KEY": CLIENTS_SVR_KEY },
+        },
+      );
+
+      const data = await resp.json();
+
+      if (data?.exists) {
+        setShortnameStatus({
+          checking: false,
+          available: false,
+          message: "Shortname already in use",
+        });
+      } else {
+        setShortnameStatus({
+          checking: false,
+          available: true,
+          message: "Available ✓",
+        });
+      }
+    } catch (err) {
+      console.error("Shortname check failed:", err);
+      setShortnameStatus({
+        checking: false,
+        available: null,
+        message: "Unable to verify",
+      });
+    }
+  };
 
   const updateDraft = (patch) =>
     setDraft((d) => ({
@@ -219,6 +270,11 @@ export default function Register() {
 
     if (!snapshot.termsRead || !snapshot.isChecked) {
       setError(termsMsg);
+      return;
+    }
+
+    if (shortnameStatus.available === false) {
+      setError("That shortname is already in use.");
       return;
     }
     if (snapshot.addressLabel === "Address") {
@@ -413,7 +469,22 @@ export default function Register() {
                   shortname: e.target.value,
                 })
               }
+              onBlur={(e) => checkShortnameAvailability(e.target.value)}
             />
+            {shortnameStatus.message && (
+              <div
+                className={`mt-1 text-sm ${
+                  shortnameStatus.available === true
+                    ? "text-green-600"
+                    : shortnameStatus.available === false
+                      ? "text-red-500"
+                      : "text-gray-500"
+                }`}
+              >
+                {shortnameStatus.message}
+              </div>
+            )}
+
             <div className="text-sm text-gray-600 -mt-4">
               Use 3–32 lowercase letters/numbers only. Example:{" "}
               <b>clientsouth</b>
