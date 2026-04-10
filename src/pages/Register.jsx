@@ -557,7 +557,7 @@ export default function Register() {
             />
 
             <TextField
-              label="Full Name"
+              label="Client Representative Name"
               name="name"
               required
               value={draft.name}
