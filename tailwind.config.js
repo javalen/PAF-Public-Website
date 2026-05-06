@@ -1,10 +1,20 @@
 /** @type {import('tailwindcss').Config} */
+const tokens = require("./design-tokens.js");
+
 export default {
     darkMode: ["class"],
     content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
   theme: {
+    container: {
+      center: true,
+      padding: "2rem",
+      screens: {
+        "2xl": "1400px",
+      },
+    },
   	extend: {
   		colors: {
+        ...tokens.colors,
   			primary: {
   				DEFAULT: 'hsl(var(--primary))',
   				foreground: 'hsl(var(--primary-foreground))'
@@ -47,11 +57,36 @@ export default {
   			}
   		},
   		borderRadius: {
-  			lg: 'var(--radius)',
-  			md: 'calc(var(--radius) - 2px)',
-  			sm: 'calc(var(--radius) - 4px)'
-  		}
+  			lg: '0.5rem',
+  			md: '0.375rem',
+  			sm: '0.25rem'
+  		},
+      letterSpacing: {
+        tighter: "-0.05em",
+        tight: "-0.025em",
+        normal: "0em",
+        wide: "0.025em",
+        wider: "0.05em",
+        widest: "0.1em"
+      },
+      fontFamily: {
+        roboto: ["Roboto", "sans-serif"],
+        funnel: ["Funnel Display", "sans-serif"]
+      },
+      animation: {
+        'spin-slow': 'spin 3s linear infinite',
+        'fade-in': 'fadeIn 0.6s ease-out',
+      },
+      keyframes: {
+        fadeIn: {
+          '0%': { opacity: '0' },
+          '100%': { opacity: '1' },
+        },
+      },
   	}
   },
-  plugins: [require("tailwindcss-animate")],
+  plugins: [
+    require("tailwindcss-animate"),
+    require("@tailwindcss/forms")
+  ],
 };

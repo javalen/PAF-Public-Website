@@ -1,9 +1,14 @@
+import { Header } from "../components/Header";
+import { Footer } from "../components/Footer";
+
 export default function Privacy() {
   return (
-    <div className="p-28">
-      <div className="font-bold text-center">
-        Predictaf, LLC Privacy Statement
-      </div>
+    <>
+      <Header />
+      <div className="px-4 py-8 sm:px-8 sm:py-12 md:px-16 md:py-16 lg:px-28 lg:py-20 max-w-7xl mx-auto">
+        <div className="font-bold text-center text-2xl sm:text-3xl mb-8">
+          Predictaf, LLC Privacy Statement
+        </div>
       <div className="mt-5">
         Predictaf, LLC (Predictaf,” “we,” “our,” or “us”) values the privacy of
         individuals who use the Predictaf website, mobile application, software,
@@ -512,9 +517,11 @@ export default function Privacy() {
         <div className="mt-3 ml-5">
           a. Please contact us with any questions regarding this Policy or to
           submit a request related to your Personal Information at
-          admin@predictiveaf.com.
+          admin@predictaf.com.
         </div>
       </div>
-    </div>
+      </div>
+      <Footer />
+    </>
   );
 }

@@ -2,9 +2,13 @@ import React, { useMemo, useState } from "react";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import Logo from "../../assets/predictafP.png";
+// import Logo from "../../assets/predictafP.png";
+// import Logo from "../../assets/predictaf-icon-test.svg";
+import Logo from "../../assets/predictaf-logo-test.svg";
+
+
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
-import { Button } from "../ui/button";
+import PafButton from "../ui/PafButton";
 import { Checkbox } from "../ui/checkbox";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
@@ -368,11 +372,11 @@ export default function PricingWizard() {
   return (
     <div className="max-w-4xl mx-auto p-4">
       <div className="flex justify-center items-center">
-        <img src={Logo} className="h-24 w-auto" />
+        {/* <img src={Logo} className="h-24 w-auto" /> */}
       </div>
-      <Card className="rounded-2xl">
+      <Card className="rounded-2xl m-8">
         <CardHeader className="space-y-2">
-          <CardTitle className="text-2xl">Predictaf Pricing Wizard</CardTitle>
+          {/* <CardTitle className="text-2xl">Predictaf Pricing Wizard</CardTitle> */}
           <div className="text-sm text-muted-foreground">Step {step} of 7</div>
         </CardHeader>
 
@@ -389,7 +393,7 @@ export default function PricingWizard() {
                 <SelectTrigger className="rounded-xl">
                   <SelectValue placeholder="Select role" />
                 </SelectTrigger>
-                <SelectContent className="bg-white">
+                <SelectContent className="bg-white z-[9999]">
                   <SelectItem value="property_manager">
                     Property Manager
                   </SelectItem>
@@ -444,7 +448,7 @@ export default function PricingWizard() {
                   <SelectTrigger className="rounded-xl">
                     <SelectValue placeholder="Select property type" />
                   </SelectTrigger>
-                  <SelectContent className="bg-white">
+                  <SelectContent className="bg-white z-[9999]">
                     <SelectItem value="condo">Condo</SelectItem>
                     <SelectItem value="apartments">Apartments</SelectItem>
                     <SelectItem value="mixed_use">Mixed-use</SelectItem>
@@ -494,7 +498,7 @@ export default function PricingWizard() {
                           <SelectTrigger className="rounded-xl">
                             <SelectValue />
                           </SelectTrigger>
-                          <SelectContent className="bg-white">
+                          <SelectContent className="bg-white z-[9999]">
                             <SelectItem value="1-2">1–2</SelectItem>
                             <SelectItem value="3-5">3–5</SelectItem>
                             <SelectItem value="6+">6+</SelectItem>
@@ -549,7 +553,7 @@ export default function PricingWizard() {
                   <SelectTrigger className="rounded-xl">
                     <SelectValue />
                   </SelectTrigger>
-                  <SelectContent className="bg-white">
+                  <SelectContent className="bg-white z-[9999]">
                     <SelectItem value="spreadsheets">Spreadsheets</SelectItem>
                     <SelectItem value="email">Email threads</SelectItem>
                     <SelectItem value="software">Other software</SelectItem>
@@ -584,11 +588,11 @@ export default function PricingWizard() {
                     onClick={() => form.setValue("hands_off_level", k)}
                     className={`w-full text-left border rounded-xl p-3 transition ${
                       values.hands_off_level === k
-                        ? "border-primary"
-                        : "border-slate-200"
+                        ? "border-brandPrimary dark:border-brandPrimary-dark bg-backgroundSecondary dark:bg-backgroundSecondary-dark"
+                        : "border-borderPrimary dark:border-borderPrimary-dark"
                     }`}
                   >
-                    <div className="font-medium">{label}</div>
+                    <div className="font-medium font-['Roboto'] text-textPrimary dark:text-textPrimary-dark">{label}</div>
                   </button>
                 ))}
               </div>
@@ -900,15 +904,14 @@ export default function PricingWizard() {
                   </Card>
 
                   <div className="flex justify-center pt-2">
-                    <Button
-                      className=" mt-2 rounded-xl bg-[#7690b5] hover:bg-[#4c6486] text-white"
+                    <PafButton
+                      variant="primary"
+                      size="medium"
                       onClick={generate}
                       disabled={submitting}
                     >
-                      {submitting
-                        ? "Generating..."
-                        : "Generate My Custom Proposal"}
-                    </Button>
+                      {submitting ? "Generating..." : "Generate My Custom Proposal"}
+                    </PafButton>
                   </div>
                 </div>
               ) : (
@@ -934,17 +937,18 @@ export default function PricingWizard() {
 
                     <div className="flex gap-2">
                       {result.share_url && (
-                        <Button
-                          className="mt-2 rounded-xl bg-[#7690b5] hover:bg-[#4c6486] text-white"
-                          variant="outline"
+                        <PafButton
+                          variant="secondary"
+                          size="small"
                           onClick={copyShareLink}
                         >
                           Copy Share Link
-                        </Button>
+                        </PafButton>
                       )}
                       {result.share_url && (
-                        <Button
-                          className="mt-2 rounded-xl bg-[#7690b5] hover:bg-[#4c6486] text-white"
+                        <PafButton
+                          variant="primary"
+                          size="small"
                           onClick={() =>
                             window.open(
                               result.share_url,
@@ -954,7 +958,7 @@ export default function PricingWizard() {
                           }
                         >
                           Open Quote
-                        </Button>
+                        </PafButton>
                       )}
                     </div>
                   </div>
@@ -1035,13 +1039,10 @@ export default function PricingWizard() {
                               </span>
                             </div>
 
-                            <Button
-                              className={[
-                                "w-full rounded-xl",
-                                isRecommended
-                                  ? "bg-slate-900 hover:bg-slate-800 text-white"
-                                  : "",
-                              ].join(" ")}
+                            <PafButton
+                              variant={isRecommended ? "primary" : "secondary"}
+                              size="small"
+                              className="w-full"
                               onClick={() =>
                                 window.open(
                                   "https://calendar.app.google/p3Bi6LnTTzgfpo8M7",
@@ -1051,7 +1052,7 @@ export default function PricingWizard() {
                               }
                             >
                               Request Demo
-                            </Button>
+                            </PafButton>
                           </CardContent>
                         </Card>
                       );
@@ -1086,36 +1087,38 @@ export default function PricingWizard() {
 
           {/* NAV */}
           <div className="flex items-center justify-between pt-2">
-            <Button
+            <PafButton
               type="button"
-              variant="outline"
-              className=" mt-2 rounded-xl bg-[#7690b5] hover:bg-[#4c6486] text-white"
+              variant="secondary"
+              size="small"
               onClick={back}
               disabled={step === 1 || submitting}
             >
               Back
-            </Button>
+            </PafButton>
 
             {step < 6 && (
-              <Button
+              <PafButton
                 type="button"
-                className="mt-2 rounded-xl bg-[#7690b5] hover:bg-[#4c6486] text-white"
+                variant="primary"
+                size="small"
                 onClick={next}
                 disabled={submitting}
               >
                 Next
-              </Button>
+              </PafButton>
             )}
 
             {step === 6 && (
-              <Button
+              <PafButton
                 type="button"
-                className="mt-2 rounded-xl bg-[#7690b5] hover:bg-[#4c6486] text-white"
+                variant="primary"
+                size="small"
                 onClick={() => setStep(7)}
                 disabled={submitting}
               >
                 Review
-              </Button>
+              </PafButton>
             )}
           </div>
         </CardContent>

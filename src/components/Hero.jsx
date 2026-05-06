@@ -1,233 +1,196 @@
-import { useId } from "react";
-import { PafPhone } from "./PafPhone";
+import { useState, useEffect, useCallback } from "react";
 import { Container } from "./Container";
-import { PhoneFrame } from "./PhoneFrame";
-import PropManage from "../images/prop-manage.png";
-import HoweOwner from "../images/homeowner.png";
-import MaintMan from "../images/maintenance.png";
-import Contractor from "../images/contractors.png";
+import PafButton from "./ui/PafButton";
+import TextHighlight from "./ui/TextHighlight";
+import { ArrowRight, ChevronLeft, ChevronRight, Pause, Play } from "lucide-react";
 
-function BackgroundIllustration(props) {
-  let id = useId();
+// Carousel images sourced from existing project assets
+import facilityImg from "../assets/heroImage1.jpg";
+import hvacImg from "../images/hvac.jpg";
+import compExImg from "../images/compEx.jpg";
+import sysExImg from "../images/sysEx.jpg";
+import saftyExImg from "../images/saftyEx.jpg";
 
-  return (
-    <div {...props}>
-      <svg
-        viewBox="0 0 1026 1026"
-        fill="none"
-        aria-hidden="true"
-        className="absolute inset-0 h-full w-full animate-spin-slow"
-      >
-        <path
-          d="M1025 513c0 282.77-229.23 512-512 512S1 795.77 1 513 230.23 1 513 1s512 229.23 512 512Z"
-          stroke="#D4D4D4"
-          strokeOpacity="0.7"
-        />
-        <path
-          d="M513 1025C230.23 1025 1 795.77 1 513"
-          stroke={`url(#${id}-gradient-1)`}
-          strokeLinecap="round"
-        />
-        <defs>
-          <linearGradient
-            id={`${id}-gradient-1`}
-            x1="1"
-            y1="513"
-            x2="1"
-            y2="1025"
-            gradientUnits="userSpaceOnUse"
-          >
-            <stop stopColor="#06b6d4" />
-            <stop offset="1" stopColor="#06b6d4" stopOpacity="0" />
-          </linearGradient>
-        </defs>
-      </svg>
-      <svg
-        viewBox="0 0 1026 1026"
-        fill="none"
-        aria-hidden="true"
-        className="absolute inset-0 h-full w-full animate-spin-reverse-slower"
-      >
-        <path
-          d="M913 513c0 220.914-179.086 400-400 400S113 733.914 113 513s179.086-400 400-400 400 179.086 400 400Z"
-          stroke="#D4D4D4"
-          strokeOpacity="0.7"
-        />
-        <path
-          d="M913 513c0 220.914-179.086 400-400 400"
-          stroke={`url(#${id}-gradient-2)`}
-          strokeLinecap="round"
-        />
-        <defs>
-          <linearGradient
-            id={`${id}-gradient-2`}
-            x1="913"
-            y1="513"
-            x2="913"
-            y2="913"
-            gradientUnits="userSpaceOnUse"
-          >
-            <stop stopColor="#06b6d4" />
-            <stop offset="1" stopColor="#06b6d4" stopOpacity="0" />
-          </linearGradient>
-        </defs>
-      </svg>
-    </div>
-  );
-}
+const CAROUSEL_IMAGES = [
+  { src: facilityImg, alt: "Facility management overview" },
+  // { src: hvacImg, alt: "HVAC system monitoring" },
+  // { src: compExImg, alt: "Compliance tracking" },
+  // { src: sysExImg, alt: "Systems dashboard" },
+  // { src: saftyExImg, alt: "Safety compliance" },
+];
 
-function PlayIcon(props) {
-  return (
-    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" {...props}>
-      <circle cx="12" cy="12" r="11.5" stroke="#D4D4D4" />
-      <path
-        d="M9.5 14.382V9.618a.5.5 0 0 1 .724-.447l4.764 2.382a.5.5 0 0 1 0 .894l-4.764 2.382a.5.5 0 0 1-.724-.447Z"
-        fill="#A3A3A3"
-        stroke="#A3A3A3"
-      />
-    </svg>
-  );
-}
+const SHORT_TEXT_BEFORE =
+  "Predicaf is a proactive maintenance and compliance management system designed for large-scale residential and commercial properties, ";
+
+const FULL_TEXT_BEFORE =
+  "Predicaf is a proactive maintenance and compliance management system designed for large-scale residential and commercial properties, ";
+
+const HIGHLIGHT_TEXT = "particularly those with limited engineering oversight";
+
+const FULL_TEXT_AFTER =
+  "Our products enable users to catalog and manage critical building systems such as mechanical equipment, HVAC units, fire sprinkler systems, and electrical panels, while linking each asset to a tailored maintenance schedule. The system then tracks these schedules in real-time, flagging overdue tasks and upcoming service requirements. Additionally, it manages time-sensitive documentation like warranties, permits, and inspections by tracking expiration dates and sending automated alerts. The result is improved operational visibility, reduced liability, and data-driven oversight all in a centralized interface";
 
 export function Hero() {
+  const [expanded, setExpanded] = useState(false);
+  const [current, setCurrent] = useState(0);
+  const [paused, setPaused] = useState(false);
+  const hasMultipleImages = CAROUSEL_IMAGES.length > 1;
+
+
+
+  // Auto-advance carousel every 4 seconds unless paused
+  const next = useCallback(
+    () => setCurrent((c) => (c + 1) % CAROUSEL_IMAGES.length),
+    [],
+  );
+  const prev = () =>
+    setCurrent((c) => (c - 1 + CAROUSEL_IMAGES.length) % CAROUSEL_IMAGES.length);
+
+  useEffect(() => {
+    if (!hasMultipleImages || paused) return;
+    const timer = setInterval(next, 4000);
+    return () => clearInterval(timer);
+  }, [hasMultipleImages, next, paused]);
+
   return (
-    <div className="overflow-hidden py-5 sm:py-5 lg:pb-32 xl:pb-36">
+    <section id="hero" className="bg-backgroundPrimary dark:bg-backgroundPrimary-dark py-16 sm:py-20 lg:py-24">
       <Container>
-        <div className="lg:grid lg:grid-cols-12 lg:gap-x-8 lg:gap-y-20">
-          <div className="relative z-10 mx-auto max-w-2xl lg:col-span-7 lg:max-w-none lg:pt-6 xl:col-span-6">
-            <h1 className="text-4xl font-medium tracking-tight text-gray-900">
-              How can Predictaf help you?
+        <div className="grid grid-cols-1 gap-12 lg:grid-cols-2 lg:gap-16 lg:items-center">
+
+          {/* ── LEFT: text content ── */}
+          <div className="flex flex-col gap-6">
+            {/* ABOUT label */}
+            <p className="text-sm font-extrabold font-['Funnel_Display'] tracking-widest uppercase text-brandSecondary dark:text-brandSecondary-dark leading-normal mb-[-16px]">
+              About
+            </p>
+
+            {/* Heading */}
+            <h1 className="text-5xl font-light font-['Funnel_Display'] tracking-normal leading-[1.1] text-brandPrimary dark:text-brandPrimary-dark">
+              From Reactive
+              <br />
+              to Predictive
             </h1>
-            <p className="mt-6 text-lg text-gray-600">
-              Predictaf is a comprehensive mobile application that enables users
-              to monitor, manage, and analyze data from mechanical systems in
-              commercial and residential buildings. The app aims to enhance
-              operational efficiency, predictive maintenance, and overall system
-              performance through real-time data insights and analytics.
-            </p>
-            <p className="mt-6 text-lg text-gray-600">
-              Our platform is a proactive maintenance and compliance management
-              system designed for large-scale residential and commercial
-              properties, particularly those managed by HOAs with limited
-              engineering oversight. It allows users to catalog mechanical
-              systems — HVAC, fire sprinklers, electrical panels, etc. — and
-              associate each with a custom maintenance schedule. The system then
-              tracks these schedules in real-time, flagging overdue tasks and
-              upcoming service requirements. Additionally, it manages
-              time-sensitive documentation like warranties, permits, and
-              inspections by tracking expiration dates and sending automated
-              alerts. The result is improved operational visibility, reduced
-              liability, and data-driven oversight — all in a centralized
-              interface
-            </p>
-          </div>
-          <div className="relative mt-10 sm:mt-20 lg:col-span-5 lg:row-span-2 lg:mt-0 xl:col-span-6">
-            <BackgroundIllustration className="absolute left-1/2 top-4 h-[1026px] w-[1026px] -translate-x-1/3 stroke-gray-300/70 [mask-image:linear-gradient(to_bottom,white_20%,transparent_75%)] sm:top-16 sm:-translate-x-1/2 lg:-top-16 lg:ml-12 xl:-top-14 xl:ml-0" />
-            <div className="-mx-4 h-[708px] px-9 [mask-image:linear-gradient(to_bottom,white_30%,transparent)] sm:mx-0 lg:absolute lg:-inset-x-10 lg:-bottom-20 lg:-top-10 lg:px-0 lg:pt-10 xl:-bottom-32">
-              <PhoneFrame className="mx-auto max-w-[366px]" priority>
-                <PafPhone />
-              </PhoneFrame>
-            </div>
-          </div>
-          <div className="relative -mt-4 lg:col-span-7 lg:mt-0 xl:col-span-6">
-            <p className="text-center text-sm font-semibold text-gray-900  mb-8">
-              Who can benefit from Predictaf?
-            </p>
-          </div>
-          <div className="relative -mt-4 lg:col-span-7 lg:mt-0 xl:col-span-6 grid grid-cols-1 sm:grid-cols-2 gap-y-10 gap-x-6">
-            {/* Property Managers */}
-            <div className="flex flex-col items-center text-center px-4">
-              <img
-                src={PropManage}
-                alt="Property Managers"
-                className="w-20 mb-4"
-              />
-              <h3 className="text-sm font-semibold text-gray-900">
-                Property Managers
-              </h3>
-              <p className="mt-1 text-sm text-gray-600">
-                Centralized dashboard for managing maintenance tasks, vendors,
-                and documentation across all systems.
+
+            {/* Body text – collapsed/expanded */}
+            <div>
+              <p className="text-lg font-['Roboto'] tracking-normal leading-relaxed text-brandPrimary dark:text-textSecondary-dark">
+                {SHORT_TEXT_BEFORE}
+                <TextHighlight>{HIGHLIGHT_TEXT}</TextHighlight>.
+                {!expanded && (
+                  <>
+                    {" "}
+                    <button
+                      type="button"
+                      onClick={() => setExpanded((e) => !e)}
+                      className="underline text-brandPrimary dark:text-colorHilight hover:text-brandSecondary dark:hover:text-brandSecondary font-['Roboto'] tracking-normal leading-normal transition-colors"
+                    >
+                      Read More
+                    </button>
+                  </>
+                )}
               </p>
+
+              {expanded && (
+                <>
+                  <p className="mt-4 text-lg font-['Roboto'] tracking-normal leading-relaxed text-brandPrimary dark:text-textSecondary-dark">
+                    {FULL_TEXT_AFTER}
+                  </p>
+                  <button
+                    type="button"
+                    onClick={() => setExpanded((e) => !e)}
+                    className="mt-4 underline text-brandPrimary dark:text-colorHilight hover:text-brandSecondary dark:hover:text-brandSecondary font-['Roboto'] tracking-normal leading-normal transition-colors"
+                  >
+                    Read Less
+                  </button>
+                </>
+              )}
             </div>
 
-            {/* HOA Boards / Homeowners */}
-            <div className="flex flex-col items-center text-center px-4">
-              <img src={HoweOwner} alt="HOA Boards" className="w-20 mb-4" />
-              <h3 className="text-sm font-semibold text-gray-900">
-                HOA Boards / Homeowners
-              </h3>
-              <p className="mt-1 text-sm text-gray-600">
-                Get full visibility into system health, compliance, and costs
-                without needing technical expertise.
-              </p>
-            </div>
-
-            {/* Maintenance Teams */}
-            <div className="flex flex-col items-center text-center px-4">
-              <img
-                src={MaintMan}
-                alt="Maintenance Team"
-                className="w-20 mb-4"
-              />
-              <h3 className="text-sm font-semibold text-gray-900">
-                Maintenance Teams
-              </h3>
-              <p className="mt-1 text-sm text-gray-600">
-                Simplify task tracking and service history with real-time
-                schedules and maintenance logs.
-              </p>
-            </div>
-
-            {/* Contractors / Vendors */}
-            <div className="flex flex-col items-center text-center px-4">
-              <img src={Contractor} alt="Contractors" className="w-20 mb-4" />
-              <h3 className="text-sm font-semibold text-gray-900">
-                Contractors / Vendors
-              </h3>
-              <p className="mt-1 text-sm text-gray-600">
-                Streamlined coordination with building teams, upcoming tasks,
-                and asset information at your fingertips.
+            {/* CTA */}
+            <div className="flex flex-col gap-4 mt-2">
+              <a href="/register">
+                <PafButton variant="primary" size="large" iconRight={<ArrowRight />}>
+                  Start a Free Trial
+                </PafButton>
+              </a>
+              <p className="text-base font-['Roboto'] tracking-normal leading-normal text-brandPrimary dark:text-brandPrimary-dark">
+                Sign Up in 30 Seconds • No credit card required
               </p>
             </div>
           </div>
 
-          {/* <div className="relative -mt-4 lg:col-span-7 lg:mt-0 xl:col-span-6 columns-2">
-            <div className="h-32">
-              <div className="grid justify-center">
-                <img src={PropManage} alt="" className="w-20 align-middle" />
-              </div>
-              <div className="text-center text-sm font-semibold text-gray-900">
-                Property Management Companies
-              </div>
+          {/* ── RIGHT: image carousel ── */}
+          <div className="relative w-full">
+            {/* Image frame */}
+            <div className="relative overflow-hidden rounded-2xl aspect-[4/3] bg-backgroundSecondary dark:bg-backgroundSecondary-dark shadow-lg">
+              {CAROUSEL_IMAGES.map((img, i) => (
+                <img
+                  key={img.src}
+                  src={img.src}
+                  alt={img.alt}
+                  className={`absolute inset-0 w-full h-full object-cover ${
+                    hasMultipleImages ? "transition-opacity duration-700" : ""
+                  } ${
+                    i === current ? "opacity-100" : "opacity-0"
+                  }`}
+                />
+              ))}
+
+              {hasMultipleImages && (
+                <>
+                  {/* Pause / Play toggle */}
+                  <button
+                    type="button"
+                    onClick={() => setPaused((p) => !p)}
+                    aria-label={paused ? "Play slideshow" : "Pause slideshow"}
+                    className="absolute top-3 right-3 flex items-center justify-center h-8 w-8 rounded-full bg-backgroundPrimary/70 dark:bg-backgroundPrimary-dark/70 text-textPrimary dark:text-textPrimary-dark hover:bg-backgroundPrimary dark:hover:bg-backgroundPrimary-dark transition-colors"
+                  >
+                    {paused ? <Play className="h-4 w-4" /> : <Pause className="h-4 w-4" />}
+                  </button>
+
+                  {/* Prev / Next arrow buttons */}
+                  <button
+                    type="button"
+                    onClick={prev}
+                    aria-label="Previous image"
+                    className="absolute left-3 top-1/2 -translate-y-1/2 flex items-center justify-center h-9 w-9 rounded-full bg-backgroundPrimary/70 dark:bg-backgroundPrimary-dark/70 text-textPrimary dark:text-textPrimary-dark hover:bg-backgroundPrimary dark:hover:bg-backgroundPrimary-dark transition-colors"
+                  >
+                    <ChevronLeft className="h-5 w-5" />
+                  </button>
+                  <button
+                    type="button"
+                    onClick={next}
+                    aria-label="Next image"
+                    className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center justify-center h-9 w-9 rounded-full bg-backgroundPrimary/70 dark:bg-backgroundPrimary-dark/70 text-textPrimary dark:text-textPrimary-dark hover:bg-backgroundPrimary dark:hover:bg-backgroundPrimary-dark transition-colors"
+                  >
+                    <ChevronRight className="h-5 w-5" />
+                  </button>
+                </>
+              )}
             </div>
-            <div className="h-32 ">
-              <div className="grid justify-center">
-                <img src={HoweOwner} alt="" className="w-20" />
+
+            {hasMultipleImages && (
+              <div className="mt-4 flex justify-center gap-2">
+                {CAROUSEL_IMAGES.map((_, i) => (
+                  <button
+                    key={i}
+                    type="button"
+                    onClick={() => setCurrent(i)}
+                    aria-label={`Go to image ${i + 1}`}
+                    className={`h-2 rounded-full transition-all duration-300 ${
+                      i === current
+                        ? "w-6 bg-brandPrimary dark:bg-brandPrimary-dark"
+                        : "w-2 bg-borderSecondary dark:bg-borderSecondary-dark"
+                    }`}
+                  />
+                ))}
               </div>
-              <div className="text-center text-sm font-semibold text-gray-900">
-                Home Owners
-              </div>
-            </div>
-            <div className="h-32">
-              <div className="grid justify-center">
-                <img src={MaintMan} alt="" className="w-20 align-middle" />
-              </div>
-              <div className="text-center text-sm font-semibold text-gray-900">
-                Maintenance Resources
-              </div>
-            </div>
-            <div className="h-32 ">
-              <div className="grid justify-center">
-                <img src={Contractor} alt="" className="w-20" />
-              </div>
-              <div className="text-center text-sm font-semibold text-gray-900">
-                Contractors
-              </div>
-            </div>
-          </div> */}
+            )}
+          </div>
+
         </div>
       </Container>
-    </div>
+    </section>
   );
 }
+

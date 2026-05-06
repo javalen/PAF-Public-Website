@@ -1,279 +1,266 @@
-"use client";
+import { CheckCircle2, Sparkles } from "lucide-react";
+import PropTypes from "prop-types";
+import { useMemo, useState } from "react";
 
-import { useState } from "react";
-import { Radio, RadioGroup } from "@headlessui/react";
-import clsx from "clsx";
-
-import { Button } from "./Button";
 import { Container } from "./Container";
-import { Logomark } from "./Logo";
+import PafButton from "./ui/PafButton";
 
-const plans = [
+const pricingPlans = [
   {
     name: "Starter",
-    featured: false,
-    price: { Monthly: "$0", Annually: "$0" },
     description:
-      "It's free to try the app for 3 months. Get started for free and enjoy the mobile app and access to the Web Based Control Panel.",
-    button: {
-      label: "Get started for free now",
-      href: "/register",
-    },
+      "Small teams can quickly start with the basics.",
+    price: "$18",
+    ctaLabel: "Try for Free",
+    ctaHref: "/register",
+    trialLabel: "Enjoy a 3-month free trial!",
+    creditText: "No credit card required",
     features: [
-      "Create a Single Top Level Client",
       "Create up to 5 Facilities",
-      "Create Systems",
-      "Create Maintenance Schedules",
-      "Upload Compliance Documents",
-      "Unlimited Single User Access to the Control Panel",
+      "Manage Multiple Systems",
+      "Maintenance Schedules",
+      "Secure Compliance Documents",
     ],
-    logomarkClassName: "fill-gray-300",
   },
   {
-    name: "Business",
-    featured: false,
-    price: { Monthly: "$100", Annually: "$1099" },
+    name: "Small Business",
     description:
-      "Small businesses are the backbone of the economy and we want to assist you in getting better by providing the tools to help your operation.",
-    button: {
-      label: "Subscribe",
-      href: "/register",
-    },
+      "Growing teams who need more essential tools and resources.",
+    price: "$49",
+    ctaLabel: "Try for Free",
+    ctaHref: "/register",
+    trialLabel: "Enjoy a 3-month free trial!",
+    creditText: "No credit card required",
     features: [
-      "Create a Single Top Level Client",
-      "Create up to 5 Facilities",
-      "Create Unlimited Systems",
-      "Create Maintenance Schedules",
-      "Upload Compliance Documents",
-      "Unlimited Access to the Control Panel",
-      "Create New Custom Divisions",
-      "Create custom Roles/Permissions",
-      "Decide which Exceptions apply to which Facilities",
+      "Create up to 25 Facilities",
+      "Manage Multiple Systems",
+      "Maintenance Schedules",
+      "Analytics and Reporting",
+      "Secure Compliance Documents",
     ],
-    logomarkClassName: "fill-gray-500",
   },
   {
-    name: "Business Plus",
-    featured: true,
-    price: { Monthly: "$499", Annually: "$4,999" },
+    name: "Premium",
     description:
-      "Larger businesses can benefit by experiencing all the benefits of Predictaf with the added experience of your own custom branding. With your branding Predictaf takes a backseat and your business becomes the star",
-    button: {
-      label: "Subscribe",
-      href: "/register",
-    },
+      "Departments overseeing up to 50 facilities seeking more efficiency.",
+    price: "$99",
+    ctaLabel: "Try for Free",
+    ctaHref: "/register",
+    trialLabel: "Enjoy a 3-month free trial!",
+    creditText: "No credit card required",
     features: [
-      "Create a Single Top Level Client",
-      "Create up to 5 Facilities",
-      "Create Systems",
-      "Create Maintenance Schedules",
-      "Upload Compliance Documents",
-      "Unlimited Access to the Control Panel",
-      "Create New Custom Divisions",
-      "Create Custom Roles/Permissions",
-      "Decide which Exceptions apply to which Facilities",
-      "Custom Branding of Mobile App and Control Panel",
-      "Dedicated Backend Sevices",
+      "Create up to 50 Facilities",
+      "Manage Multiple Systems",
+      "Maintenance Schedules",
+      "Analytics and Reporting",
+      "Automated Workflows",
+      "Secure Compliance Documents",
+      "Reserve Studies",
     ],
-    logomarkClassName: "fill-cyan-500",
+    isMostPopular: true,
+  },
+  {
+    name: "Enterprise",
+    description:
+      "Multi-site organizations needing dedicated services and integrations and governance.",
+    ctaLabel: "Request a Quote",
+    ctaHref: "/register",
+    trialLabel: "Enjoy a 3-month free trial!",
+    features: [
+      "Create unlimited facilities",
+      "Manage Multiple Systems",
+      "Maintenance Schedules",
+      "Analytics and Reporting",
+      "Automated Workflows",
+      "Secure Compliance Documents",
+      "Reserve Studies",
+      "Tenant Portal",
+      "Dedicated Backend Services",
+    ],
   },
 ];
 
-function CheckIcon(props) {
-  return (
-    <svg viewBox="0 0 24 24" aria-hidden="true" {...props}>
-      <path
-        d="M9.307 12.248a.75.75 0 1 0-1.114 1.004l1.114-1.004ZM11 15.25l-.557.502a.75.75 0 0 0 1.15-.043L11 15.25Zm4.844-5.041a.75.75 0 0 0-1.188-.918l1.188.918Zm-7.651 3.043 2.25 2.5 1.114-1.004-2.25-2.5-1.114 1.004Zm3.4 2.457 4.25-5.5-1.187-.918-4.25 5.5 1.188.918Z"
-        fill="currentColor"
-      />
-      <circle
-        cx="12"
-        cy="12"
-        r="8.25"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.5"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
-  );
-}
-
-function Plan({
+// Renders one pricing card in the new flat, comparison-style layout.
+function PricingCard({
   name,
-  price,
   description,
-  button,
+  price,
+  priceNote,
+  ctaLabel,
+  ctaHref,
+  trialLabel,
+  creditText,
   features,
-  activePeriod,
-  logomarkClassName,
-  featured = false,
+  isMostPopular = false,
 }) {
   return (
-    <section
-      className={clsx(
-        "flex flex-col overflow-hidden rounded-3xl p-6 shadow-lg shadow-gray-900/5",
-        featured ? "order-first bg-gray-900 lg:order-none" : "bg-white",
-      )}
+    <article
+      className={`relative rounded-2xl border p-5 ${
+        isMostPopular
+          ? "bg-backgroundSecondary dark:bg-backgroundSecondary-dark"
+          : "bg-backgroundPrimary dark:bg-backgroundPrimary-dark"
+      } ${
+        isMostPopular
+          ? "border-brandSecondary dark:border-brandSecondary"
+          : "border-borderSecondary dark:border-borderSecondary-dark"
+      }`}
     >
+      {isMostPopular && (
+        <div className="absolute right-4 top-0 rounded-b border-b border-l border-r  border-brandSecondary bg-backgroundPrimary px-2.5 py-1 dark:bg-backgroundPrimary-dark">
+          <span className="inline-flex items-center gap-1 text-xs font-medium font-['Roboto'] leading-normal tracking-normal text-brandPrimary dark:text-brandPrimary-dark">
+            <Sparkles className="h-3.5 w-3.5" />
+            Most Popular
+          </span>
+        </div>
+      )}
+
       <h3
-        className={clsx(
-          "flex items-center text-sm font-semibold",
-          featured ? "text-white" : "text-gray-900",
-        )}
+        className={`whitespace-nowrap font-['Funnel_Display'] text-[30px] font-medium leading-normal tracking-normal text-textPrimary dark:text-textPrimary-dark sm:text-[32px] md:text-[34px] ${
+          isMostPopular ? "mt-6 pr-32" : ""
+        }`}
       >
-        <Logomark className={clsx("h-6 w-6 flex-none", logomarkClassName)} />
-        <span className="ml-4">{name}</span>
+        {name}
       </h3>
-      <p
-        className={clsx(
-          "relative mt-5 flex text-3xl tracking-tight",
-          featured ? "text-white" : "text-gray-900",
-        )}
-      >
-        {price.Monthly === price.Annually ? (
-          price.Monthly
-        ) : (
-          <>
-            <span
-              aria-hidden={activePeriod === "Annually"}
-              className={clsx(
-                "transition duration-300",
-                activePeriod === "Annually" &&
-                  "pointer-events-none translate-x-6 select-none opacity-0",
-              )}
-            >
-              {price.Monthly}
-            </span>
-            <span
-              aria-hidden={activePeriod === "Monthly"}
-              className={clsx(
-                "absolute left-0 top-0 transition duration-300",
-                activePeriod === "Monthly" &&
-                  "pointer-events-none -translate-x-6 select-none opacity-0",
-              )}
-            >
-              {price.Annually}
-            </span>
-          </>
-        )}
-      </p>
-      <p
-        className={clsx(
-          "mt-3 text-sm",
-          featured ? "text-gray-300" : "text-gray-700",
-        )}
-      >
+      <p className="mt-2 min-h-[68px] font-['Roboto'] text-[17px] font-normal leading-normal tracking-normal text-textSecondary dark:text-textSecondary-dark">
         {description}
       </p>
-      <div className="order-last mt-6">
-        <ul
-          role="list"
-          className={clsx(
-            "-my-2 divide-y text-sm",
-            featured
-              ? "divide-gray-800 text-gray-300"
-              : "divide-gray-200 text-gray-700",
+
+      {price && (
+        <>
+          <p className="mt-2 flex items-baseline whitespace-nowrap font-['Funnel_Display'] leading-normal tracking-normal text-brandPrimary dark:text-brandPrimary-dark">
+            <span className="text-[58px] font-bold">{price}</span>
+            <span className="text-[18px] font-medium">/user/mo</span>
+          </p>
+          {priceNote && (
+            <p className="mt-0.5 font-['Roboto'] text-[14px] font-medium leading-normal tracking-normal text-textSecondary dark:text-textSecondary-dark">
+              {priceNote}
+            </p>
           )}
-        >
-          {features.map((feature) => (
-            <li key={feature} className="flex py-2">
-              <CheckIcon
-                className={clsx(
-                  "h-6 w-6 flex-none",
-                  featured ? "text-white" : "text-cyan-500",
-                )}
-              />
-              <span className="ml-4">{feature}</span>
-            </li>
-          ))}
-        </ul>
+        </>
+      )}
+
+      <div className="mt-4 inline-flex rounded-full border border-borderTagTrue bg-backgroundTagTrue px-4 py-1">
+        <span className="font-['Roboto'] text-[14px] font-medium leading-normal tracking-normal text-colorSuccess">
+          {trialLabel}
+        </span>
       </div>
-      <Button
-        href={button.href}
-        color={featured ? "cyan" : "gray"}
-        className="mt-6"
-        aria-label={`Get started with the ${name} plan for ${price}`}
-      >
-        {button.label}
-      </Button>
-    </section>
+
+      <a href={ctaHref} className="mt-5 inline-block">
+        <PafButton variant="primary" size="medium">
+          {ctaLabel}
+        </PafButton>
+      </a>
+
+      {creditText && (
+        <p className="mt-2 font-['Roboto'] text-[17px] font-normal leading-normal tracking-normal text-textSecondary dark:text-textSecondary-dark">
+          {creditText}
+        </p>
+      )}
+
+      <ul className="mt-5 mb-5 space-y-2">
+        {features.map((feature) => (
+          <li key={feature} className="flex items-start gap-2">
+            <CheckCircle2 className="mt-0.5 h-6 w-6 shrink-0 text-brandSecondary dark:text-brandSecondary" />
+            <span className="font-['Roboto'] text-[20px] font-normal leading-normal tracking-normal text-textPrimary dark:text-textPrimary-dark sm:text-[17px]">
+              {feature}
+            </span>
+          </li>
+        ))}
+      </ul>
+    </article>
   );
 }
 
+PricingCard.propTypes = {
+  name: PropTypes.string.isRequired,
+  description: PropTypes.string.isRequired,
+  price: PropTypes.string,
+  priceNote: PropTypes.string,
+  ctaLabel: PropTypes.string.isRequired,
+  ctaHref: PropTypes.string.isRequired,
+  trialLabel: PropTypes.string.isRequired,
+  creditText: PropTypes.string,
+  features: PropTypes.arrayOf(PropTypes.string).isRequired,
+  isMostPopular: PropTypes.bool,
+};
+
 export function Pricing() {
-  let [activePeriod, setActivePeriod] = useState("Monthly");
+  const [billingCycle, setBillingCycle] = useState("monthly");
+
+  // Converts the plan list into billing-cycle aware display values.
+  const visiblePlans = useMemo(() => {
+    return pricingPlans.map((plan) => {
+      if (!plan.price) {
+        return {
+          ...plan,
+          price: undefined,
+          priceNote: undefined,
+        };
+      }
+
+      const monthlyPrice = Number(plan.price.replace(/[^\d.]/g, ""));
+      const isYearly = billingCycle === "yearly";
+      const calculatedPrice = isYearly ? monthlyPrice * 0.8 : monthlyPrice;
+
+      return {
+        ...plan,
+        price: `$${Math.round(calculatedPrice)}`,
+          priceNote: isYearly ? "billed yearly" : undefined,
+      };
+    });
+  }, [billingCycle]);
 
   return (
     <section
       id="pricing"
       aria-labelledby="pricing-title"
-      className="border-t border-gray-200 bg-gray-100 py-20 sm:py-32"
+      className="bg-backgroundPrimary py-20 dark:bg-backgroundPrimary-dark sm:py-24 lg:py-28"
     >
-      <Container>
-        <div className="mx-auto max-w-2xl text-center">
+      <Container className="max-w-[1250px]">
+        <p className="font-['Funnel_Display'] text-sm font-extrabold uppercase leading-normal tracking-[0.4px] text-brandSecondary dark:text-brandSecondary-dark">
+          Pricing Options
+        </p>
+        <div className="mt-1 flex flex-wrap items-center justify-between gap-3">
           <h2
             id="pricing-title"
-            className="text-3xl font-medium tracking-tight text-gray-900"
+            className="font-['Funnel_Display'] text-[38px] font-light leading-normal tracking-normal text-brandPrimary dark:text-brandPrimary-dark sm:text-[42px]"
           >
-            Flat pricing, no management fees.
+            Plans for Every Team
           </h2>
-          <p className="mt-2 text-lg text-gray-600">
-            Whether you’re one person trying to get ahead or a big firm trying
-            to take over the world, we’ve got a plan for you.
-          </p>
-        </div>
 
-        <div className="mt-8 flex justify-center">
-          <div className="relative">
-            <RadioGroup
-              value={activePeriod}
-              onChange={setActivePeriod}
-              className="grid grid-cols-2"
+          <div className="inline-flex items-center justify-end gap-2 rounded-[15px] bg-brandPrimary p-[5px] dark:bg-brandPrimary">
+            <button
+              type="button"
+              onClick={() => setBillingCycle("monthly")}
+                aria-pressed={billingCycle === "monthly"}
+              className={`rounded-[10px] px-3 py-1 font-['Funnel_Display'] text-xs font-semibold leading-normal tracking-normal transition-colors ${
+                billingCycle === "monthly"
+                  // ? "bg-colorHilight text-brandPrimary"
+                  ? "bg-backgroundSecondary text-brandPrimary"
+                  : "bg-transparent text-backgroundPrimary"
+              }`}
             >
-              {["Monthly", "Annually"].map((period) => (
-                <Radio
-                  key={period}
-                  value={period}
-                  className={clsx(
-                    "cursor-pointer border border-gray-300 px-[calc(theme(spacing.3)-1px)] py-[calc(theme(spacing.2)-1px)] text-sm text-gray-700 outline-2 outline-offset-2 transition-colors hover:border-gray-400",
-                    period === "Monthly"
-                      ? "rounded-l-lg"
-                      : "-ml-px rounded-r-lg",
-                  )}
-                >
-                  {period}
-                </Radio>
-              ))}
-            </RadioGroup>
-            <div
-              aria-hidden="true"
-              className={clsx(
-                "pointer-events-none absolute inset-0 z-10 grid grid-cols-2 overflow-hidden rounded-lg bg-cyan-500 transition-all duration-300",
-                activePeriod === "Monthly"
-                  ? "[clip-path:inset(0_50%_0_0)]"
-                  : "[clip-path:inset(0_0_0_calc(50%-1px))]",
-              )}
+              Pay Monthly
+            </button>
+            <button
+              type="button"
+              onClick={() => setBillingCycle("yearly")}
+                aria-pressed={billingCycle === "yearly"}
+              className={`rounded-[10px] px-3 py-1 font-['Funnel_Display'] text-xs font-semibold leading-normal tracking-normal transition-colors ${
+                billingCycle === "yearly"
+                  // ? "bg-colorHilight text-brandPrimary"
+                  ? "bg-backgroundSecondary text-brandPrimary"
+                  : "bg-transparent text-backgroundPrimary"
+              }`}
             >
-              {["Monthly", "Annually"].map((period) => (
-                <div
-                  key={period}
-                  className={clsx(
-                    "py-2 text-center text-sm font-semibold text-white",
-                    period === "Annually" && "-ml-px",
-                  )}
-                >
-                  {period}
-                </div>
-              ))}
-            </div>
+              Pay Yearly ( Save up to 20% )
+            </button>
           </div>
         </div>
 
-        <div className="mx-auto mt-16 grid max-w-2xl grid-cols-1 items-start gap-x-8 gap-y-10 sm:mt-20 lg:max-w-none lg:grid-cols-3">
-          {plans.map((plan) => (
-            <Plan key={plan.name} {...plan} activePeriod={activePeriod} />
+        <div className="mt-8 grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-4">
+          {visiblePlans.map((plan) => (
+            <PricingCard key={plan.name} {...plan} />
           ))}
         </div>
       </Container>

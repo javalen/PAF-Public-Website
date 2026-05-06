@@ -8,9 +8,10 @@ import Register from "./pages/Register";
 import QuickStart from "./pages/QuickStart";
 import Support from "./pages/Support";
 import Privacy from "./pages/Privacy";
+import { PricingWizardProvider } from "./components/pricing-wizard/PricingWizardContext";
+import { PricingWizardModal } from "./components/pricing-wizard/PricingWizardModal";
 
 // NEW: Pricing Wizard routes (public)
-import PricingWizard from "./components/pricing-wizard/PricingWizard";
 import PublicQuotePage from "./components/pricing-wizard/PublicQuotePage";
 import NewsletterViewer from "./pages/NewsletterViewer";
 
@@ -25,17 +26,19 @@ function App() {
     { path: "/support", element: <Support /> },
     { path: "/privacy", element: <Privacy /> },
 
-    // NEW: Public pricing wizard + shareable quote page
-    { path: "/pricing", element: <PricingWizard /> },
+    // NEW: Shareable quote page (pricing wizard is now a modal)
     { path: "/pricing/quote/:id", element: <PublicQuotePage /> },
     { path: "/news-letter", element: <NewsletterViewer /> },
     { path: "/news-letter/view/:slug", element: <NewsletterViewer /> },
   ]);
 
   return (
-    <AuthContext.Provider value={{ user, setUser }}>
-      <RouterProvider router={router} />
-    </AuthContext.Provider>
+    <PricingWizardProvider>
+      <AuthContext.Provider value={{ user, setUser }}>
+        <RouterProvider router={router} />
+        <PricingWizardModal />
+      </AuthContext.Provider>
+    </PricingWizardProvider>
   );
 }
 

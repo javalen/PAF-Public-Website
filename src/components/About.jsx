@@ -6,18 +6,18 @@ const About = () => {
     <section
       id="about"
       aria-labelledby="about-title"
-      className="border-t border-gray-200 py-20 sm:py-32"
+      className="border-t border-borderPrimary dark:border-borderPrimary-dark py-20 sm:py-32"
     >
       <Container>
-        <h1 className="text-4xl font-bold mb-4 text-center text-gray-800">
+        <h1 className="font-['Roboto'] tracking-normal leading-normal text-4xl font-bold mb-4 text-center text-textPrimary dark:text-textPrimary-dark">
           About Predictaf
         </h1>
 
         <section className="mb-6">
-          <h2 className="text-2xl font-semibold mb-2 text-gray-700">
+          <h2 className="font-['Roboto'] tracking-normal leading-normal text-2xl font-semibold mb-2 text-textSecondary dark:text-textSecondary-dark">
             Who We Are
           </h2>
-          <p className="text-gray-600 leading-relaxed">
+          <p className="font-['Roboto'] tracking-normal leading-normal text-textSecondary dark:text-textSecondary-dark leading-relaxed">
             At Predictaf, we are a team of dedicated professionals passionate
             about redefining the standards of property management. Our expertise
             spans across various fields, including mechanical systems, software
@@ -27,10 +27,10 @@ const About = () => {
         </section>
 
         <section className="mb-6">
-          <h2 className="text-2xl font-semibold mb-2 text-gray-700">
+          <h2 className="font-['Roboto'] tracking-normal leading-normal text-2xl font-semibold mb-2 text-textSecondary dark:text-textSecondary-dark">
             What We Do
           </h2>
-          <p className="text-gray-600 leading-relaxed">
+          <p className="font-['Roboto'] tracking-normal leading-normal text-textSecondary dark:text-textSecondary-dark leading-relaxed">
             Predictaf is a purpose-built software designed specifically for
             managing mechanical systems within your properties. Unlike
             traditional property management software that primarily focuses on
@@ -42,10 +42,10 @@ const About = () => {
         </section>
 
         <section className="mb-6">
-          <h2 className="text-2xl font-semibold mb-2 text-gray-700">
+          <h2 className="font-['Roboto'] tracking-normal leading-normal text-2xl font-semibold mb-2 text-textSecondary dark:text-textSecondary-dark">
             Our Features
           </h2>
-          <ul className="list-disc list-inside text-gray-600 leading-relaxed">
+          <ul className="list-disc list-inside text-textSecondary dark:text-textSecondary-dark leading-relaxed">
             <li>
               <strong>Digital Transparency:</strong> Provide clear, real-time
               insights to all stakeholders, ensuring everyone is informed and
@@ -70,17 +70,17 @@ const About = () => {
         </section>
 
         <section>
-          <h2 className="text-2xl font-semibold mb-2 text-gray-700">
+          <h2 className="font-['Roboto'] tracking-normal leading-normal text-2xl font-semibold mb-2 text-textSecondary dark:text-textSecondary-dark">
             Why Choose Predictaf?
           </h2>
-          <p className="text-gray-600 leading-relaxed">
+          <p className="font-['Roboto'] tracking-normal leading-normal text-textSecondary dark:text-textSecondary-dark leading-relaxed">
             Our software is designed with your needs in mind. We understand the
             complexities of property management and the importance of
             maintaining mechanical systems. With Predictaf, you gain a powerful
             tool that simplifies maintenance processes, enhances transparency,
             and gives you complete control over your operations.
           </p>
-          <p className="text-gray-600 leading-relaxed">
+          <p className="font-['Roboto'] tracking-normal leading-normal text-textSecondary dark:text-textSecondary-dark leading-relaxed">
             Join us in transforming property management and experience the
             benefits of a streamlined, automated approach to mechanical systems
             maintenance. With Predictaf, the power to manage your properties

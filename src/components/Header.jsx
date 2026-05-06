@@ -1,5 +1,7 @@
 "use client";
 
+import { useEffect, useState } from "react";
+
 import {
   Popover,
   PopoverButton,
@@ -11,8 +13,11 @@ import { AnimatePresence, motion } from "framer-motion";
 import { Button } from "./Button";
 import { Container } from "./Container";
 import { NavLinks } from "./NavLinks";
-import Logo from "../assets/predictafP.png";
 import { Link } from "react-router-dom";
+// import iconLight from "../assets/predictaf-icon.svg";
+// import iconDark from "../assets/predictaf-icon-dark.svg";
+import iconLight from "../assets/predictaf-icon-test.svg";
+import iconDark from "../assets/predictaf-icon-test-dark.svg";
 
 /* -------------------- ICONS -------------------- */
 
@@ -248,20 +253,48 @@ function ResourcesMenu() {
 /* -------------------- HEADER -------------------- */
 
 export function Header() {
+  const [isScrolled, setIsScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => setIsScrolled(window.scrollY > 10);
+
+    handleScroll();
+    window.addEventListener("scroll", handleScroll, { passive: true });
+
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
   return (
-    <header>
+    <header
+      className={cx(
+        "sticky top-0 z-[60] border-b border-borderPrimary dark:border-borderPrimary-dark bg-backgroundPrimary dark:bg-backgroundPrimary-dark transition-shadow duration-300",
+        isScrolled
+          // ? "shadow-[0_4px_14px_rgba(20,20,20,0.08)] dark:shadow-[0_4px_14px_rgba(0,0,0,0.45)]"
+          // : "shadow-none",
+          ? "bg-backgroundSecondary dark:bg-backgroundSecondary-dark"
+          : "bg-backgroundPrimary",
+      )}
+    >
       <nav>
         <Container className="relative z-50 flex justify-between py-4">
+          {/* Mobile: icon only */}
+          <div className="flex items-center lg:hidden">
+            <Link to="/" className="inline-flex items-center">
+              <img src={iconLight} alt="Predictaf" className="h-[45px] w-auto object-contain dark:hidden" draggable={false} />
+              <img src={iconDark} alt="Predictaf" className="hidden h-[45px] w-auto object-contain dark:block" draggable={false} />
+            </Link>
+          </div>
+
           <div className="hidden lg:flex lg:items-center gap-1 whitespace-nowrap">
             <NavLinks />
 
-            <Divider />
+            {/* <Divider /> */}
 
-            <DesktopLink to="/pricing">Pricing Wizard</DesktopLink>
+            {/* <DesktopLink to="/pricing">Pricing Wizard</DesktopLink> */}
 
-            <Divider />
+            {/* <Divider /> */}
 
-            <ResourcesMenu />
+            {/* <ResourcesMenu /> */}
           </div>
 
           <div className="flex items-center gap-6">
@@ -305,24 +338,28 @@ export function Header() {
                           className="absolute inset-x-0 top-0 z-0 origin-top rounded-b-2xl bg-gray-50 px-6 pb-6 pt-32 shadow-2xl shadow-gray-900/20"
                         >
                           <div className="space-y-8">
-                            <MobileNavLink href="/#features" onClick={close}>
-                              Features
-                            </MobileNavLink>
-
-                            <MobileNavLink href="/pricing" onClick={close}>
-                              Pricing Wizard
-                            </MobileNavLink>
-
-                            <MobileNavLink href="/#faqs" onClick={close}>
-                              FAQs
-                            </MobileNavLink>
-
-                            <MobileNavLink href="/#about" onClick={close}>
+                            <MobileNavLink href="/#hero" onClick={close}>
                               About
                             </MobileNavLink>
 
-                            <MobileNavLink href="/quickstart" onClick={close}>
-                              Quick Start
+                            <MobileNavLink href="/#who-we-serve" onClick={close}>
+                              Who We Serve
+                            </MobileNavLink>
+
+                            <MobileNavLink href="/#features" onClick={close}>
+                              Key Features
+                            </MobileNavLink>
+
+                            <MobileNavLink href="/#pricing" onClick={close}>
+                              Pricing
+                            </MobileNavLink>
+
+                            <MobileNavLink href="/#mission" onClick={close}>
+                              Mission
+                            </MobileNavLink>
+
+                            <MobileNavLink href="https://calendar.app.google/p3Bi6LnTTzgfpo8M7" onClick={close}>
+                              Schedule a Demo
                             </MobileNavLink>
 
                             <MobileNavLink
@@ -368,14 +405,6 @@ export function Header() {
               )}
             </Popover>
 
-            {/* Desktop CTA */}
-            <Button
-              href="/register"
-              variant="outline"
-              className="hidden lg:block"
-            >
-              Register
-            </Button>
           </div>
         </Container>
       </nav>

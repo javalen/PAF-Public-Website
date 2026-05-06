@@ -62,7 +62,10 @@
   * {
     @apply border-border;
   }
+  html {
+    @apply bg-backgroundPrimary dark:bg-backgroundPrimary-dark;
+  }
   body {
-    @apply bg-background text-foreground;
+    @apply bg-backgroundPrimary dark:bg-backgroundPrimary-dark text-foreground;
   }
 }
