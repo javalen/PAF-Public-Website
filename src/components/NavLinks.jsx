@@ -11,7 +11,7 @@ const links = [
   { label: "Quick Start", href: "/quickstart" },
   {
     label: "Predictaf on YouTube",
-    href: "https://www.youtube.com/@PredictiveAF",
+    href: "https://www.youtube.com/@Predictaf",
     external: true,
   },
   { label: "Support", href: "/support" },
