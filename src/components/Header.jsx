@@ -356,6 +356,9 @@ export function Header() {
                           </div>
 
                           <div className="mt-8 flex flex-col gap-4">
+                            <Button href="/login" variant="outline">
+                              Login
+                            </Button>
                             <Button href="/register" variant="outline">
                               Register
                             </Button>
@@ -369,6 +372,9 @@ export function Header() {
             </Popover>
 
             {/* Desktop CTA */}
+            <Button href="/login" variant="outline" className="hidden lg:block">
+              Login
+            </Button>
             <Button
               href="/register"
               variant="outline"

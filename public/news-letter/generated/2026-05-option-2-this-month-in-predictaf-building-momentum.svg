@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <rect width="1200" height="630" fill="#f6f7fb"/>
+  <rect x="70" y="70" width="1060" height="490" rx="26" fill="#ffffff" stroke="#d9e2ec"/>
+  <path d="M120 430h960v80H120zM170 180h220v250H170zM430 130h260v300H430zM730 215h300v215H730z" fill="#ecfeff" stroke="#0f766e" stroke-width="10"/>
+  <path d="M210 230h48M210 285h48M210 340h48M485 185h70M485 245h70M485 305h70M785 270h80M785 330h80" stroke="#334155" stroke-width="18" stroke-linecap="round"/>
+  <rect x="790" y="110" width="250" height="150" rx="16" fill="#ffffff" stroke="#334155" stroke-width="10"/>
+  <path d="M830 215h170M830 170h70M930 170h70" stroke="#0f766e" stroke-width="12" stroke-linecap="round"/>
+  <circle cx="700" cy="390" r="34" fill="#334155"/>
+  <path d="M700 424v66M660 485h80M680 450h40" stroke="#334155" stroke-width="16" stroke-linecap="round"/>
+  <rect x="610" y="305" width="95" height="135" rx="16" fill="#ffffff" stroke="#0f766e" stroke-width="10"/>
+  <path d="M635 350h45M635 385h32" stroke="#334155" stroke-width="9" stroke-linecap="round"/>
+  <text x="90" y="520" fill="#111827" font-family="Arial, Helvetica, sans-serif" font-size="34" font-weight="700">2. Predictaf Insider</text>
+</svg>
