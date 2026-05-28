@@ -1,13 +1,15 @@
 import { useState } from "react";
 import "./App.css";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import Login from "./pages/Login";
 import Home from "./pages/Home";
 import AuthContext from "./auth/context";
 import Register from "./pages/Register";
+import Login from "./pages/Login";
 import QuickStart from "./pages/QuickStart";
 import Support from "./pages/Support";
 import Privacy from "./pages/Privacy";
+import Careers from "./pages/Careers";
+import Logos from "./pages/Logos";
 import { PricingWizardProvider } from "./components/pricing-wizard/PricingWizardContext";
 import { PricingWizardModal } from "./components/pricing-wizard/PricingWizardModal";
 
@@ -25,6 +27,8 @@ function App() {
     { path: "/quickstart", element: <QuickStart /> },
     { path: "/support", element: <Support /> },
     { path: "/privacy", element: <Privacy /> },
+    { path: "/careers", element: <Careers /> },
+    { path: "/pages/logos", element: <Logos /> },
 
     // NEW: Shareable quote page (pricing wizard is now a modal)
     { path: "/pricing/quote/:id", element: <PublicQuotePage /> },

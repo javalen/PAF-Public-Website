@@ -1,8 +1,10 @@
-import { ArrowRight } from "lucide-react";
+import { useState } from "react";
+import { ArrowRight, Users } from "lucide-react";
 import { Link } from "react-router-dom";
 
 import { Container } from "./Container";
 import PafButton from "./ui/PafButton";
+import PafChip from "./ui/PafChip";
 
 const audienceGroups = [
   {
@@ -33,6 +35,8 @@ const audienceGroups = [
 ];
 
 export default function WhoWeServe() {
+  const [selectedAudience, setSelectedAudience] = useState(audienceGroups[0]);
+
   return (
     <section
       id="who-we-serve"
@@ -41,15 +45,63 @@ export default function WhoWeServe() {
     >
       <Container className="max-w-[1250px]">
         <div className="flex flex-col gap-10 lg:gap-8">
+          {/* Mobile layout */}
+          <div className="flex flex-col gap-[10px] px-0 pb-[12px] pt-0 lg:hidden">
+            <div className="flex flex-col gap-1">
+              <p className="font-['Funnel_Display'] text-xs font-extrabold uppercase leading-normal tracking-normal text-brandSecondary dark:text-brandSecondary-dark">
+                Who We Serve
+              </p>
+              <h2 className="font-['Funnel_Display'] text-[36px] font-light leading-[1.1] tracking-normal text-brandPrimary dark:text-brandPrimary-dark">
+                Built for Facility Operations Teams
+              </h2>
+            </div>
+
+            <div className="w-full overflow-x-auto pt-3">
+              <div className="flex min-w-max items-center gap-2 pr-2">
+                {audienceGroups.map((group) => (
+                  <PafChip
+                    key={group.title}
+                    label={group.title}
+                    isSelected={selectedAudience.title === group.title}
+                    onClick={() => setSelectedAudience(group)}
+                    icon={<Users />}
+                  />
+                ))}
+              </div>
+            </div>
+
+            <div className="flex flex-col gap-2 pb-8 pt-[22px]">
+              <h3 className="font-['Funnel_Display'] text-xl font-medium leading-normal tracking-normal text-brandPrimary dark:text-brandPrimary-dark">
+                {selectedAudience.title}
+              </h3>
+              <p className="font-['Roboto'] text-sm font-normal leading-normal tracking-normal text-textSecondary dark:text-textSecondary-dark">
+                {selectedAudience.description}
+              </p>
+            </div>
+
+            <Link to="/register" className="w-full">
+              <PafButton
+                variant="primary"
+                size="large"
+                iconRight={<ArrowRight />}
+                className="w-full"
+              >
+                Start a Free Trial
+              </PafButton>
+            </Link>
+          </div>
+
+          {/* Desktop layout */}
+          <div className="hidden lg:block">
           <div className="max-w-[541px]">
             <p className="font-['Funnel_Display'] text-sm font-extrabold uppercase leading-normal tracking-[0.4px] text-brandSecondary dark:text-brandSecondary-dark">
               Who We Serve
             </p>
             <h2
               id="who-we-serve-title"
-              className="mt-1 font-['Funnel_Display'] text-[38px] font-light leading-[1.15] tracking-normal text-brandPrimary dark:text-brandPrimary-dark sm:text-[42px]"
+              className="mt-1 font-['Funnel_Display'] text-[38px] font-light leading-[1.15] tracking-normal text-brandPrimary dark:text-brandPrimary-dark sm:text-[42px] mb-8"
             >
-              Supporting the people who keep things running.
+              Supporting the Teams Who Keep Things Running
             </h2>
           </div>
 
@@ -101,6 +153,7 @@ export default function WhoWeServe() {
                 </PafButton>
               </Link>
             </div>
+          </div>
           </div>
         </div>
       </Container>

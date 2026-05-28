@@ -1,12 +1,13 @@
 import clsx from "clsx";
 import React from "react";
+import PropTypes from "prop-types";
 
 // Primary button component with consistent styling, responsive sizing, and icon support
-// Supports three visual variants (primary, secondary, danger) and four size options (xs, small, medium, large)
+// Supports visual variants (primary, secondary, danger, textlink) and four size options (xs, small, medium, large)
 // Automatically adjusts layout for icon-only buttons and handles responsive size classes
 export function PafButton({
   children,
-  variant = "primary", // Visual style: 'primary' | 'secondary' | 'danger'
+  variant = "primary", // Visual style: 'primary' | 'secondary' | 'danger' | 'textlink'
   size = "medium", // Button size: 'xs' | 'small' | 'medium' | 'large' (supports responsive: "large sm:medium")
   disabled = false,
   iconLeft = null, // Icon to display on left side of text
@@ -29,6 +30,7 @@ export function PafButton({
     // primary: "bg-brandPrimary border border-brandPrimary text-white hover:bg-colorHilight hover:text-brandPrimary",
     secondary: "bg-backgroundSecondary dark:bg-backgroundSecondary-dark text-textPrimary dark:text-textPrimary-dark border border-borderSecondary dark:border-borderSecondary-dark hover:border-black dark:hover:border-white",
     danger: "bg-backgroundTagFalse text-textTagFalse border border-borderTagFalse hover:border-textTagFalse",
+    textlink: "bg-transparent border-0 rounded-none text-brandPrimary dark:text-brandPrimary-dark hover:underline font-['Roboto',sans-serif] tracking-normal leading-normal",
   };
   
   // Determine appropriate icon size based on button size
@@ -51,6 +53,47 @@ export function PafButton({
   
   // Detect icon-only mode - either explicitly set or no children with icons present
   const isIconOnly = iconOnly || (!children && (iconLeft || iconRight));
+
+  // Textlink variant is text-only and should not receive button-like padding.
+  const getTextLinkSizeClasses = (sizeInput) => {
+    const textSizes = {
+      xs: "text-xs p-0",
+      small: "text-sm p-0",
+      medium: "text-base p-0",
+      large: "text-lg p-0",
+    };
+
+    if (typeof sizeInput === "string" && !sizeInput.includes(":")) {
+      return textSizes[sizeInput] || textSizes.medium;
+    }
+
+    if (typeof sizeInput === "string" && sizeInput.includes(":")) {
+      const responsiveTextSizes = {
+        "sm:xs": "sm:text-xs sm:p-0",
+        "sm:small": "sm:text-sm sm:p-0",
+        "sm:medium": "sm:text-base sm:p-0",
+        "sm:large": "sm:text-lg sm:p-0",
+        "md:xs": "md:text-xs md:p-0",
+        "md:small": "md:text-sm md:p-0",
+        "md:medium": "md:text-base md:p-0",
+        "md:large": "md:text-lg md:p-0",
+        "lg:xs": "lg:text-xs lg:p-0",
+        "lg:small": "lg:text-sm lg:p-0",
+        "lg:medium": "lg:text-base lg:p-0",
+        "lg:large": "lg:text-lg lg:p-0",
+      };
+
+      return sizeInput
+        .split(" ")
+        .map((sizePart) => {
+          if (sizePart.includes(":")) return responsiveTextSizes[sizePart] || "";
+          return textSizes[sizePart] || textSizes.medium;
+        })
+        .join(" ");
+    }
+
+    return textSizes.medium;
+  };
   
   // Generate size classes including responsive variants
   // Handles both simple sizes ("medium") and responsive sizes ("large sm:medium")
@@ -127,7 +170,7 @@ export function PafButton({
       className={clsx(
         base,
         variants[variant],
-        getSizeClasses(size),
+        variant === "textlink" ? getTextLinkSizeClasses(size) : getSizeClasses(size),
         isIconOnly && "gap-0", // Remove gap for icon-only buttons
         className,
         disabled && "opacity-50 cursor-not-allowed"
@@ -145,5 +188,16 @@ export function PafButton({
 }
 
 PafButton.displayName = "PafButton";
+
+PafButton.propTypes = {
+  children: PropTypes.node,
+  variant: PropTypes.oneOf(["emphasis", "primary", "secondary", "danger", "textlink"]),
+  size: PropTypes.string,
+  disabled: PropTypes.bool,
+  iconLeft: PropTypes.node,
+  iconRight: PropTypes.node,
+  iconOnly: PropTypes.bool,
+  className: PropTypes.string,
+};
 
 export default PafButton;

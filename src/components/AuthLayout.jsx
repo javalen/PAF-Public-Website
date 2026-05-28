@@ -1,12 +1,12 @@
 import { CirclesBackground } from ".//CirclesBackground";
-import Logo from "../assets/predictafP.png";
+// import Logo from "../assets/predictafP.png";
 
 export function AuthLayout({ title, subtitle, children }) {
   return (
     <main className="flex min-h-full overflow-hidden pt-8 sm:py-14">
       <div className="mx-auto flex w-full max-w-2xl flex-col px-4 sm:px-6">
         <a href="/" aria-label="Home">
-          <img src={Logo} className="mx-auto h-20 w-auto" />
+          {/* <img src={Logo} className="mx-auto h-20 w-auto" /> */}
         </a>
         <div className="relative mt-6 sm:mt-8">
           <CirclesBackground

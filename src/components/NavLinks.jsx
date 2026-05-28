@@ -5,8 +5,8 @@ import PafButton from "./ui/PafButton";
 import DarkModeToggle from "./ui/DarkModeToggle";
 // import logoLight from "../assets/predictaf-logo.svg";
 // import logoDark from "../assets/predictaf-logo-dark.svg";
-import logoLight from "../assets/predictaf-logo-test.svg";
-import logoDark from "../assets/predictaf-logo-dark-test.svg";
+import logoLight from "../assets/predictaf-logo.svg";
+import logoDark from "../assets/predictaf-logo-dark.svg";
 
 const primaryLinks = [
   { label: "About", href: "/#hero" },
@@ -99,11 +99,24 @@ function renderNavLinks(withActions) {
           </PafButton>
         </Link>
 
-        <Link to="/login">
+        {/* <Link to="/login"> */}
+        {/* <Link to="https://west.predictaf.com/">
           <PafButton variant="secondary" size="small">
             Log In
           </PafButton>
-        </Link>
+        </Link> */}
+
+        <a
+          // href="https://west.predictaf.com/"
+          href="/login" 
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <PafButton variant="secondary" size="small">
+            Log In
+          </PafButton>
+        </a>
+
       </div>
     </div>
   );

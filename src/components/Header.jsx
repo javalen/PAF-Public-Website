@@ -10,14 +10,26 @@ import {
 } from "@headlessui/react";
 import { AnimatePresence, motion } from "framer-motion";
 
-import { Button } from "./Button";
+import PafButton from "./ui/PafButton";
+import DarkModeToggle from "./ui/DarkModeToggle";
 import { Container } from "./Container";
 import { NavLinks } from "./NavLinks";
 import { Link } from "react-router-dom";
-// import iconLight from "../assets/predictaf-icon.svg";
-// import iconDark from "../assets/predictaf-icon-dark.svg";
-import iconLight from "../assets/predictaf-icon-test.svg";
-import iconDark from "../assets/predictaf-icon-test-dark.svg";
+
+
+import iconLight from "../assets/predictaf-icon.svg";
+import iconDark from "../assets/predictaf-icon-dark.svg";
+import logoLight from "../assets/predictaf-logo.svg";
+import logoDark from "../assets/predictaf-logo-dark.svg";
+
+
+import appStoreBadge from "../assets/appStore.svg";
+import googlePlayBadge from "../assets/googlePlay.svg";
+import { ArrowRight } from "lucide-react";
+
+const ANDROID_APP_URL =
+  "https://play.google.com/store/apps/details?id=com.predictiveaf.mobile&pcampaignid=web_share";
+const IOS_APP_URL = "#";
 
 /* -------------------- ICONS -------------------- */
 
@@ -38,7 +50,7 @@ function ChevronUpIcon(props) {
   return (
     <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" {...props}>
       <path
-        d="M17 14l-5-5-5 5"
+        d="M6 6l12 12M18 6 6 18"
         strokeWidth={2}
         strokeLinecap="round"
         strokeLinejoin="round"
@@ -86,9 +98,13 @@ function Divider() {
   return <span className="mx-2 text-gray-300 opacity-60 select-none">|</span>;
 }
 
-function MobileNavLink({ href, children, onClick }) {
+function MobileNavLink({ href, children, onClick, className }) {
   const isExternal = href.startsWith("http") || href.endsWith(".pdf");
   const isHash = href.startsWith("#") || href.includes("/#");
+  const linkClasses = cx(
+    "block text-lg font-normal font-['Funnel_Display'] leading-normal tracking-normal text-brandPrimary dark:text-brandPrimary-dark",
+    className,
+  );
 
   const handleClick = () => {
     if (onClick) onClick(); // close menu
@@ -101,7 +117,7 @@ function MobileNavLink({ href, children, onClick }) {
         target="_blank"
         rel="noopener noreferrer"
         onClick={handleClick}
-        className="block text-base leading-7 tracking-tight text-gray-700"
+        className={linkClasses}
       >
         {children}
       </a>
@@ -113,7 +129,7 @@ function MobileNavLink({ href, children, onClick }) {
       <a
         href={href}
         onClick={handleClick}
-        className="block text-base leading-7 tracking-tight text-gray-700"
+        className={linkClasses}
       >
         {children}
       </a>
@@ -125,7 +141,7 @@ function MobileNavLink({ href, children, onClick }) {
       as={Link}
       to={href}
       onClick={handleClick}
-      className="block text-base leading-7 tracking-tight text-gray-700"
+      className={linkClasses}
     >
       {children}
     </PopoverButton>
@@ -276,12 +292,54 @@ export function Header() {
       )}
     >
       <nav>
-        <Container className="relative z-50 flex justify-between py-4">
-          {/* Mobile: icon only */}
+        <Container className="relative z-50 flex items-center justify-between py-4">
+          {/* Mobile: full logo pre-scroll, icon-only on sticky state */}
           <div className="flex items-center lg:hidden">
             <Link to="/" className="inline-flex items-center">
-              <img src={iconLight} alt="Predictaf" className="h-[45px] w-auto object-contain dark:hidden" draggable={false} />
-              <img src={iconDark} alt="Predictaf" className="hidden h-[45px] w-auto object-contain dark:block" draggable={false} />
+              {isScrolled ? (
+                <>
+                 
+                  <img
+                    src={iconLight}
+                    alt="Predictaf"
+                    className="h-[50px] w-auto object-contain dark:hidden"
+                    draggable={false}
+                  />
+                  <img
+                    src={iconDark}
+                    alt="Predictaf"
+                    className="hidden h-[50px] w-auto object-contain dark:block"
+                    draggable={false}
+                  />
+                  {/* <img
+                    src={logoLight}
+                    alt="Predictaf"
+                    className="h-[38px] w-auto object-contain dark:hidden"
+                    draggable={false}
+                  />
+                  <img
+                    src={logoDark}
+                    alt="Predictaf"
+                    className="hidden h-[38px] w-auto object-contain dark:block"
+                    draggable={false}
+                  /> */}
+                </>
+              ) : (
+                <>
+                  <img
+                    src={logoLight}
+                    alt="Predictaf"
+                    className="h-[38px] w-auto object-contain dark:hidden"
+                    draggable={false}
+                  />
+                  <img
+                    src={logoDark}
+                    alt="Predictaf"
+                    className="hidden h-[38px] w-auto object-contain dark:block"
+                    draggable={false}
+                  />
+                </>
+              )}
             </Link>
           </div>
 
@@ -302,16 +360,28 @@ export function Header() {
             <Popover className="lg:hidden">
               {({ open, close }) => (
                 <>
-                  <PopoverButton
-                    className="relative z-10 -m-2 inline-flex items-center rounded-lg stroke-gray-900 p-2 hover:bg-gray-200/50 hover:stroke-gray-600 active:stroke-gray-900 ui-not-focus-visible:outline-none"
-                    aria-label="Toggle site navigation"
-                  >
-                    {open ? (
-                      <ChevronUpIcon className="h-6 w-6" />
-                    ) : (
-                      <MenuIcon className="h-6 w-6" />
+                  <div className="ml-auto flex items-center gap-2">
+                    <DarkModeToggle />
+
+                    {isScrolled && (
+                      <Link to="/register" className="inline-flex">
+                        <PafButton variant="primary" size="small">
+                          Sign Up
+                        </PafButton>
+                      </Link>
                     )}
-                  </PopoverButton>
+
+                    <PopoverButton
+                      className="relative z-10 -mr-1 inline-flex items-center rounded-lg p-2 stroke-gray-900 hover:bg-gray-200/50 hover:stroke-gray-600 active:stroke-gray-900 ui-not-focus-visible:outline-none dark:stroke-gray-100 dark:hover:bg-white/10 dark:hover:stroke-white"
+                      aria-label="Toggle site navigation"
+                    >
+                      {open ? (
+                        <ChevronUpIcon className="h-6 w-6" />
+                      ) : (
+                        <MenuIcon className="h-6 w-6" />
+                      )}
+                    </PopoverButton>
+                  </div>
 
                   <AnimatePresence initial={false}>
                     {open && (
@@ -322,7 +392,7 @@ export function Header() {
                           initial={{ opacity: 0 }}
                           animate={{ opacity: 1 }}
                           exit={{ opacity: 0 }}
-                          className="fixed inset-0 z-0 bg-gray-300/60 backdrop-blur"
+                          className="fixed inset-0 z-0 bg-transparent"
                         />
 
                         <PopoverPanel
@@ -335,67 +405,114 @@ export function Header() {
                             y: -32,
                             transition: { duration: 0.2 },
                           }}
-                          className="absolute inset-x-0 top-0 z-0 origin-top rounded-b-2xl bg-gray-50 px-6 pb-6 pt-32 shadow-2xl shadow-gray-900/20"
+                          className="absolute left-0 right-0 top-full z-0 origin-top overflow-hidden rounded-b-2xl bg-backgroundPrimary dark:bg-backgroundPrimary-dark pt-0 shadow-2xl shadow-gray-900/20 h-[calc(100dvh-78px)] flex flex-col"
                         >
-                          <div className="space-y-8">
-                            <MobileNavLink href="/#hero" onClick={close}>
-                              About
-                            </MobileNavLink>
+                          {/* Mobile menu sheet: menu links Funnel Display, no logo */}
+                          <div className="h-full flex flex-col border-t border-borderPrimary dark:border-borderPrimary-dark bg-backgroundPrimary dark:bg-backgroundPrimary-dark">
+                            <div className="flex-1 overflow-y-auto divide-y divide-borderPrimary dark:divide-borderPrimary-dark">
+                              <div className="px-6 py-3.5">
+                                <MobileNavLink href="/#hero" onClick={close} className="font-['Funnel_Display'] leading-normal tracking-normal text-lg">
+                                  About
+                                </MobileNavLink>
+                              </div>
+                              <div className="px-6 py-3.5">
+                                <MobileNavLink href="/#who-we-serve" onClick={close} className="font-['Funnel_Display'] leading-normal tracking-normal text-lg">
+                                  Who We Serve
+                                </MobileNavLink>
+                              </div>
+                              <div className="px-6 py-3.5">
+                                <MobileNavLink href="/#features" onClick={close} className="font-['Funnel_Display'] leading-normal tracking-normal text-lg">
+                                  Key Features
+                                </MobileNavLink>
+                              </div>
+                              <div className="px-6 py-3.5">
+                                <MobileNavLink href="/#pricing" onClick={close} className="font-['Funnel_Display'] leading-normal tracking-normal text-lg">
+                                  Pricing
+                                </MobileNavLink>
+                              </div>
+                              <div className="px-6 py-3.5">
+                                <MobileNavLink
+                                  href="https://calendar.app.google/p3Bi6LnTTzgfpo8M7"
+                                  onClick={close}
+                                  className="font-['Funnel_Display'] leading-normal tracking-normal text-lg"
+                                >
+                                  Schedule a Demo
+                                </MobileNavLink>
+                              </div>
+                            </div>
 
-                            <MobileNavLink href="/#who-we-serve" onClick={close}>
-                              Who We Serve
-                            </MobileNavLink>
+                            <div className="mt-auto shrink-0 bg-brandPrimary px-4 pb-5 pt-9 dark:bg-brandPrimary">
+                              <div className="flex flex-col gap-5">
+                                <Link to="/register" onClick={close} className="w-full">
+                                  <PafButton
+                                    variant="emphasis"
+                                    size="large"
+                                    className="w-full"
+                                    iconRight={< ArrowRight />}
+                                  >
+                                    Start a Free Trial
+                                  </PafButton>
+                                </Link>
 
-                            <MobileNavLink href="/#features" onClick={close}>
-                              Key Features
-                            </MobileNavLink>
+                                {/* <Link to="/login" onClick={close} className="w-full"> */}
+                                {/* <Link to="https://west.predictaf.com/" onClick={close} className="w-full">
+                                  <PafButton
+                                    variant="secondary"
+                                    size="large"
+                                    className="w-full border-0 bg-backgroundPrimary text-brandPrimary hover:bg-backgroundPrimary/95 dark:bg-backgroundPrimary-dark dark:text-brandPrimary-dark"
+                                  >
+                                    Log In
+                                  </PafButton>
+                                </Link> */}
 
-                            <MobileNavLink href="/#pricing" onClick={close}>
-                              Pricing
-                            </MobileNavLink>
 
-                            <MobileNavLink href="/#mission" onClick={close}>
-                              Mission
-                            </MobileNavLink>
+                                <a
+                                  // href="https://west.predictaf.com/"
+                                  href="/login" 
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  onClick={close}
+                                  className="w-full"
+                                >
+                                  <PafButton
+                                    variant="secondary"
+                                    size="large"
+                                    className="w-full border-0 bg-backgroundPrimary text-brandPrimary hover:bg-backgroundPrimary/95 dark:bg-backgroundPrimary-dark dark:text-brandPrimary-dark"
+                                  >
+                                    Log In
+                                  </PafButton>
+                                </a>
 
-                            <MobileNavLink href="https://calendar.app.google/p3Bi6LnTTzgfpo8M7" onClick={close}>
-                              Schedule a Demo
-                            </MobileNavLink>
-
-                            <MobileNavLink
-                              href="https://www.youtube.com/@PredictiveAF"
-                              onClick={close}
-                            >
-                              PAF on YouTube
-                            </MobileNavLink>
-
-                            <MobileNavLink href="/support" onClick={close}>
-                              Support
-                            </MobileNavLink>
-
-                            <MobileNavLink
-                              href="https://calendar.app.google/p3Bi6LnTTzgfpo8M7"
-                              onClick={close}
-                            >
-                              Request a Demo
-                            </MobileNavLink>
-
-                            <MobileNavLink
-                              href="https://www.predictiveaf.com/PredictiveAF_Intro_Deck.pdf"
-                              onClick={close}
-                            >
-                              Download Overview
-                            </MobileNavLink>
-
-                            <MobileNavLink href="/news-letter" onClick={close}>
-                              Newsletters
-                            </MobileNavLink>
-                          </div>
-
-                          <div className="mt-8 flex flex-col gap-4">
-                            <Button href="/register" variant="outline">
-                              Register
-                            </Button>
+                                <div className="flex items-center justify-center gap-3 p-4">
+                                  <a
+                                    href={ANDROID_APP_URL}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    onClick={close}
+                                    className="inline-flex"
+                                  >
+                                    <img
+                                      src={googlePlayBadge}
+                                      alt="Get it on Google Play"
+                                      className="h-[40px] w-auto"
+                                    />
+                                  </a>
+                                  <a
+                                    href={IOS_APP_URL}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    onClick={close}
+                                    className="inline-flex"
+                                  >
+                                    <img
+                                      src={appStoreBadge}
+                                      alt="Download on the App Store"
+                                      className="h-[40px] w-auto"
+                                    />
+                                  </a>
+                                </div>
+                              </div>
+                            </div>
                           </div>
                         </PopoverPanel>
                       </>

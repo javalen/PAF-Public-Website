@@ -18,6 +18,10 @@ import gridImg1 from "../assets/img-grid1-img1.jpg";
 import gridImg2 from "../assets/img-grid1-img2.jpg";
 import gridImg3 from "../assets/img-grid1-img3.jpg";
 import gridImg4 from "../assets/img-grid1-img4.jpg";
+import mGridImg1 from "../assets/m-img-grid1-img1.jpg";
+import mGridImg2 from "../assets/m-img-grid1-img2.jpg";
+import mGridImg3 from "../assets/m-img-grid1-img3.jpg";
+import mGridImg4 from "../assets/m-img-grid1-img4.jpg";
 import grid2Img1 from "../assets/img-grid2-img1.jpg";
 import grid2Img2 from "../assets/img-grid2-img2.jpg";
 import grid2Img3 from "../assets/img-grid2-img3.jpg";
@@ -28,6 +32,13 @@ const HOME_GRID_IMAGES = [
   { src: gridImg2, alt: "Inspection clipboard" },
   { src: gridImg3, alt: "Engineers reviewing systems" },
   { src: gridImg4, alt: "Pipe maintenance" },
+];
+
+const HOME_GRID_IMAGES_MOBILE = [
+  { src: mGridImg1, alt: "Property showing" },
+  { src: mGridImg2, alt: "Inspection clipboard" },
+  { src: mGridImg3, alt: "Pipe maintenance" },
+  { src: mGridImg4, alt: "Engineers reviewing systems" },
 ];
 
 const HOME_GRID_IMAGES_2 = [
@@ -42,11 +53,14 @@ export default function Home() {
     <>
       <Header />
       <Hero />
-      <ImageGrid images={HOME_GRID_IMAGES} fullWidth={false} />
+      <ImageGrid images={HOME_GRID_IMAGES} mobileImages={HOME_GRID_IMAGES_MOBILE} fullWidth={false} />
       <WhoWeServe />
       <ImageGrid images={HOME_GRID_IMAGES_2} fullWidth={false} layout="split-middle" />
+      {/* <LeadForm /> */}
       <KeyFeatures />
+      <LeadForm />
       <SocialProof />
+  
       <Pricing />
       
       <PricePredictor /> 
@@ -61,7 +75,7 @@ export default function Home() {
       {/* <Faqs /> */}
       {/* <About /> */}
     
-
+      {/* <LeadForm />  */}
       <Footer />
     </>
   );

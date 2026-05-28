@@ -3,10 +3,11 @@ import userImage from "../assets/user1.jpg";
 
 export default function SocialProof() {
   return (
-    <section className="bg-brandTertiary py-14 sm:py-16" aria-label="Customer testimonial">
+    <section className="bg-brandTertiary dark:bg-backgroundSecondary-dark py-14 sm:py-16" aria-label="Customer testimonial">
       <Container className="max-w-[1250px]">
         <div className="mx-auto flex max-w-[760px] flex-col items-center gap-6 text-center">
-          <p className="font-['Funnel_Display'] text-2xl font-normal leading-normal tracking-normal text-textPrimary-dark">
+          {/* Quote text size control: adjust text-xl / sm:text-2xl here */}
+          <p className="font-['Funnel_Display'] text-lg sm:text-2xl font-normal leading-normal tracking-normal text-textPrimary-dark">
             "Knowing what needs attention now and next lets me stay on top of everything and be proactive in managing our units."
           </p>
 

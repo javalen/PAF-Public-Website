@@ -21,13 +21,17 @@ export default function PricePredictor() {
               Need help deciding which plan is right for you?
             </p> */}
             <p className="font-['Funnel_Display'] text-[14px] font-extrabold uppercase leading-normal tracking-[0.4px] text-brandSecondary dark:text-brandSecondary-dark">
-              Which plan is right for you?
+              Plan Finder
+              {/* Which plan is right for you? */}
             </p>
             {/* <h2 className="mt-1 font-['Funnel_Display'] text-[28px] font-light leading-normal tracking-normal text-brandPrimary dark:text-brandPrimary-dark sm:text-[32px] lg:text-[35px]">
               Use our price predictor to find your ideal plan.
             </h2> */}
-            <h2 className="mt-1 font-['Funnel_Display'] text-[28px] font-light leading-tight tracking-normal text-brandPrimary dark:text-brandPrimary-dark sm:text-[32px] lg:text-[35px]">
-              Use the price plan predictor to find the best plan for your organizations needs.
+            <h2 className="hidden sm:flex mt-1 font-['Funnel_Display'] text-[28px] font-light leading-tight tracking-normal text-brandPrimary dark:text-brandPrimary-dark sm:text-[32px] lg:text-[35px]">
+               Use the Plan Finder to get an instant recommendation tailored to your needs.
+            </h2>
+            <h2 className="sm:hidden mt-1 font-['Funnel_Display'] text-[28px] font-light leading-tight tracking-normal text-brandPrimary dark:text-brandPrimary-dark sm:text-[32px] lg:text-[35px]">
+              Get an instant personalized plan recommendation.
             </h2>
             {/* <h2 className="mt-1 font-['Funnel_Display'] text-[28px] font-light leading-tight tracking-normal text-brandPrimary dark:text-brandPrimary-dark sm:text-[32px] lg:text-[35px]">
               Need help deciding which plan is right for you?
@@ -46,8 +50,10 @@ export default function PricePredictor() {
               size="medium"
               className="w-full min-w-[200px] justify-center"
               iconLeft={< MessageCircleQuestionMark className="h-5 w-5" />}
+              // iconLeft={<  className="h-5 w-5" />}
             >
-              Try the Price Plan Predictor
+              {/* Get My Prediction */}
+              Find Your Best Plan
             </PafButton>
           </button>
         </div>

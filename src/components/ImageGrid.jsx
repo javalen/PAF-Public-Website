@@ -5,10 +5,15 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 gsap.registerPlugin(ScrollTrigger);
 
-export default function ImageGrid({ images, fullWidth = true, layout = "split-right" }) {
+export default function ImageGrid({ images, mobileImages, fullWidth = true, layout = "split-right" }) {
   const wrapperRef = useRef(null);
   const gridRef = useRef(null);
-  const itemRefs = useRef([]);
+  const desktopItemRefs = useRef([]);
+  const mobileItemRefs = useRef([]);
+
+  // Use dedicated mobile images when provided, otherwise reuse desktop images.
+  const mobileImageArray =
+    mobileImages && mobileImages.length >= 4 ? mobileImages.slice(0, 4) : images.slice(0, 4);
 
   const gridColumnsClass =
     layout === "split-middle"
@@ -27,42 +32,71 @@ export default function ImageGrid({ images, fullWidth = true, layout = "split-ri
   };
 
   useEffect(() => {
-    if (!wrapperRef.current || !gridRef.current) return;
+    if (!wrapperRef.current) return;
 
-    const items = itemRefs.current.filter(Boolean);
-    if (items.length < 4) return;
+    // Clear any inline backgroundColor to let Tailwind classes handle it.
+    wrapperRef.current.style.backgroundColor = "";
 
-    // Clear any inline backgroundColor to let Tailwind classes handle it
-    wrapperRef.current.style.backgroundColor = '';
+    const mm = gsap.matchMedia();
 
-    // Set initial state: images start from full-width page edges with partial visibility
-    gsap.set(items[0], { x: "-40vw" });
-    gsap.set(items[1], { x: "-25vw" });
-    gsap.set(items[2], { x: "25vw" });
-    gsap.set(items[3], { x: "40vw" });
+    // Mobile-specific image reveal for the mobile-optimized grid.
+    mm.add("(max-width: 639px)", () => {
+      const items = mobileItemRefs.current.filter(Boolean);
+      if (items.length < 4) return undefined;
 
-    // Scrubbed animation
-    const tl = gsap.timeline({
-      scrollTrigger: {
-        trigger: wrapperRef.current,
-        start: "top 85%",
-        end: "top 35%",
-        scrub: 1.5,
-      },
+      gsap.set(items[0], { x: "-28vw" });
+      gsap.set(items[1], { x: "20vw" });
+      gsap.set(items[2], { x: "-20vw" });
+      gsap.set(items[3], { x: "28vw" });
+
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: wrapperRef.current,
+          start: "top 92%",
+          end: "top 48%",
+          scrub: 1.2,
+        },
+      });
+
+      tl.to(items, { x: 0, duration: 3.2, ease: "power2.inOut", stagger: 0.08 }, 0);
+
+      return () => {
+        tl.scrollTrigger?.kill();
+        tl.kill();
+      };
     });
 
-    // Animate images sliding in
-    tl.to(
-      items,
-      { x: 0, duration: 4, ease: "power2.inOut", stagger: 0.08 },
-      0
-    );
+    // Desktop/tablet image reveal for the desktop grid.
+    mm.add("(min-width: 640px)", () => {
+      const items = desktopItemRefs.current.filter(Boolean);
+      if (items.length < 4) return undefined;
+
+      gsap.set(items[0], { x: "-40vw" });
+      gsap.set(items[1], { x: "-25vw" });
+      gsap.set(items[2], { x: "25vw" });
+      gsap.set(items[3], { x: "40vw" });
+
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: wrapperRef.current,
+          start: "top 85%",
+          end: "top 35%",
+          scrub: 1.5,
+        },
+      });
+
+      tl.to(items, { x: 0, duration: 4, ease: "power2.inOut", stagger: 0.08 }, 0);
+
+      return () => {
+        tl.scrollTrigger?.kill();
+        tl.kill();
+      };
+    });
 
     return () => {
-      tl.scrollTrigger?.kill();
-      tl.kill();
+      mm.revert();
     };
-  }, []);
+  }, [images, mobileImages]);
 
   const [img1, img2, img3, img4] = images;
   const imageArray = [img1, img2, img3, img4];
@@ -77,7 +111,7 @@ export default function ImageGrid({ images, fullWidth = true, layout = "split-ri
         <div
           key={i}
           ref={(el) => {
-            if (el) itemRefs.current[i] = el;
+            if (el) desktopItemRefs.current[i] = el;
           }}
           className={getItemClassName(i)}
         >
@@ -90,16 +124,68 @@ export default function ImageGrid({ images, fullWidth = true, layout = "split-ri
   return (
     <div
       ref={wrapperRef}
-      className="relative w-screen overflow-hidden bg-backgroundPrimary dark:bg-backgroundPrimary-dark"
-      style={{ height: "345px" }}
+      className="relative w-full overflow-hidden bg-backgroundPrimary dark:bg-backgroundPrimary-dark"
+      style={mobileImages ? undefined : { height: "345px" }}
     >
-      {fullWidth ? (
-        grid
-      ) : (
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 h-full flex items-center justify-center">
-          {grid}
+      {/* Mobile asymmetric grid with dedicated mobile animation */}
+      <div className="sm:hidden flex flex-col gap-[4px]">
+        {/* Top row: wider left cell, narrower right cell */}
+        <div className="flex gap-[4px]">
+          <div
+            ref={(el) => {
+              if (el) mobileItemRefs.current[0] = el;
+            }}
+            className="h-[170px] overflow-hidden"
+            style={{ flex: "226 1 0%" }}
+          >
+            <img src={mobileImageArray[0].src} alt={mobileImageArray[0].alt} className="w-full h-full object-cover" />
+          </div>
+          <div
+            ref={(el) => {
+              if (el) mobileItemRefs.current[1] = el;
+            }}
+            className="h-[170px] overflow-hidden"
+            style={{ flex: "160 1 0%" }}
+          >
+            <img src={mobileImageArray[1].src} alt={mobileImageArray[1].alt} className="w-full h-full object-cover" />
+          </div>
         </div>
-      )}
+        {/* Bottom row: slightly narrower left, slightly wider right */}
+        <div className="flex gap-[4px]">
+          <div
+            ref={(el) => {
+              if (el) mobileItemRefs.current[2] = el;
+            }}
+            className="h-[90px] overflow-hidden"
+            style={{ flex: "185 1 0%" }}
+          >
+            <img src={mobileImageArray[2].src} alt={mobileImageArray[2].alt} className="w-full h-full object-cover" />
+          </div>
+          <div
+            ref={(el) => {
+              if (el) mobileItemRefs.current[3] = el;
+            }}
+            className="h-[90px] overflow-hidden"
+            style={{ flex: "200 1 0%" }}
+          >
+            <img src={mobileImageArray[3].src} alt={mobileImageArray[3].alt} className="w-full h-full object-cover" />
+          </div>
+        </div>
+      </div>
+
+      {/* Desktop grid – hidden on mobile when mobileImages is provided */}
+      <div
+        className="hidden sm:block"
+        style={{ height: "345px" }}
+      >
+        {fullWidth ? (
+          grid
+        ) : (
+          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 h-full flex items-center justify-center">
+            {grid}
+          </div>
+        )}
+      </div>
     </div>
   );
 }
@@ -111,6 +197,12 @@ ImageGrid.propTypes = {
       alt: PropTypes.string.isRequired,
     })
   ).isRequired,
+  mobileImages: PropTypes.arrayOf(
+    PropTypes.shape({
+      src: PropTypes.string.isRequired,
+      alt: PropTypes.string.isRequired,
+    })
+  ),
   fullWidth: PropTypes.bool,
   layout: PropTypes.oneOf(["split-right", "split-middle"]),
 };

@@ -7,8 +7,14 @@ import gsap from "gsap";
 import { Container } from "./Container";
 import PafButton from "./ui/PafButton";
 import hiwBackground from "../assets/hiwBackground.jpg";
+import mHiwBackground from "../assets/m-hiwBackground.jpg";
+import appStoreBadge from "../assets/appStore.svg";
+import googlePlayBadge from "../assets/googlePlay.svg";
 
 const SLIDE_ALIGNMENT_NUDGE = 14;
+const ANDROID_APP_URL =
+  "https://play.google.com/store/apps/details?id=com.predictiveaf.mobile&pcampaignid=web_share";
+const IOS_APP_URL = "#";
 
 const keyFeatures = [
   {
@@ -73,13 +79,16 @@ export default function KeyFeatures() {
   const trackRef = useRef(null);
   const cardRefs = useRef([]);
   const headingWrapRef = useRef(null);
+  const mobileFeatureRef = useRef(null);
   const [slideIndex, setSlideIndex] = useState(0);
+  const [mobileSlideIndex, setMobileSlideIndex] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
   const [isAutoScrollEnabled, setIsAutoScrollEnabled] = useState(true);
   const [alignOffset, setAlignOffset] = useState(0);
 
   const displayFeatures = [...keyFeatures, ...keyFeatures];
   const activeDot = slideIndex % keyFeatures.length;
+  const mobileActiveItem = keyFeatures[mobileSlideIndex];
 
   const updateAlignmentOffset = useCallback(() => {
     if (!headingWrapRef.current) return;
@@ -170,23 +179,186 @@ export default function KeyFeatures() {
     setSlideIndex(index);
   };
 
+  const handleMobileDotClick = (index) => {
+    setMobileSlideIndex(index);
+  };
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setMobileSlideIndex((prev) => (prev + 1) % keyFeatures.length);
+    }, 5200);
+
+    return () => clearInterval(timer);
+  }, []);
+
+  useEffect(() => {
+    if (!mobileFeatureRef.current) return;
+
+    const mm = gsap.matchMedia();
+
+    mm.add("(max-width: 639px)", () => {
+      const tween = gsap.fromTo(
+        mobileFeatureRef.current,
+        { x: 72, opacity: 0.3 },
+        {
+          x: 0,
+          opacity: 1,
+          duration: 0.85,
+          ease: "power2.out",
+          overwrite: "auto",
+        },
+      );
+
+      return () => {
+        tween.kill();
+      };
+    });
+
+    return () => {
+      mm.revert();
+    };
+  }, [mobileSlideIndex]);
+
   return (
     <section
       id="features"
       aria-labelledby="key-features-title"
-      className="relative w-full overflow-hidden mt-12 sm:mt-16 lg:mt-20 py-32 sm:py-36 lg:py-40"
-      style={{
-        backgroundImage: `url(${hiwBackground})`,
-        backgroundSize: "cover",
-        backgroundPosition: "center",
-        backgroundRepeat: "no-repeat",
-      }}
+      className="relative w-full overflow-hidden mt-0 sm:mt-16 lg:mt-20 py-32 sm:py-36 lg:py-40"
     >
+      {/* Mobile background art */}
       <div
-        className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgba(0,80,179,0.42)_0%,rgba(0,80,179,0.3)_55%,rgba(0,80,179,0.42)_100%)]"
+        className="absolute inset-0 sm:hidden"
+        style={{
+          backgroundImage: `url(${mHiwBackground})`,
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          backgroundRepeat: "no-repeat",
+        }}
         aria-hidden="true"
       />
 
+      {/* Desktop/tablet background art */}
+      <div
+        className="absolute inset-0 hidden sm:block"
+        style={{
+          backgroundImage: `url(${hiwBackground})`,
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          backgroundRepeat: "no-repeat",
+        }}
+        aria-hidden="true"
+      />
+
+      {/* Mobile overlay */}
+      <div
+        className="pointer-events-none absolute inset-0 bg-brandPrimary/72 sm:hidden"
+        aria-hidden="true"
+      />
+
+      {/* Desktop/tablet overlay */}
+      <div
+        className="pointer-events-none absolute inset-0 hidden sm:block bg-[linear-gradient(180deg,rgba(0,80,179,0.42)_0%,rgba(0,80,179,0.3)_55%,rgba(0,80,179,0.42)_100%)]"
+        aria-hidden="true"
+      />
+
+      {/* MOBILE VERSION */}
+      <Container className="relative z-10 sm:hidden px-4">
+        <div className="flex flex-col">
+          <p className="font-['Funnel_Display'] text-xs font-extrabold uppercase leading-normal tracking-normal text-colorHilight">
+            Key Features
+          </p>
+
+          <h2 className="mt-1 max-w-[320px] font-['Funnel_Display'] text-[36px] font-light leading-[1.1] tracking-normal text-textPrimary-dark">
+            {/* How Predictaf Works */}
+            The Source of Truth for Facility Operations
+          </h2>
+
+          <div ref={mobileFeatureRef} className="min-h-[286px]">
+            <div className="relative mt-5 ml-2 h-14 w-10">
+              <div className="absolute left-[15px] top-8 h-6 w-px bg-colorHilight" />
+              <div className="absolute left-[12px] top-[30px] h-2 w-2 rounded-full bg-colorHilight" />
+              <div className="absolute left-0 top-0 flex h-8 w-8 items-center justify-center rounded-[10px] bg-colorHilight text-sm font-bold font-['Funnel_Display'] leading-normal tracking-normal text-brandPrimary">
+                {mobileSlideIndex + 1}
+              </div>
+            </div>
+
+            <article className="mt-2 min-h-[220px] rounded-[36px] border border-brandSecondary/30 bg-[radial-gradient(circle_at_70%_45%,rgba(24,144,255,0.2),rgba(0,80,179,0.85)_55%,rgba(0,80,179,0.95)_100%)] px-7 py-8 shadow-[0_0_0_1px_rgba(24,144,255,0.25)]">
+              <h3 className="font-['Funnel_Display'] text-2xl font-medium leading-normal tracking-normal text-colorHilight">
+                {mobileActiveItem.title}
+              </h3>
+              <p className="mt-3 font-['Roboto'] text-base font-normal leading-normal tracking-normal text-textPrimary-dark">
+                {mobileActiveItem.description}
+              </p>
+            </article>
+          </div>
+
+          <div className="mt-8 flex items-center justify-center gap-3">
+            {keyFeatures.map((_, index) => (
+              <button
+                key={`mobile-dot-${index}`}
+                type="button"
+                onClick={() => handleMobileDotClick(index)}
+                aria-label={`Go to key feature ${index + 1}`}
+                className={`h-2.5 rounded-full transition-all duration-300 ${
+                  mobileSlideIndex === index
+                    ? "w-5 bg-colorHilight"
+                    : "w-2.5 bg-backgroundSecondary/35"
+                }`}
+              />
+            ))}
+          </div>
+
+          <div className="mt-8">
+            <Link to="/register" className="block w-full">
+              <PafButton
+                variant="emphasis"
+                size="large"
+                iconRight={<ArrowRight />}
+                className="w-full"
+              >
+                Start a Free Trial
+              </PafButton>
+            </Link>
+
+            <div className="mt-4 flex flex-col gap-3">
+              <p className="font-['Roboto'] text-sm font-medium leading-normal tracking-normal text-textPrimary-dark/90">
+                Download the mobile app
+              </p>
+              <div className="flex flex-wrap gap-3">
+                <a
+                  href={IOS_APP_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="Download on the App Store"
+                  className="inline-flex"
+                >
+                  <img
+                    src={appStoreBadge}
+                    alt="Download on the App Store"
+                    className="h-[54px] w-auto"
+                  />
+                </a>
+                <a
+                  href={ANDROID_APP_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="Get it on Google Play"
+                  className="inline-flex"
+                >
+                  <img
+                    src={googlePlayBadge}
+                    alt="Get it on Google Play"
+                    className="h-[54px] w-auto"
+                  />
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </Container>
+
+      {/* DESKTOP/TABLET VERSION */}
+      <div className="hidden sm:block">
       <Container className="relative z-10 max-w-[1250px]">
         <div className="flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
           <div ref={headingWrapRef}>
@@ -197,7 +369,8 @@ export default function KeyFeatures() {
               id="key-features-title"
               className="mt-1 font-['Funnel_Display'] text-[42px] font-light leading-[1.2] tracking-normal text-white"
             >
-              How Predictaf Works
+              {/* How Predictaf Works */}
+              The Source of Truth for Facility Operations
             </h2>
           </div>
 
@@ -268,6 +441,7 @@ export default function KeyFeatures() {
         >
           <ChevronRight className="h-5 w-5" />
         </button>
+      </div>
       </div>
     </section>
   );

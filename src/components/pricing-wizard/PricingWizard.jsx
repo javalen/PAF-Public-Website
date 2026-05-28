@@ -4,7 +4,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 // import Logo from "../../assets/predictafP.png";
 // import Logo from "../../assets/predictaf-icon-test.svg";
-import Logo from "../../assets/predictaf-logo-test.svg";
+import Logo from "../../assets/predictaf-logo.svg";
 
 
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";

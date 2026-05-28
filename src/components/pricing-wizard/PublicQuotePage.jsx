@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { useParams } from "react-router-dom";
-import Logo from "../../assets/predictafP.png";
+// import Logo from "../../assets/predictafP.png";
+import Logo from "../../assets/predictaf-icon.svg";
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 import { Button } from "../ui/button";
 import { Separator } from "../ui/separator";

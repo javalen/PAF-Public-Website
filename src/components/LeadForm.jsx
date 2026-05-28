@@ -1,9 +1,12 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { ArrowRight } from "lucide-react";
-import PropTypes from "prop-types";
+import { ArrowRight, Calendar } from "lucide-react";
 import { Container } from "./Container";
 import PafButton from "./ui/PafButton";
+
+const SCHEDULE_DEMO_URL =
+  import.meta.env.VITE_SCHEDULE_DEMO_URL ||
+  "https://calendar.app.google/p3Bi6LnTTzgfpo8M7";
 
 // LeadForm captures name and email, then navigates to pricing wizard
 export default function LeadForm() {
@@ -87,23 +90,43 @@ export default function LeadForm() {
   };
 
   return (
-    <section className="bg-backgroundSecondary dark:bg-backgroundSecondary-dark py-12 sm:py-16 lg:py-20">
+    // <section className="bg-backgroundSecondary dark:bg-backgroundPrimary-dark py-12 sm:py-16 lg:py-20">
+    // <section className="bg-colorHilight  py-12 sm:py-16 lg:py-20">
+    <section className="bg-backgroundSecondary dark:bg-backgroundPrimary-dark py-12 sm:py-16 lg:py-20">
       <Container>
         <div className="flex flex-col gap-8 lg:flex-row lg:items-end lg:justify-between">
           {/* Left side: Heading and subheading */}
-          <div className="flex flex-col gap-2">
-            <p className="text-xs font-semibold font-['Funnel_Display'] tracking-widest uppercase text-brandSecondary dark:text-brandSecondary">
+          <div className="flex flex-col gap-1">
+            <p className="font-['Funnel_Display'] text-xs font-extrabold uppercase leading-normal tracking-normal text-brandSecondary dark:text-brandSecondary">
               Get in touch
             </p>
-            <h2 className="max-w-3xl text-2xl font-light font-['Funnel_Display'] tracking-normal leading-normal text-brandPrimary dark:text-brandPrimary-dark sm:text-3xl lg:text-4xl">
-              Need help deciding which plan is right for you?
+            <h2 className="max-w-3xl font-['Funnel_Display'] text-[36px] font-light leading-[1.1] tracking-normal text-brandPrimary dark:text-brandPrimary-dark sm:text-[42px] ">
+              {/* Need help deciding which plan is right for you? */}
+              Ready to improve facility operations?
             </h2>
+
+            {/* Mobile only: direct schedule CTA without form fields. */}
+            <a
+              href={SCHEDULE_DEMO_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mt-4 block w-full sm:hidden"
+            >
+              <PafButton
+                variant="primary"
+                size="large"
+                iconLeft={< Calendar  className="w-5 h-5" />}
+                className="w-full"
+              >
+                Schedule a Demo
+              </PafButton>
+            </a>
           </div>
 
-          {/* Right side: Form */}
+          {/* Desktop/tablet only: lead form fields and submit flow. */}
           <form
             onSubmit={handleSubmit}
-            className="flex flex-col gap-4 sm:flex-row sm:gap-3 lg:gap-4 w-full"
+            className="hidden w-full flex-col gap-4 sm:flex sm:flex-row sm:gap-3 lg:gap-4"
           >
             {/* Name field */}
             <div className="flex flex-1 flex-col gap-2 min-w-0">
@@ -127,7 +150,7 @@ export default function LeadForm() {
               )}
             </div>
 
-            {/* Email field */}
+            {/* Email field  */}
             <div className="flex flex-1 flex-col gap-2 min-w-0">
               <label
                 htmlFor="email"
@@ -150,15 +173,16 @@ export default function LeadForm() {
             </div>
 
             {/* Submit button */}
-            <div className="flex items-end pt-1">
+            <div className="flex w-full items-end pt-1 sm:w-auto">
               <PafButton
                 variant="primary"
-                size="medium"
-                iconRight={<ArrowRight className="w-5 h-5" />}
+                size="large sm:medium"
+                iconLeft={< Calendar className="w-5 h-5" />}
                 type="submit"
                 disabled={isSubmitting}
+                className="w-full sm:w-auto"
               >
-                Request a Demo
+                Schedule a Demo
               </PafButton>
             </div>
           </form>
@@ -168,4 +192,3 @@ export default function LeadForm() {
   );
 }
 
-LeadForm.propTypes = {};

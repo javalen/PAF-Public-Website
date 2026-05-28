@@ -9,7 +9,7 @@ export function PricingWizardModal() {
     <Modal
       isOpen={isOpen}
       onClose={() => setIsOpen(false)}
-      title="Price Plan Predictor"
+      title="Price Plan Finder"
       size="lg"
       showHeader={true}
       showCloseButton={true}
