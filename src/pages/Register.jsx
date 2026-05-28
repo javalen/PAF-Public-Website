@@ -685,14 +685,14 @@ export default function Register() {
                   )}
 
                   <p className="font-['Roboto'] text-base font-normal leading-normal tracking-normal text-textSecondary dark:text-textSecondary-dark">
-                    By clicking continue above, you agree to the {" "}
+                    By clicking continue, you agree to the {" "}
                     <a
                       href="https://pafadminpanel-east.onrender.com/terms"
                       className="underline"
                       target="t&c"
                       rel="noreferrer"
                     >
-                      Predictaf Terms
+                      Terms
                     </a>
                   </p>
 
