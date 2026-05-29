@@ -64,9 +64,23 @@ export default function CareersPageContent() {
                 <PafButton
                   variant="primary"
                   size="large"
-                  iconLeft={<img src={linkedinIcon} alt="" className="h-4 w-4 brightness-0 invert" aria-hidden="true" />}
-                  className="dark:hover:bg-brandSecondary dark:hover:text-white"
-                  // iconRight={<ArrowRight />}
+                  iconLeft={(
+                    <span
+                      aria-hidden="true"
+                      className="h-4 w-4 bg-current transition-colors"
+                      style={{
+                        WebkitMaskImage: `url(${linkedinIcon})`,
+                        WebkitMaskRepeat: "no-repeat",
+                        WebkitMaskPosition: "center",
+                        WebkitMaskSize: "contain",
+                        maskImage: `url(${linkedinIcon})`,
+                        maskRepeat: "no-repeat",
+                        maskPosition: "center",
+                        maskSize: "contain",
+                      }}
+                    />
+                  )}
+    s
                 >
                   Follow Us
                 </PafButton>
