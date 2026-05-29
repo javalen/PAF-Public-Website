@@ -1,6 +1,6 @@
 import { useState } from "react";
 import "./App.css";
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { createBrowserRouter, Navigate, RouterProvider } from "react-router-dom";
 import Home from "./pages/Home";
 import AuthContext from "./auth/context";
 import Register from "./pages/Register";
@@ -16,6 +16,7 @@ import { PricingWizardModal } from "./components/pricing-wizard/PricingWizardMod
 // NEW: Pricing Wizard routes (public)
 import PublicQuotePage from "./components/pricing-wizard/PublicQuotePage";
 import NewsletterViewer from "./pages/NewsletterViewer";
+import SocialRedirect from "./pages/SocialRedirect";
 
 function App() {
   const [user, setUser] = useState();
@@ -29,6 +30,12 @@ function App() {
     { path: "/privacy", element: <Privacy /> },
     { path: "/careers", element: <Careers /> },
     { path: "/pages/logos", element: <Logos /> },
+    {
+      path: "/linkedin",
+      element: <Navigate replace to="/social/linkedin" />,
+    },
+    { path: "/social", element: <SocialRedirect /> },
+    { path: "/social/:source", element: <SocialRedirect /> },
 
     // NEW: Shareable quote page (pricing wizard is now a modal)
     { path: "/pricing/quote/:id", element: <PublicQuotePage /> },

@@ -55,7 +55,7 @@ export default function CareersPageContent() {
             </h1>
 
             <p className="mx-auto mt-6 max-w-3xl text-lg font-normal font-['Roboto'] leading-normal tracking-normal text-textSecondary dark:text-textSecondary-dark">
-              We are building tools that help teams prevent costly failures before they happen. Follow us on LinkedIn<TextHighlight> to get updates on our recruitment schedule.</TextHighlight>
+              We are building tools that help teams prevent costly failures before they happen. Follow us on LinkedIn <TextHighlight>to get updates on our recruitment schedule.</TextHighlight>
             </p>
 
             <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
@@ -65,6 +65,7 @@ export default function CareersPageContent() {
                   variant="primary"
                   size="large"
                   iconLeft={<img src={linkedinIcon} alt="" className="h-4 w-4 brightness-0 invert" aria-hidden="true" />}
+                  className="dark:hover:bg-brandSecondary dark:hover:text-white"
                   // iconRight={<ArrowRight />}
                 >
                   Follow Us

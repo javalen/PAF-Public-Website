@@ -651,7 +651,7 @@ export default function Register() {
                       value={draft.email}
                       onChange={(e) => updateDraft({ email: e.target.value })}
                       className="w-full rounded-[4px] border border-borderSecondary dark:border-borderSecondary-dark bg-backgroundSecondary dark:bg-backgroundSecondary-dark px-3 py-2.5 text-sm font-['Roboto'] leading-normal tracking-normal text-textPrimary dark:text-textPrimary-dark placeholder:text-textTertiary dark:placeholder:text-textTertiary-dark focus:outline-none focus:ring-1 focus:ring-brandSecondary dark:focus:ring-brandSecondary-dark"
-                      placeholder="Address"
+                      placeholder="Email Address"
                       autoComplete="email"
                       required
                     />
