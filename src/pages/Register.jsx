@@ -26,12 +26,14 @@ const CLIENTS_SVR_KEY =
   import.meta.env.VITE_API_KEY ||
   "";
 
-const LEAD_CAPTURE_ENDPOINTS = [
-  "/register/lead",
-  "/register-lead",
-  "/lead-capture",
-  "/leads/register",
-];
+const LEAD_CAPTURE_ENDPOINT = "/register/lead";
+
+const makeClientShortname = (name = "") =>
+  String(name || "")
+    .trim()
+    .toLowerCase()
+    .replace(/[^a-z0-9]/g, "")
+    .slice(0, 32);
 
 // const ALLOW_DEV_STEP_ONE_SKIP = import.meta.env.DEV;
 
@@ -70,6 +72,8 @@ export default function Register() {
   const [step, setStep] = useState(1);
   const [leadCaptureLoading, setLeadCaptureLoading] = useState(false);
   const [leadCaptured, setLeadCaptured] = useState(false);
+  const [shortnameStatus, setShortnameStatus] = useState("idle");
+  const [shortnameMessage, setShortnameMessage] = useState("");
 
   const [isDarkMode, setIsDarkMode] = useState(false);
 
@@ -77,9 +81,11 @@ export default function Register() {
   const tickerWordRef = useRef(null);
   const tickerIndexRef = useRef(0);
   const tickerTimerRef = useRef(null);
+  const shortnameCheckSeqRef = useRef(0);
 
   const [draft, setDraft] = useState({
     compName: "",
+    shortname: "",
     division: "",
     username: "",
     name: "",
@@ -156,32 +162,26 @@ export default function Register() {
       throw new Error("Please enter your full name and email.");
     }
 
-    let lastError = new Error("Lead capture endpoint unavailable.");
+    try {
+      const resp = await fetch(`${CLIENTS_SVR_URL}${LEAD_CAPTURE_ENDPOINT}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "X-API-KEY": CLIENTS_SVR_KEY,
+        },
+        body: JSON.stringify(payload),
+      });
 
-    for (const endpoint of LEAD_CAPTURE_ENDPOINTS) {
-      try {
-        const resp = await fetch(`${CLIENTS_SVR_URL}${endpoint}`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "X-API-KEY": CLIENTS_SVR_KEY,
-          },
-          body: JSON.stringify(payload),
-        });
-
-        const data = await resp.json().catch(() => null);
-        if (resp.ok && (data?.ok ?? true)) {
-          setLeadCaptured(true);
-          return;
-        }
-
-        lastError = new Error(data?.error || data?.message || "Unable to save lead.");
-      } catch (err) {
-        lastError = err instanceof Error ? err : new Error("Unable to save lead.");
+      const data = await resp.json().catch(() => null);
+      if (resp.ok && (data?.ok ?? true)) {
+        setLeadCaptured(true);
+        return;
       }
-    }
 
-    throw lastError;
+      throw new Error(data?.error || data?.message || "Unable to save lead.");
+    } catch (err) {
+      throw err instanceof Error ? err : new Error("Unable to save lead.");
+    }
   };
 
   const updateDraft = (patch) =>
@@ -198,10 +198,13 @@ export default function Register() {
     const requiredStateReady =
       draft.addressLabel !== "Address" &&
       !!draft.clientHost &&
-      !!draft.selectedRegionLabel;
+      !!draft.selectedRegionLabel &&
+      !!draft.shortname &&
+      shortnameStatus === "available";
 
     const requiredInputsReady =
       !!draft.compName?.trim() &&
+      !!draft.shortname &&
       !!draft.division?.trim() &&
       !!draft.name?.trim() &&
       !!draft.phone?.trim() &&
@@ -219,6 +222,8 @@ export default function Register() {
 
   const isStepTwoValid =
     !!draft.compName?.trim() &&
+    !!draft.shortname &&
+    shortnameStatus === "available" &&
     !!draft.phone?.trim() &&
     !!draft.division?.trim() &&
     !!draft.clientHost &&
@@ -283,6 +288,8 @@ export default function Register() {
     draft.addressLabel,
     draft.clientHost,
     draft.selectedRegionLabel,
+    draft.shortname,
+    shortnameStatus,
     loading,
   ]);
 
@@ -299,6 +306,78 @@ export default function Register() {
     setError("");
     const host = e?.target?.value || "";
     updateDraft({ clientHost: host });
+  };
+
+  const onClientNameChange = (value) => {
+    shortnameCheckSeqRef.current += 1;
+    updateDraft({ compName: value, shortname: "" });
+    setError("");
+    setShortnameStatus("idle");
+    setShortnameMessage("");
+  };
+
+  const checkClientShortname = async (shortname) => {
+    if (!CLIENTS_SVR_URL || !CLIENTS_SVR_KEY) {
+      throw new Error(
+        "Registration service is not configured (missing VITE_CLIENTS_SVR_URL or VITE_CLIENTS_SVR_KEY).",
+      );
+    }
+
+    const resp = await fetch(
+      `${CLIENTS_SVR_URL}/client-shortname-exists?shortname=${encodeURIComponent(shortname)}`,
+      {
+        headers: { "X-API-KEY": CLIENTS_SVR_KEY },
+      },
+    );
+
+    const data = await resp.json().catch(() => null);
+    if (!resp.ok || !data?.ok) {
+      throw new Error(data?.error || "Unable to check client name.");
+    }
+
+    return Boolean(data.exists);
+  };
+
+  const validateClientNameAvailability = async () => {
+    const shortname = makeClientShortname(draft.compName);
+    const seq = shortnameCheckSeqRef.current + 1;
+    shortnameCheckSeqRef.current = seq;
+    updateDraft({ shortname });
+
+    if (!shortname) {
+      setShortnameStatus("idle");
+      setShortnameMessage("");
+      return false;
+    }
+
+    if (shortname.length < 3) {
+      setShortnameStatus("error");
+      setShortnameMessage("Client name must create a shortname of at least 3 letters or numbers.");
+      return false;
+    }
+
+    try {
+      setShortnameStatus("checking");
+      setShortnameMessage("Checking client name...");
+
+      const exists = await checkClientShortname(shortname);
+      if (seq !== shortnameCheckSeqRef.current) return false;
+
+      if (exists) {
+        setShortnameStatus("taken");
+        setShortnameMessage("That client name is already in use.");
+        return false;
+      }
+
+      setShortnameStatus("available");
+      setShortnameMessage("");
+      return true;
+    } catch (err) {
+      if (seq !== shortnameCheckSeqRef.current) return false;
+      setShortnameStatus("error");
+      setShortnameMessage(err?.message || "Unable to check client name.");
+      return false;
+    }
   };
 
   // Temporary dev-only bypass to continue working on step 2 while API is unavailable.
@@ -366,11 +445,30 @@ export default function Register() {
   const continueFromStepTwo = async () => {
     setError("");
 
-    if (!isStepTwoValid) {
+    const nextShortname = makeClientShortname(draft.compName);
+    const shortnameReady =
+      shortnameStatus === "available" && draft.shortname === nextShortname;
+    const clientNameAvailable =
+      shortnameReady || (await validateClientNameAvailability());
+
+    if (!clientNameAvailable) {
+      setError("Please choose a different client name.");
+      return;
+    }
+
+    if (
+      !draft.compName?.trim() ||
+      !nextShortname ||
+      !draft.phone?.trim() ||
+      !draft.division?.trim() ||
+      !draft.clientHost ||
+      draft.addressLabel === "Address"
+    ) {
       setError("Please complete client name, address, phone, region, and division.");
       return;
     }
 
+    updateDraft({ shortname: nextShortname });
     setStep(3);
   };
 
@@ -403,6 +501,10 @@ export default function Register() {
       setError("Please select a region.");
       return;
     }
+    if (!snapshot.shortname) {
+      setError("Please confirm the client name is available.");
+      return;
+    }
     if (!CLIENTS_SVR_URL || !CLIENTS_SVR_KEY) {
       setError(
         "Registration service is not configured (missing VITE_CLIENTS_SVR_URL or VITE_CLIENTS_SVR_KEY).",
@@ -419,6 +521,7 @@ export default function Register() {
       const payload = {
         regionHost: snapshot.clientHost,
         compName: snapshot.compName,
+        shortname: snapshot.shortname,
         division: snapshot.division,
         ...(snapshot.username?.trim() ? { username: snapshot.username.trim() } : {}),
         name: snapshot.name,
@@ -738,11 +841,23 @@ export default function Register() {
                       id="compName"
                       type="text"
                       value={draft.compName}
-                      onChange={(e) => updateDraft({ compName: e.target.value })}
+                      onChange={(e) => onClientNameChange(e.target.value)}
+                      onBlur={validateClientNameAvailability}
                       className="w-full rounded-md border border-borderSecondary dark:border-borderSecondary-dark bg-backgroundSecondary dark:bg-backgroundSecondary-dark px-3 py-3 text-base font-['Roboto'] leading-normal tracking-normal text-textPrimary dark:text-textPrimary-dark placeholder:text-textTertiary dark:placeholder:text-textTertiary-dark focus:outline-none focus:ring-2 focus:ring-brandSecondary dark:focus:ring-brandSecondary-dark"
                       placeholder=""
                       required
                     />
+                    {shortnameMessage && (
+                      <p
+                        className={`mt-2 font-['Roboto'] text-sm font-normal leading-normal tracking-normal ${
+                          shortnameStatus === "taken" || shortnameStatus === "error"
+                            ? "text-colorError"
+                            : "text-textSecondary dark:text-textSecondary-dark"
+                        }`}
+                      >
+                        {shortnameMessage}
+                      </p>
+                    )}
                   </div>
 
                   <div>
@@ -851,7 +966,7 @@ export default function Register() {
                       variant="primary"
                       size="large"
                       onClick={continueFromStepTwo}
-                      disabled={!isStepTwoValid}
+                      disabled={!isStepTwoValid || shortnameStatus === "checking"}
                       iconRight={<ArrowRight className="w-5 h-5" />}
                     >
                       Continue
