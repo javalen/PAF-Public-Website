@@ -1,7 +1,15 @@
 import axios from "axios";
 //const mailHost = import.meta.env.VITE_PUBLIC_EMAIL_SVR;
 const useEmail = () => {
-  const sendWelcomeEmail = (mailHost, client, emailTo, subject, name, host) => {
+  const sendWelcomeEmail = (
+    mailHost,
+    client,
+    emailTo,
+    subject,
+    name,
+    host,
+    controlPanelHost,
+  ) => {
     axios
       .post(mailHost + "/send-welcome-email", {
         client: client,
@@ -9,6 +17,7 @@ const useEmail = () => {
         subject: subject,
         name: name,
         host: host,
+        controlPanelHost: controlPanelHost,
       })
       .then((response) => {
         console.log("Email sent successfully....");

@@ -60,6 +60,7 @@ export default function Register() {
 
   const [regions, setRegions] = useState([]);
   const [mailHost, setMailHost] = useState();
+  const [controlPanelHost, setControlPanelHost] = useState("");
 
   const [formValid, setFormValid] = useState(false);
   const [submitted, setSubmitted] = useState(false);
@@ -265,12 +266,14 @@ export default function Register() {
     if (!draft.clientHost) {
       updateDraft({ selectedRegionLabel: "" });
       setMailHost(undefined);
+      setControlPanelHost("");
       return;
     }
 
     const mh = regions.find((reg) => reg.value === draft.clientHost);
     updateDraft({ selectedRegionLabel: mh?.label || "" });
     setMailHost(mh?.mail_server);
+    setControlPanelHost(mh?.control_panel || "");
   }, [draft.clientHost, regions]); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
@@ -518,6 +521,11 @@ export default function Register() {
 
     setLoading(true);
     try {
+      const selectedRegion = regions.find(
+        (reg) => reg.value === snapshot.clientHost,
+      );
+      const selectedControlPanelHost =
+        selectedRegion?.control_panel || controlPanelHost || "";
       const payload = {
         regionHost: snapshot.clientHost,
         compName: snapshot.compName,
@@ -559,6 +567,7 @@ export default function Register() {
         "Welcome to Predictaf!",
         snapshot.name,
         snapshot.clientHost,
+        selectedControlPanelHost,
       );
 
       setSuccessObj({
