@@ -14,17 +14,23 @@ const CAROUSEL_IMAGES = [
   // { src: hvacImg, alt: "HVAC system monitoring" },
 
 ];
-
+//Desktop View Only
 const SHORT_TEXT_BEFORE =
-  "Predicaf is a proactive maintenance and compliance management system designed for large-scale residential and commercial properties, ";
+  "From work orders and preventive maintenance to facility teams, assets, inspections, documents, vendors, and ";
+  // "Predicaf is a proactive maintenance and compliance management system designed for large-scale residential and commercial properties,";
+  // "Predictaf is an all -in -one property operations platform that helps property managers, facility teams, and building owners manage facilities, assets, maintenance, inspections, vendors, documents, and long - term reserve planning ";
 
+// Mobile View Only
 const FULL_TEXT_BEFORE =
-  "Predicaf is a proactive maintenance and compliance management system designed for large-scale residential and commercial properties, ";
+  "From work orders and preventive maintenance to facility teams, assets, inspections, documents, vendors, and ";
 
-const HIGHLIGHT_TEXT = "particularly those with limited engineering oversight";
+
+const HIGHLIGHT_TEXT = "AI-powered long-term reserve planning, everything is connected in one system";
 
 const FULL_TEXT_AFTER =
-  "The mobile app and web control panel enable users to catalog and manage critical building systems such as mechanical equipment, HVAC units, fire sprinkler systems, and electrical panels, while linking each asset to a tailored maintenance schedule. The products then track schedules in real-time, flagging overdue tasks and upcoming service requirements. Additionally, Predictaf manages time-sensitive documentation like warranties, permits, and inspections by tracking expiration dates and sending automated alerts. The result is improved operational visibility, reduced liability, and data-driven oversight all in a centralized interface";
+  "Designed for commercial, residential, HOA, and mixed-use portfolios, Predictaf centralizes day-to-day operations while improving visibility across every property. From work orders and preventive maintenance to compliance tracking and executive reporting, teams have everything they need to operate more efficiently in a single platform. By connecting operational data across your portfolio, Predictaf helps organizations reduce manual processes, improve accountability, extend asset life, and make more informed decisions about their properties.";
+
+  // "The mobile app and web control panel enable users to catalog and manage critical building systems such as mechanical equipment, HVAC units, fire sprinkler systems, and electrical panels, while linking each asset to a tailored maintenance schedule. The products then track schedules in real-time, flagging overdue tasks and upcoming service requirements. Additionally, Predictaf manages time-sensitive documentation like warranties, permits, and inspections by tracking expiration dates and sending automated alerts. The result is improved operational visibility, reduced liability, and data-driven oversight all in a centralized interface.";
 
 export function Hero() {
   const [expanded, setExpanded] = useState(false);
@@ -57,9 +63,9 @@ export function Hero() {
             {/* Mobile heading and top CTA block */}
             <div className="flex flex-col gap-5">
               <h1 className="text-[42px] font-light font-['Funnel_Display'] tracking-normal leading-[1.1] text-white">
-                From Reactive
+                One Platform for
                 <br />
-                to Predictive
+                Property Operations
               </h1>
 
               <div className="mt-1 flex flex-col gap-4">
@@ -208,9 +214,9 @@ export function Hero() {
             </p>
 
             <h1 className="text-5xl font-light font-['Funnel_Display'] tracking-normal leading-[1.1] text-brandPrimary dark:text-brandPrimary-dark">
-              From Reactive
+              One Platform for
               <br />
-              to Predictive
+              Property Operations
             </h1>
 
             <div>

@@ -20,7 +20,7 @@ const keyFeatures = [
   {
     title: "Catalogs Facility & System Assets",
     description:
-      "Easily organize Facilities and sytems such as HVAC, electrical, fire safety, and other assets in one centralized platform.",
+      "Easily organize facilities and sytems such as HVAC, electrical, fire safety, and other assets in one centralized platform.",
   },
   {
     title: "Set Smart Maintenance Schedules",
