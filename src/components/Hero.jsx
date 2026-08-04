@@ -2,24 +2,29 @@ import { useState, useEffect, useCallback } from "react";
 import { Container } from "./Container";
 import PafButton from "./ui/PafButton";
 import TextHighlight from "./ui/TextHighlight";
-import { ArrowRight, Calendar, ChevronLeft, ChevronRight, Pause, Play } from "lucide-react";
+import {
+  ArrowRight,
+  Calendar,
+  ChevronLeft,
+  ChevronRight,
+  Pause,
+  Play,
+} from "lucide-react";
 import StatusTag from "./ui/StatusTag";
 
 // Carousel images sourced from existing project assets
 import facilityImg from "../assets/heroImage1.jpg";
 
-
 const CAROUSEL_IMAGES = [
   { src: facilityImg, alt: "Facility management overview" },
   // { src: hvacImg, alt: "HVAC system monitoring" },
-
 ];
 
 const SHORT_TEXT_BEFORE =
-  "Predicaf is a proactive maintenance and compliance management system designed for large-scale residential and commercial properties, ";
+  "Predictaf is a proactive maintenance and compliance management system designed for large-scale residential and commercial properties, ";
 
 const FULL_TEXT_BEFORE =
-  "Predicaf is a proactive maintenance and compliance management system designed for large-scale residential and commercial properties, ";
+  "Predictaf is a proactive maintenance and compliance management system designed for large-scale residential and commercial properties, ";
 
 const HIGHLIGHT_TEXT = "particularly those with limited engineering oversight";
 
@@ -32,15 +37,15 @@ export function Hero() {
   const [paused, setPaused] = useState(false);
   const hasMultipleImages = CAROUSEL_IMAGES.length > 1;
 
-
-
   // Auto-advance carousel every 4 seconds unless paused
   const next = useCallback(
     () => setCurrent((c) => (c + 1) % CAROUSEL_IMAGES.length),
     [],
   );
   const prev = () =>
-    setCurrent((c) => (c - 1 + CAROUSEL_IMAGES.length) % CAROUSEL_IMAGES.length);
+    setCurrent(
+      (c) => (c - 1 + CAROUSEL_IMAGES.length) % CAROUSEL_IMAGES.length,
+    );
 
   useEffect(() => {
     if (!hasMultipleImages || paused) return;
@@ -49,7 +54,10 @@ export function Hero() {
   }, [hasMultipleImages, next, paused]);
 
   return (
-    <section id="hero" className="bg-brandPrimary lg:bg-backgroundPrimary dark:lg:bg-backgroundPrimary-dark pt-6 pb-0 sm:py-20 lg:py-24">
+    <section
+      id="hero"
+      className="bg-brandPrimary lg:bg-backgroundPrimary dark:lg:bg-backgroundPrimary-dark pt-6 pb-0 sm:py-20 lg:py-24"
+    >
       <Container>
         {/* MOBILE HERO (visible below lg): adjust mobile spacing, copy, CTA, and image order here */}
         <div className="lg:hidden">
@@ -94,9 +102,7 @@ export function Hero() {
                     alt={img.alt}
                     className={`absolute inset-0 w-full h-full object-cover ${
                       hasMultipleImages ? "transition-opacity duration-700" : ""
-                    } ${
-                      i === current ? "opacity-100" : "opacity-0"
-                    }`}
+                    } ${i === current ? "opacity-100" : "opacity-0"}`}
                   />
                 ))}
 
@@ -108,7 +114,11 @@ export function Hero() {
                       aria-label={paused ? "Play slideshow" : "Pause slideshow"}
                       className="absolute top-3 right-3 flex items-center justify-center h-8 w-8 rounded-full bg-backgroundPrimary/70 dark:bg-backgroundPrimary-dark/70 text-textPrimary dark:text-textPrimary-dark hover:bg-backgroundPrimary dark:hover:bg-backgroundPrimary-dark transition-colors"
                     >
-                      {paused ? <Play className="h-4 w-4" /> : <Pause className="h-4 w-4" />}
+                      {paused ? (
+                        <Play className="h-4 w-4" />
+                      ) : (
+                        <Pause className="h-4 w-4" />
+                      )}
                     </button>
 
                     <button
@@ -189,9 +199,13 @@ export function Hero() {
                 target="_blank"
                 rel="noopener noreferrer"
                 className="mt-4 block w-full"
-               
               >
-                <PafButton variant="primary" size="large" className="w-full" iconLeft={< Calendar className="w-5 h-5" />}>
+                <PafButton
+                  variant="primary"
+                  size="large"
+                  className="w-full"
+                  iconLeft={<Calendar className="w-5 h-5" />}
+                >
                   Schedule a Demo
                 </PafButton>
               </a>
@@ -250,7 +264,8 @@ export function Hero() {
                 <div className="inline-flex">
                   <StatusTag variant="success" size="lg" showIndicator={false}>
                     {/* For a limited time only enjoy a 3 month Free Trial! */}
-                    Enjoy a FREE 3-month trial available for a limited time only!
+                    Enjoy a FREE 3-month trial available for a limited time
+                    only!
                   </StatusTag>
                 </div>
                 <a href="/register" className="w-auto">
@@ -263,7 +278,7 @@ export function Hero() {
                   </PafButton>
                 </a>
                 <p className="text-base font-['Roboto'] tracking-normal leading-normal text-brandPrimary dark:text-brandPrimary-dark">
-                  Sign Up in 30 Seconds • No credit card required 
+                  Sign Up in 30 Seconds • No credit card required
                 </p>
               </div>
             </div>
@@ -279,9 +294,7 @@ export function Hero() {
                   alt={img.alt}
                   className={`absolute inset-0 w-full h-full object-cover ${
                     hasMultipleImages ? "transition-opacity duration-700" : ""
-                  } ${
-                    i === current ? "opacity-100" : "opacity-0"
-                  }`}
+                  } ${i === current ? "opacity-100" : "opacity-0"}`}
                 />
               ))}
 
@@ -293,7 +306,11 @@ export function Hero() {
                     aria-label={paused ? "Play slideshow" : "Pause slideshow"}
                     className="absolute top-3 right-3 flex items-center justify-center h-8 w-8 rounded-full bg-backgroundPrimary/70 dark:bg-backgroundPrimary-dark/70 text-textPrimary dark:text-textPrimary-dark hover:bg-backgroundPrimary dark:hover:bg-backgroundPrimary-dark transition-colors"
                   >
-                    {paused ? <Play className="h-4 w-4" /> : <Pause className="h-4 w-4" />}
+                    {paused ? (
+                      <Play className="h-4 w-4" />
+                    ) : (
+                      <Pause className="h-4 w-4" />
+                    )}
                   </button>
 
                   <button
@@ -339,4 +356,3 @@ export function Hero() {
     </section>
   );
 }
-

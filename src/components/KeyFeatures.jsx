@@ -20,7 +20,7 @@ const keyFeatures = [
   {
     title: "Catalogs Facility & System Assets",
     description:
-      "Easily organize Facilities and sytems such as HVAC, electrical, fire safety, and other assets in one centralized platform.",
+      "Easily organize Facilities and systems such as HVAC, electrical, fire safety, and other assets in one centralized platform.",
   },
   {
     title: "Set Smart Maintenance Schedules",
@@ -46,7 +46,10 @@ const keyFeatures = [
 
 function KeyFeatureCard({ item, index }) {
   return (
-    <article className="flex min-w-[760px] items-center gap-6 md:min-w-[820px]" aria-label={item.title}>
+    <article
+      className="flex min-w-[760px] items-center gap-6 md:min-w-[820px]"
+      aria-label={item.title}
+    >
       <div className="relative h-[51px] w-[114px] shrink-0">
         <div className="absolute left-[4px] right-0 top-1/2 h-px -translate-y-1/2 bg-colorHilight" />
         <div className="absolute right-0 top-1/2 h-2 w-2 -translate-y-1/2 rounded-full bg-colorHilight" />
@@ -55,7 +58,7 @@ function KeyFeatureCard({ item, index }) {
         </div>
       </div>
 
-          <div className="rounded-[24px] border-[3px] border-brandSecondary/30 bg-[radial-gradient(circle_at_70%_45%,rgba(0,58,140,0.85),rgba(0,58,140,0.85)_60%,rgba(0,58,140,1)_100%)] px-10 py-14 md:px-14 md:py-14">
+      <div className="rounded-[24px] border-[3px] border-brandSecondary/30 bg-[radial-gradient(circle_at_70%_45%,rgba(0,58,140,0.85),rgba(0,58,140,0.85)_60%,rgba(0,58,140,1)_100%)] px-10 py-14 md:px-14 md:py-14">
         <h3 className="font-['Funnel_Display'] text-[32px] font-base leading-normal tracking-normal text-colorHilight md:text-[20px]">
           {item.title}
         </h3>
@@ -96,29 +99,35 @@ export default function KeyFeatures() {
     setAlignOffset(Math.max(0, left));
   }, []);
 
-  const goToSlide = useCallback((nextIndex) => {
-    if (!trackRef.current) return;
+  const goToSlide = useCallback(
+    (nextIndex) => {
+      if (!trackRef.current) return;
 
-    const targetCard = cardRefs.current[nextIndex];
-    if (!targetCard) return;
+      const targetCard = cardRefs.current[nextIndex];
+      if (!targetCard) return;
 
-    const targetX = -(targetCard.offsetLeft - (alignOffset + SLIDE_ALIGNMENT_NUDGE));
-    gsap.to(trackRef.current, {
-      x: targetX,
-      duration: 0.9,
-      ease: "power2.inOut",
-      onComplete: () => {
-        if (nextIndex === keyFeatures.length) {
-          const firstCard = cardRefs.current[0];
-          const resetX = firstCard
-            ? -(firstCard.offsetLeft - (alignOffset + SLIDE_ALIGNMENT_NUDGE))
-            : 0;
-          gsap.set(trackRef.current, { x: resetX });
-          setSlideIndex(0);
-        }
-      },
-    });
-  }, [alignOffset]);
+      const targetX = -(
+        targetCard.offsetLeft -
+        (alignOffset + SLIDE_ALIGNMENT_NUDGE)
+      );
+      gsap.to(trackRef.current, {
+        x: targetX,
+        duration: 0.9,
+        ease: "power2.inOut",
+        onComplete: () => {
+          if (nextIndex === keyFeatures.length) {
+            const firstCard = cardRefs.current[0];
+            const resetX = firstCard
+              ? -(firstCard.offsetLeft - (alignOffset + SLIDE_ALIGNMENT_NUDGE))
+              : 0;
+            gsap.set(trackRef.current, { x: resetX });
+            setSlideIndex(0);
+          }
+        },
+      });
+    },
+    [alignOffset],
+  );
 
   useEffect(() => {
     updateAlignmentOffset();
@@ -171,7 +180,9 @@ export default function KeyFeatures() {
 
   const handlePrevious = () => {
     setIsAutoScrollEnabled(false);
-    setSlideIndex((prev) => (prev - 1 + keyFeatures.length) % keyFeatures.length);
+    setSlideIndex(
+      (prev) => (prev - 1 + keyFeatures.length) % keyFeatures.length,
+    );
   };
 
   const handleDotClick = (index) => {
@@ -359,89 +370,96 @@ export default function KeyFeatures() {
 
       {/* DESKTOP/TABLET VERSION */}
       <div className="hidden sm:block">
-      <Container className="relative z-10 max-w-[1250px]">
-        <div className="flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
-          <div ref={headingWrapRef}>
-            <p className="font-['Funnel_Display'] text-sm font-extrabold uppercase leading-normal tracking-[0.4px] text-colorHilight">
-              Key Features
-            </p>
-            <h2
-              id="key-features-title"
-              className="mt-1 font-['Funnel_Display'] text-[42px] font-light leading-[1.2] tracking-normal text-white"
-            >
-              {/* How Predictaf Works */}
-              The Source of Truth for Facility Operations
-            </h2>
-          </div>
-
-          <Link to="/register">
-            <PafButton variant="emphasis" size="large" iconRight={<ArrowRight />}>
-              Start a Free Trial
-            </PafButton>
-          </Link>
-        </div>
-      </Container>
-
-      <div className="relative z-10 mt-10 w-screen">
-        <div
-          className="relative overflow-hidden"
-          onMouseEnter={() => setIsPaused(true)}
-          onMouseLeave={() => setIsPaused(false)}
-        >
-          <div
-            ref={trackRef}
-            className="flex w-max gap-8 pr-8 will-change-transform"
-            style={{ paddingLeft: `${alignOffset}px` }}
-          >
-            {displayFeatures.map((item, index) => (
-              <div
-                key={`${item.title}-${index}`}
-                ref={(el) => {
-                  if (el) cardRefs.current[index] = el;
-                }}
+        <Container className="relative z-10 max-w-[1250px]">
+          <div className="flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
+            <div ref={headingWrapRef}>
+              <p className="font-['Funnel_Display'] text-sm font-extrabold uppercase leading-normal tracking-[0.4px] text-colorHilight">
+                Key Features
+              </p>
+              <h2
+                id="key-features-title"
+                className="mt-1 font-['Funnel_Display'] text-[42px] font-light leading-[1.2] tracking-normal text-white"
               >
-                <KeyFeatureCard item={item} index={index % keyFeatures.length} />
-              </div>
+                {/* How Predictaf Works */}
+                The Source of Truth for Facility Operations
+              </h2>
+            </div>
+
+            <Link to="/register">
+              <PafButton
+                variant="emphasis"
+                size="large"
+                iconRight={<ArrowRight />}
+              >
+                Start a Free Trial
+              </PafButton>
+            </Link>
+          </div>
+        </Container>
+
+        <div className="relative z-10 mt-10 w-screen">
+          <div
+            className="relative overflow-hidden"
+            onMouseEnter={() => setIsPaused(true)}
+            onMouseLeave={() => setIsPaused(false)}
+          >
+            <div
+              ref={trackRef}
+              className="flex w-max gap-8 pr-8 will-change-transform"
+              style={{ paddingLeft: `${alignOffset}px` }}
+            >
+              {displayFeatures.map((item, index) => (
+                <div
+                  key={`${item.title}-${index}`}
+                  ref={(el) => {
+                    if (el) cardRefs.current[index] = el;
+                  }}
+                >
+                  <KeyFeatureCard
+                    item={item}
+                    index={index % keyFeatures.length}
+                  />
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        <div className="relative z-10 mt-8 flex items-center justify-center gap-3">
+          <button
+            type="button"
+            onClick={handlePrevious}
+            aria-label="Previous key feature"
+            className="rounded p-1 text-colorHilight transition-opacity hover:opacity-80"
+          >
+            <ChevronLeft className="h-5 w-5" />
+          </button>
+
+          <div className="flex items-center gap-2">
+            {keyFeatures.map((_, index) => (
+              <button
+                key={index}
+                type="button"
+                onClick={() => handleDotClick(index)}
+                aria-label={`Go to key feature ${index + 1}`}
+                className={`h-2 rounded-full transition-all duration-300 ${
+                  activeDot === index
+                    ? "w-4 bg-colorHilight"
+                    : "w-2 bg-colorHilight/40"
+                }`}
+              />
             ))}
           </div>
+
+          <button
+            type="button"
+            onClick={handleNext}
+            aria-label="Next key feature"
+            className="rounded p-1 text-colorHilight transition-opacity hover:opacity-80"
+          >
+            <ChevronRight className="h-5 w-5" />
+          </button>
         </div>
-      </div>
-
-      <div className="relative z-10 mt-8 flex items-center justify-center gap-3">
-        <button
-          type="button"
-          onClick={handlePrevious}
-          aria-label="Previous key feature"
-          className="rounded p-1 text-colorHilight transition-opacity hover:opacity-80"
-        >
-          <ChevronLeft className="h-5 w-5" />
-        </button>
-
-        <div className="flex items-center gap-2">
-          {keyFeatures.map((_, index) => (
-            <button
-              key={index}
-              type="button"
-              onClick={() => handleDotClick(index)}
-              aria-label={`Go to key feature ${index + 1}`}
-              className={`h-2 rounded-full transition-all duration-300 ${
-                activeDot === index
-                  ? "w-4 bg-colorHilight"
-                  : "w-2 bg-colorHilight/40"
-              }`}
-            />
-          ))}
-        </div>
-
-        <button
-          type="button"
-          onClick={handleNext}
-          aria-label="Next key feature"
-          className="rounded p-1 text-colorHilight transition-opacity hover:opacity-80"
-        >
-          <ChevronRight className="h-5 w-5" />
-        </button>
-      </div>
       </div>
     </section>
   );
