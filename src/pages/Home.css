@@ -179,6 +179,19 @@
   font-size: 0.88rem;
 }
 
+.reserve-button-small-secondary {
+  border-color: var(--reserve-line);
+  background: var(--reserve-surface);
+  box-shadow: none;
+  color: var(--reserve-ink) !important;
+}
+
+.reserve-button-small.reserve-button-small-secondary:hover {
+  border-color: color-mix(in srgb, var(--reserve-blue) 35%, var(--reserve-line));
+  background: var(--reserve-surface-soft);
+  box-shadow: none;
+}
+
 .reserve-button-primary {
   background: var(--reserve-blue);
   box-shadow: 0 16px 34px rgba(8, 101, 217, 0.24);

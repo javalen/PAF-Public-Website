@@ -17,6 +17,7 @@ import { PricingWizardModal } from "./components/pricing-wizard/PricingWizardMod
 import PublicQuotePage from "./components/pricing-wizard/PublicQuotePage";
 import NewsletterViewer from "./pages/NewsletterViewer";
 import SocialRedirect from "./pages/SocialRedirect";
+import ExploreDemo from "./pages/ExploreDemo";
 
 function App() {
   const [user, setUser] = useState();
@@ -24,6 +25,7 @@ function App() {
   const router = createBrowserRouter([
     { path: "/login", element: <Login /> },
     { path: "/register", element: <Register /> },
+    { path: "/explore-demo", element: <ExploreDemo /> },
     { path: "/", element: <Home /> },
     { path: "/quickstart", element: <QuickStart /> },
     { path: "/support", element: <Support /> },

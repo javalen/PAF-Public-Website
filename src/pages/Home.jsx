@@ -15,6 +15,7 @@ import {
   HardHat,
   Layers3,
   Menu,
+  PlayCircle,
   RefreshCw,
   ShieldCheck,
   Sparkles,
@@ -144,9 +145,17 @@ function SiteHeader() {
           <a className="reserve-login" href="/login">
             Log in
           </a>
-          <a className="reserve-button reserve-button-small" href={DEMO_URL} target="_blank" rel="noreferrer">
-            Book a demo
+          <a
+            className="reserve-button reserve-button-small reserve-button-small-secondary"
+            href={DEMO_URL}
+            target="_blank"
+            rel="noreferrer"
+          >
+            Book a Demo
           </a>
+          <Link className="reserve-button reserve-button-small" to="/explore-demo">
+            Explore Demo
+          </Link>
           <button
             type="button"
             className="reserve-menu-button"
@@ -170,6 +179,7 @@ function SiteHeader() {
             ))}
             <div className="reserve-mobile-actions">
               <a href="/login">Log in</a>
+              <Link to="/explore-demo" onClick={() => setMenuOpen(false)}>Explore Demo</Link>
               <a href={DEMO_URL} target="_blank" rel="noreferrer">Book a demo</a>
             </div>
           </div>
@@ -273,8 +283,11 @@ function Hero() {
               <Link className="reserve-button reserve-button-primary" to="/register">
                 Start your free trial <ArrowRight />
               </Link>
+              <Link className="reserve-button reserve-button-secondary" to="/explore-demo">
+                Explore Demo <PlayCircle />
+              </Link>
               <a className="reserve-button reserve-button-secondary" href={DEMO_URL} target="_blank" rel="noreferrer">
-                See Predictaf in action
+                Book a Demo <CalendarClock />
               </a>
             </div>
             <div className="reserve-hero-proof">
@@ -485,7 +498,7 @@ function Governance() {
           <span className="reserve-kicker">Intelligent, not mysterious</span>
           <h2>Recommendations your team can review—and defend.</h2>
           <p>Reserve planning affects budgets, assessments, property values, and trust. Predictaf is designed to keep evidence, assumptions, review, and approvals visible.</p>
-          <a className="reserve-text-link" href={DEMO_URL} target="_blank" rel="noreferrer">Explore the reserve workflow <ArrowRight /></a>
+          <Link className="reserve-text-link" to="/explore-demo">Explore the reserve workflow <ArrowRight /></Link>
         </div>
         <div className="reserve-governance-items">
           {items.map((item) => {
@@ -581,6 +594,7 @@ function SiteFooter() {
         <div>
           <strong>Get started</strong>
           <Link to="/register">Start a free trial</Link>
+          <Link to="/explore-demo">Explore Demo</Link>
           <a href={DEMO_URL} target="_blank" rel="noreferrer">Schedule a demo</a>
           <a href="/login">Log in</a>
         </div>
