@@ -3,7 +3,9 @@ import clsx from "clsx";
 export function AppStoreLink({ color = "black" }) {
   return (
     <a
-      href="#"
+      href="https://apps.apple.com/us/app/predictaf-mobile/id6738309158"
+      target="_blank"
+      rel="noopener noreferrer"
       aria-label="Download on the App Store"
       className={clsx(
         "rounded-lg transition-colors",

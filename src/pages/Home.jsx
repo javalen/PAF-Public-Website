@@ -10,6 +10,7 @@ import {
   ChevronRight,
   ClipboardCheck,
   Coins,
+  Download,
   FileText,
   Gauge,
   HardHat,
@@ -28,16 +29,21 @@ import { Pricing } from "../components/Pricing";
 import DarkModeToggle from "../components/ui/DarkModeToggle";
 import logoLight from "../assets/predictaf-logo.svg";
 import logoDark from "../assets/predictaf-logo-dark.svg";
+import appStoreBadge from "../assets/appStore.svg";
+import googlePlayBadge from "../assets/googlePlay.svg";
 import "./Home.css";
 
 const DEMO_URL = "https://calendar.app.google/p3Bi6LnTTzgfpo8M7";
 const STORY_IMAGE = "/reserve-operations-story.jpg";
+const IOS_APP_URL = "https://apps.apple.com/us/app/predictaf-mobile/id6738309158";
+const ANDROID_APP_URL = "https://play.google.com/store/apps/details?id=com.predictiveaf.mobile";
 
 const navItems = [
   { label: "Platform", href: "#platform" },
   { label: "Reserve Intelligence", href: "#reserve-intelligence" },
   { label: "How It Works", href: "#how-it-works" },
   { label: "Who It’s For", href: "#who-its-for" },
+  { label: "Mobile App", href: "#mobile-app" },
   { label: "Pricing", href: "#pricing" },
 ];
 
@@ -533,6 +539,66 @@ function WhoItsFor() {
   );
 }
 
+function MobileAppDownload() {
+  const stores = [
+    {
+      name: "Apple App Store",
+      platform: "For iPhone",
+      description: "Scan to open Predictaf Mobile in the App Store.",
+      url: IOS_APP_URL,
+      qr: "/store/predictaf-app-store-qr.png",
+      qrDownload: "predictaf-app-store-qr.png",
+      badge: appStoreBadge,
+      badgeAlt: "Download on the App Store",
+    },
+    {
+      name: "Google Play",
+      platform: "For Android",
+      description: "Scan to open PredictAF in the Google Play Store.",
+      url: ANDROID_APP_URL,
+      qr: "/store/predictaf-google-play-qr.png",
+      qrDownload: "predictaf-google-play-qr.png",
+      badge: googlePlayBadge,
+      badgeAlt: "Get it on Google Play",
+    },
+  ];
+
+  return (
+    <section className="reserve-mobile-app" id="mobile-app">
+      <div className="reserve-container">
+        <div className="reserve-section-heading reserve-section-heading-wide reserve-mobile-heading">
+          <div>
+            <span className="reserve-kicker">Predictaf in your pocket</span>
+            <h2>Scan. Install. Stay ahead.</h2>
+          </div>
+          <p>Bring work orders, inspections, asset history, and system intelligence into the field. Point your phone’s camera at the code for your device.</p>
+        </div>
+        <div className="reserve-download-grid">
+          {stores.map((store) => (
+            <article className="reserve-download-card" key={store.name}>
+              <a className="reserve-qr-link" href={store.url} target="_blank" rel="noreferrer" aria-label={`Open Predictaf on ${store.name}`}>
+                <img src={store.qr} alt={`QR code for Predictaf on ${store.name}`} />
+              </a>
+              <div className="reserve-download-copy">
+                <span>{store.platform}</span>
+                <h3>{store.name}</h3>
+                <p>{store.description}</p>
+                <a className="reserve-store-link" href={store.url} target="_blank" rel="noreferrer">
+                  <img src={store.badge} alt={store.badgeAlt} />
+                </a>
+                <a className="reserve-qr-download" href={store.qr} download={store.qrDownload}>
+                  <Download aria-hidden="true" /> Download QR code
+                </a>
+              </div>
+            </article>
+          ))}
+        </div>
+        <p className="reserve-mobile-note">Already viewing this page on your phone? Tap the store badge instead of scanning.</p>
+      </div>
+    </section>
+  );
+}
+
 function Testimonial() {
   return (
     <section className="reserve-testimonial">
@@ -595,6 +661,7 @@ function SiteFooter() {
           <strong>Get started</strong>
           <Link to="/register">Start a free trial</Link>
           <Link to="/explore-demo">Explore Demo</Link>
+          <a href="#mobile-app">Download the mobile app</a>
           <a href={DEMO_URL} target="_blank" rel="noreferrer">Schedule a demo</a>
           <a href="/login">Log in</a>
         </div>
@@ -615,6 +682,7 @@ export default function Home() {
         <HowItWorks />
         <Governance />
         <WhoItsFor />
+        <MobileAppDownload />
         <Testimonial />
         <Pricing />
         <ClosingCta />

@@ -251,7 +251,7 @@ export function Footer() {
                   Download for Android
                 </a>
                 <a
-                  href="#"
+                  href="https://apps.apple.com/us/app/predictaf-mobile/id6738309158"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="block font-['Roboto'] text-base font-normal leading-normal tracking-normal text-textSecondary dark:text-textSecondary-dark hover:text-brandPrimary dark:hover:text-brandSecondary-dark"

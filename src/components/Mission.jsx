@@ -8,7 +8,7 @@ import googlePlayBadge from "../assets/googlePlay.svg";
 
 const ANDROID_APP_URL =
   "https://play.google.com/store/apps/details?id=com.predictiveaf.mobile&pcampaignid=web_share";
-const IOS_APP_URL = "#";
+const IOS_APP_URL = "https://apps.apple.com/us/app/predictaf-mobile/id6738309158";
 
 export function Mission() {
   return (
