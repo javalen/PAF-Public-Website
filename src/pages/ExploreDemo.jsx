@@ -1,5 +1,12 @@
 import { useState } from "react";
-import { ArrowLeft, ArrowRight, Check, Clock3, PlayCircle } from "lucide-react";
+import {
+  ArrowLeft,
+  ArrowRight,
+  Check,
+  Clock3,
+  PlayCircle,
+  Smartphone,
+} from "lucide-react";
 import { Link } from "react-router-dom";
 
 import { captureDemoLead, INTERACTIVE_DEMO_URL } from "../api/demoLead";
@@ -14,6 +21,7 @@ export default function ExploreDemo() {
   const [formData, setFormData] = useState({ name: "", email: "" });
   const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [step, setStep] = useState("details");
 
   const handleChange = (event) => {
     const { name, value } = event.target;
@@ -44,7 +52,8 @@ export default function ExploreDemo() {
 
     try {
       await captureDemoLead(formData);
-      window.location.assign(INTERACTIVE_DEMO_URL);
+      setStep("mobile");
+      setIsSubmitting(false);
     } catch (error) {
       setErrors({
         submit:
@@ -85,58 +94,110 @@ export default function ExploreDemo() {
         </section>
 
         <section className="explore-demo-card" aria-labelledby="explore-demo-form-title">
-          <div className="explore-demo-card-heading">
-            <span>Ready when you are</span>
-            <h2 id="explore-demo-form-title">Start your demo</h2>
-            <p>Tell us who you are, and we’ll prepare your demo environment.</p>
-          </div>
+          {step === "details" ? (
+            <>
+              <div className="explore-demo-card-heading">
+                <span>Ready when you are</span>
+                <h2 id="explore-demo-form-title">Start your demo</h2>
+                <p>Tell us who you are, and we’ll prepare your demo environment.</p>
+              </div>
 
-          <form onSubmit={handleSubmit} noValidate>
-            <div className="explore-demo-field">
-              <label htmlFor="demo-name">Full name</label>
-              <input
-                id="demo-name"
-                name="name"
-                type="text"
-                autoComplete="name"
-                value={formData.name}
-                onChange={handleChange}
-                placeholder="Your full name"
-                aria-invalid={Boolean(errors.name)}
-                aria-describedby={errors.name ? "demo-name-error" : undefined}
-              />
-              {errors.name && <p id="demo-name-error" className="explore-demo-error">{errors.name}</p>}
+              <form onSubmit={handleSubmit} noValidate>
+                <div className="explore-demo-field">
+                  <label htmlFor="demo-name">Full name</label>
+                  <input
+                    id="demo-name"
+                    name="name"
+                    type="text"
+                    autoComplete="name"
+                    value={formData.name}
+                    onChange={handleChange}
+                    placeholder="Your full name"
+                    aria-invalid={Boolean(errors.name)}
+                    aria-describedby={errors.name ? "demo-name-error" : undefined}
+                  />
+                  {errors.name && <p id="demo-name-error" className="explore-demo-error">{errors.name}</p>}
+                </div>
+
+                <div className="explore-demo-field">
+                  <label htmlFor="demo-email">Work email</label>
+                  <input
+                    id="demo-email"
+                    name="email"
+                    type="email"
+                    autoComplete="email"
+                    value={formData.email}
+                    onChange={handleChange}
+                    placeholder="you@company.com"
+                    aria-invalid={Boolean(errors.email)}
+                    aria-describedby={errors.email ? "demo-email-error" : undefined}
+                  />
+                  {errors.email && <p id="demo-email-error" className="explore-demo-error">{errors.email}</p>}
+                </div>
+
+                {errors.submit && (
+                  <p className="explore-demo-submit-error" role="alert">{errors.submit}</p>
+                )}
+
+                <button type="submit" disabled={isSubmitting}>
+                  {isSubmitting ? "Preparing your demo…" : "Explore Demo"}
+                  {!isSubmitting && <ArrowRight />}
+                </button>
+                <small>
+                  By continuing, you agree that Predictaf may contact you about the
+                  product. See our <Link to="/privacy">Privacy Policy</Link>.
+                </small>
+              </form>
+            </>
+          ) : (
+            <div className="explore-demo-mobile-step">
+              <div className="explore-demo-card-heading">
+                <span>Optional mobile experience</span>
+                <h2 id="explore-demo-form-title">See both sides of Predictaf</h2>
+                <p>
+                  To also explore the mobile app, download it before continuing.
+                  Scan the code for your device below.
+                </p>
+              </div>
+
+              <div className="explore-demo-store-codes" aria-label="Predictaf mobile app downloads">
+                <figure className="explore-demo-store-code">
+                  <img
+                    src="/store/predictaf-app-store-qr.png"
+                    alt="QR code to download Predictaf from the Apple App Store"
+                  />
+                  <figcaption>iPhone and iPad</figcaption>
+                  <span>Apple App Store</span>
+                </figure>
+                <figure className="explore-demo-store-code">
+                  <img
+                    src="/store/predictaf-google-play-qr.png"
+                    alt="QR code to download Predictaf from Google Play"
+                  />
+                  <figcaption>Android</figcaption>
+                  <span>Google Play</span>
+                </figure>
+              </div>
+
+              <div className="explore-demo-mobile-note">
+                <Smartphone aria-hidden="true" />
+                <p>
+                  Once inside the demo, select <strong>Try Mobile App</strong> beneath
+                  the session timer to securely connect the app to your live demo.
+                </p>
+              </div>
+
+              <button
+                type="button"
+                onClick={() => window.location.assign(INTERACTIVE_DEMO_URL)}
+              >
+                Continue to Demo <ArrowRight />
+              </button>
+              <small>
+                Ready now? Continue with or without downloading the mobile app.
+              </small>
             </div>
-
-            <div className="explore-demo-field">
-              <label htmlFor="demo-email">Work email</label>
-              <input
-                id="demo-email"
-                name="email"
-                type="email"
-                autoComplete="email"
-                value={formData.email}
-                onChange={handleChange}
-                placeholder="you@company.com"
-                aria-invalid={Boolean(errors.email)}
-                aria-describedby={errors.email ? "demo-email-error" : undefined}
-              />
-              {errors.email && <p id="demo-email-error" className="explore-demo-error">{errors.email}</p>}
-            </div>
-
-            {errors.submit && (
-              <p className="explore-demo-submit-error" role="alert">{errors.submit}</p>
-            )}
-
-            <button type="submit" disabled={isSubmitting}>
-              {isSubmitting ? "Preparing your demo…" : "Explore Demo"}
-              {!isSubmitting && <ArrowRight />}
-            </button>
-            <small>
-              By continuing, you agree that Predictaf may contact you about the
-              product. See our <Link to="/privacy">Privacy Policy</Link>.
-            </small>
-          </form>
+          )}
         </section>
       </main>
     </div>

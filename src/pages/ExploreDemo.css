@@ -225,6 +225,71 @@
 
 .explore-demo-card small a { color: var(--demo-blue); }
 
+.explore-demo-mobile-step {
+  display: grid;
+  gap: 22px;
+}
+
+.explore-demo-store-codes {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.explore-demo-store-code {
+  display: grid;
+  margin: 0;
+  justify-items: center;
+  gap: 5px;
+  padding: 14px 10px;
+  border: 1px solid var(--demo-line);
+  border-radius: 16px;
+  background: var(--demo-surface);
+  text-align: center;
+}
+
+.explore-demo-store-code img {
+  display: block;
+  width: min(100%, 148px);
+  height: auto;
+  border-radius: 8px;
+}
+
+.explore-demo-store-code figcaption {
+  color: var(--demo-ink);
+  font-family: "Funnel Display", sans-serif;
+  font-size: 0.9rem;
+  font-weight: 650;
+}
+
+.explore-demo-store-code span {
+  color: var(--demo-muted);
+  font-size: 0.75rem;
+}
+
+.explore-demo-mobile-note {
+  display: flex;
+  align-items: flex-start;
+  gap: 11px;
+  padding: 13px 14px;
+  border: 1px solid color-mix(in srgb, var(--demo-blue) 25%, var(--demo-line));
+  border-radius: 13px;
+  background: color-mix(in srgb, var(--demo-blue) 7%, var(--demo-surface));
+}
+
+.explore-demo-mobile-note svg {
+  width: 20px;
+  flex: 0 0 auto;
+  color: var(--demo-blue);
+}
+
+.explore-demo-mobile-note p {
+  margin: 0;
+  color: var(--demo-muted);
+  font-size: 0.82rem;
+  line-height: 1.55;
+}
+
 @media (max-width: 840px) {
   .explore-demo-main {
     grid-template-columns: 1fr;
@@ -246,4 +311,7 @@
   .explore-demo-main { padding: 42px 0 70px; }
   .explore-demo-intro > p { font-size: 1rem; }
   .explore-demo-card { border-radius: 19px; }
+
+  .explore-demo-store-codes { gap: 9px; }
+  .explore-demo-store-code { padding: 10px 7px; }
 }
