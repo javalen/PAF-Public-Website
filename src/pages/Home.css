@@ -1,10 +1,13 @@
 .reserve-site {
   --reserve-navy: #071b31;
   --reserve-navy-soft: #0d2a4b;
-  --reserve-blue: #0865d9;
-  --reserve-blue-bright: #1484f6;
-  --reserve-aqua: #1bb9aa;
-  --reserve-lime: #dff7a2;
+  /* --old reserve-blue: #0865d9; */
+  /* --old reserve-blue-bright: #1484f6; */
+  --reserve-blue: #0050B3;
+  --reserve-blue-bright: #1890FF;
+  --reserve-aqua: #1bb9aa; 
+  /* --old reserve-lime: #dff7a2; */
+  --reserve-lime: #F4FFA3;
   --reserve-ink: #10243b;
   --reserve-muted: #5c6e82;
   --reserve-line: #dce6ef;
@@ -14,8 +17,12 @@
   background: var(--reserve-surface);
   color: var(--reserve-ink);
   font-family: "Roboto", sans-serif;
-  overflow: hidden;
+  overflow: clip;
 }
+
+
+
+
 
 .dark .reserve-site {
   --reserve-ink: #f1f6fb;
@@ -67,12 +74,19 @@
   backdrop-filter: blur(18px);
 }
 
+.reserve-header a,
+.reserve-header button,
+.reserve-header a *,
+.reserve-header button * {
+  cursor: pointer !important;
+}
+
 .reserve-header-inner {
   display: grid;
   min-height: 76px;
   grid-template-columns: auto 1fr auto;
   align-items: center;
-  gap: 34px;
+  gap: 20px;
 }
 
 .reserve-brand {
@@ -80,9 +94,14 @@
   align-items: center;
 }
 
+.reserve-header .reserve-logo {
+  width: 165px;
+  height: auto;
+}
+
 .reserve-logo {
   display: block;
-  width: 156px;
+  width: 180px;
   height: auto;
 }
 
@@ -102,12 +121,13 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: clamp(17px, 2vw, 30px);
+  gap: clamp(12px, 1.4vw, 20px);
 }
 
 .reserve-nav a,
 .reserve-login {
   color: color-mix(in srgb, var(--reserve-ink) 82%, transparent);
+  cursor: pointer;
   font-family: "Funnel Display", sans-serif;
   font-size: 0.92rem;
   transition: color 160ms ease;
@@ -122,7 +142,7 @@
 .reserve-header-actions {
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: 10px;
 }
 
 .reserve-menu-button {
@@ -784,6 +804,7 @@
   font-weight: 400;
   letter-spacing: -0.035em;
   line-height: 1.02;
+  text-wrap: balance;
 }
 
 .reserve-section-heading p,
@@ -1305,6 +1326,7 @@
   font-family: "Funnel Display", sans-serif;
   font-size: 1.35rem;
   font-weight: 600;
+  text-wrap: balance;
 }
 
 .reserve-steps p {
@@ -1678,19 +1700,6 @@
   margin-top: 31px;
 }
 
-.reserve-button-light {
-  background: #fff;
-  box-shadow: 0 18px 36px rgba(0, 22, 50, 0.24);
-  color: #0758b8 !important;
-}
-
-.reserve-button-outline-light {
-  border-color: rgba(255, 255, 255, 0.5);
-  background: rgba(255, 255, 255, 0.08);
-  color: #fff !important;
-  backdrop-filter: blur(10px);
-}
-
 .reserve-closing small {
   display: block;
   margin-top: 18px;
@@ -1785,8 +1794,7 @@
   }
 
   .reserve-nav,
-  .reserve-header-actions > .reserve-button-small,
-  .reserve-header-actions > .reserve-login {
+  .reserve-header-actions > a {
     display: none;
   }
 
@@ -1820,6 +1828,7 @@
     align-items: center;
     justify-content: space-between;
     border-bottom: 1px solid var(--reserve-line);
+    cursor: pointer;
     font-family: "Funnel Display", sans-serif;
   }
 
@@ -1981,7 +1990,12 @@
   }
 
   .reserve-logo {
-    width: 142px;
+    width: 160px;
+  }
+
+  .reserve-header .reserve-logo {
+    width: auto;
+    height: 38px;
   }
 
   .reserve-header-actions {

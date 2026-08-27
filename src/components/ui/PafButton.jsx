@@ -31,6 +31,7 @@ export function PafButton({
     secondary: "bg-backgroundSecondary dark:bg-backgroundSecondary-dark text-textPrimary dark:text-textPrimary-dark border border-borderSecondary dark:border-borderSecondary-dark hover:border-black dark:hover:border-white",
     danger: "bg-backgroundTagFalse text-textTagFalse border border-borderTagFalse hover:border-textTagFalse",
     textlink: "bg-transparent border-0 rounded-none text-brandPrimary dark:text-brandPrimary-dark hover:underline font-['Roboto',sans-serif] tracking-normal leading-normal",
+    underlined: "bg-transparent border-0 rounded-none text-brandPrimary dark:text-brandPrimary-dark underline hover:text-brandSecondary dark:hover:text-brandSecondary-dark font-['Roboto',sans-serif] tracking-normal leading-normal",
   };
   
   // Determine appropriate icon size based on button size
@@ -170,7 +171,7 @@ export function PafButton({
       className={clsx(
         base,
         variants[variant],
-        variant === "textlink" ? getTextLinkSizeClasses(size) : getSizeClasses(size),
+        ["textlink", "underlined"].includes(variant) ? getTextLinkSizeClasses(size) : getSizeClasses(size),
         isIconOnly && "gap-0", // Remove gap for icon-only buttons
         className,
         disabled && "opacity-50 cursor-not-allowed"
@@ -191,7 +192,7 @@ PafButton.displayName = "PafButton";
 
 PafButton.propTypes = {
   children: PropTypes.node,
-  variant: PropTypes.oneOf(["emphasis", "primary", "secondary", "danger", "textlink"]),
+  variant: PropTypes.oneOf(["emphasis", "primary", "secondary", "danger", "textlink", "underlined"]),
   size: PropTypes.string,
   disabled: PropTypes.bool,
   iconLeft: PropTypes.node,

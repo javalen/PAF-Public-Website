@@ -26,7 +26,7 @@ import {
 } from "lucide-react";
 
 import { Pricing } from "../components/Pricing";
-import DarkModeToggle from "../components/ui/DarkModeToggle";
+import PafButton from "../components/ui/PafButton";
 import logoLight from "../assets/predictaf-logo.svg";
 import logoDark from "../assets/predictaf-logo-dark.svg";
 import appStoreBadge from "../assets/appStore.svg";
@@ -147,20 +147,25 @@ function SiteHeader() {
         </nav>
 
         <div className="reserve-header-actions">
-          <DarkModeToggle />
-          <a className="reserve-login" href="/login">
-            Log in
+          {/* <DarkModeToggle /> */}
+          <a href="/login" className="inline-flex">
+            <PafButton variant="underlined" size="small">
+              Log In
+            </PafButton>
           </a>
           <a
-            className="reserve-button reserve-button-small reserve-button-small-secondary"
             href={DEMO_URL}
             target="_blank"
             rel="noreferrer"
           >
-            Book a Demo
+            <PafButton variant="secondary" size="small">
+              Book a Demo
+            </PafButton>
           </a>
-          <Link className="reserve-button reserve-button-small" to="/explore-demo">
-            Explore Demo
+          <Link className="inline-flex" to="/explore-demo">
+            <PafButton variant="primary" size="small">
+              Explore Demo
+            </PafButton>
           </Link>
           <button
             type="button"
@@ -184,9 +189,18 @@ function SiteHeader() {
               </a>
             ))}
             <div className="reserve-mobile-actions">
-              <a href="/login">Log in</a>
-              <Link to="/explore-demo" onClick={() => setMenuOpen(false)}>Explore Demo</Link>
-              <a href={DEMO_URL} target="_blank" rel="noreferrer">Book a demo</a>
+              <a href="/login" className="inline-flex">
+                <PafButton variant="underlined" size="small">
+                  Log in
+                </PafButton>
+              </a>
+        
+              <a href={DEMO_URL} target="_blank" rel="noreferrer" className="inline-flex">
+                <PafButton variant="secondary" size="small">
+                  Book a demo
+                </PafButton>
+              </a>
+              
             </div>
           </div>
         </div>
@@ -286,15 +300,36 @@ function Hero() {
               Predictaf connects day-to-day facility operations with <strong>system-level</strong> and <strong>facility-level Reserve Studies</strong>—so the capital plan reflects what is actually happening across your property.
             </p>
             <div className="reserve-hero-actions">
-              <Link className="reserve-button reserve-button-primary" to="/register">
-                Start your free trial <ArrowRight />
-              </Link>
-              <Link className="reserve-button reserve-button-secondary" to="/explore-demo">
-                Explore Demo <PlayCircle />
-              </Link>
-              <a className="reserve-button reserve-button-secondary" href={DEMO_URL} target="_blank" rel="noreferrer">
-                Book a Demo <CalendarClock />
+         
+              <a className="inline-flex" href={DEMO_URL} target="_blank" rel="noreferrer">
+                <PafButton
+                  variant="secondary"
+                  size="medium"
+                  iconLeft={<CalendarClock />}
+                >
+                  Book a Demo
+                </PafButton>
               </a>
+
+              <Link className="inline-flex" to="/explore-demo">
+                <PafButton
+                  variant="secondary"
+                  size="medium"
+                  iconLeft={<PlayCircle />}
+                >
+                  Explore a Demo
+                </PafButton>
+              </Link>
+
+              <Link className="inline-flex" to="/register">
+                <PafButton
+                  variant="primary"
+                  size="medium"
+                  iconRight={<ArrowRight />}
+                >
+                  Start a Free Trial
+                </PafButton>
+              </Link>
             </div>
             <div className="reserve-hero-proof">
               <span><Check /> No credit card required</span>
@@ -478,7 +513,16 @@ function HowItWorks() {
                   <span className="reserve-step-icon"><Icon /></span>
                   <span className="reserve-step-number">{step.number}</span>
                 </div>
-                <h3>{step.title}</h3>
+                <h3>
+                  {step.title === "Capture what happens" ? (
+                    <>
+                      Capture<br />
+                      <span className="whitespace-nowrap">what happens</span>
+                    </>
+                  ) : (
+                    step.title
+                  )}
+                </h3>
                 <p>{step.body}</p>
                 {index < operationalSteps.length - 1 && <ChevronRight className="reserve-step-arrow" aria-hidden="true" />}
               </article>
@@ -524,14 +568,17 @@ function WhoItsFor() {
         <div className="reserve-section-heading reserve-section-heading-wide">
           <div>
             <span className="reserve-kicker">Built for property decision-makers</span>
-            <h2>One source of truth. Different views for every role.</h2>
+            <h2>
+              <span className="whitespace-nowrap">One source of truth.</span>{" "}
+              <span className="whitespace-nowrap">Different views for every role.</span>
+            </h2>
           </div>
           <p>Operations teams need detail. Boards need clarity. Owners need confidence. Predictaf connects the same evidence to the question each stakeholder is trying to answer.</p>
         </div>
         <div className="reserve-audience-grid">
           {audiences.map((audience) => {
             const Icon = audience.icon;
-            return <article key={audience.title}><span><Icon /></span><h3>{audience.title}</h3><p>{audience.body}</p></article>;
+            return <article key={audience.title}><span><Icon /></span><h3 className={audience.title === "HOA, COA & POA Boards" ? "whitespace-nowrap" : undefined}>{audience.title}</h3><p>{audience.body}</p></article>;
           })}
         </div>
       </div>
@@ -554,7 +601,7 @@ function MobileAppDownload() {
     {
       name: "Google Play",
       platform: "For Android",
-      description: "Scan to open PredictAF in the Google Play Store.",
+      description: "Scan to open Predictaf in the Google Play Store.",
       url: ANDROID_APP_URL,
       qr: "/store/predictaf-google-play-qr.png",
       qrDownload: "predictaf-google-play-qr.png",
@@ -581,7 +628,7 @@ function MobileAppDownload() {
               </a>
               <div className="reserve-download-copy">
                 <span>{store.platform}</span>
-                <h3>{store.name}</h3>
+                <h3 className={store.name === "Apple App Store" ? "whitespace-nowrap" : undefined}>{store.name}</h3>
                 <p>{store.description}</p>
                 <a className="reserve-store-link" href={store.url} target="_blank" rel="noreferrer">
                   <img src={store.badge} alt={store.badgeAlt} />
@@ -621,12 +668,33 @@ function ClosingCta() {
     <section className="reserve-closing">
       <div className="reserve-closing-grid" aria-hidden="true" />
       <div className="reserve-container reserve-closing-inner">
-        <span className="reserve-kicker">From reactive to ready</span>
+        {/* <span className="reserve-kicker">From reactive to ready</span> */}
         <h2>Make every asset part of a smarter capital plan.</h2>
         <p>See how Predictaf connects CMMS, system-level Reserve Studies, and facility-level funding forecasts in one operational platform.</p>
         <div>
-          <Link className="reserve-button reserve-button-light" to="/register">Start your free trial <ArrowRight /></Link>
-          <a className="reserve-button reserve-button-outline-light" href={DEMO_URL} target="_blank" rel="noreferrer"><CalendarClock /> Book a walkthrough</a>
+         
+          <a href={DEMO_URL} target="_blank" rel="noreferrer" className="inline-flex">
+            <PafButton
+              variant="secondary"
+              size="medium"
+              // className="!border-white/50 !bg-transparent !text-white"
+              iconLeft={<CalendarClock />}
+            >
+              Book a Demo
+            </PafButton>
+          </a> 
+          
+          <Link className="inline-flex" to="/register">
+            <PafButton
+              variant="emphasis"
+              size="medium"
+              // className="!bg-white !text-brandPrimary"
+              iconRight={<ArrowRight />}
+            >
+              Start a Free trial
+            </PafButton>
+          </Link>
+         
         </div>
         <small>No credit card required • Set up in minutes</small>
       </div>
@@ -660,7 +728,7 @@ function SiteFooter() {
         <div>
           <strong>Get started</strong>
           <Link to="/register">Start a free trial</Link>
-          <Link to="/explore-demo">Explore Demo</Link>
+          <Link to="/explore-demo">Explore a Demo</Link>
           <a href="#mobile-app">Download the mobile app</a>
           <a href={DEMO_URL} target="_blank" rel="noreferrer">Schedule a demo</a>
           <a href="/login">Log in</a>

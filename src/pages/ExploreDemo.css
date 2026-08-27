@@ -1,6 +1,7 @@
 .explore-demo-page {
   --demo-navy: #071b31;
-  --demo-blue: #0865d9;
+  /* --demo-blue: #0865d9; */
+  --demo-blue: #0050B3;
   --demo-blue-dark: #0757ba;
   --demo-aqua: #1bb9aa;
   --demo-ink: #10243b;
