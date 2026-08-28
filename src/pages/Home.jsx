@@ -708,7 +708,7 @@ function SiteFooter() {
       <div className="reserve-container reserve-footer-grid">
         <div className="reserve-footer-brand">
           <BrandLogo />
-          <p>Facility operations and Reserve Intelligence in one connected platform.</p>
+          <p>Facility Operations and Reserve Intelligence in One Connected Platform</p>
           <span>© {new Date().getFullYear()} Predictaf, Inc. All rights reserved.</span>
         </div>
         <div>
