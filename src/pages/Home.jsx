@@ -42,7 +42,7 @@ const navItems = [
   { label: "Platform", href: "#platform" },
   { label: "Reserve Intelligence", href: "#reserve-intelligence" },
   { label: "How It Works", href: "#how-it-works" },
-  { label: "Who It’s For", href: "#who-its-for" },
+  { label: "Built For", href: "#who-its-for" },
   { label: "Mobile App", href: "#mobile-app" },
   { label: "Pricing", href: "#pricing" },
 ];
@@ -164,7 +164,7 @@ function SiteHeader() {
           </a>
           <Link className="inline-flex" to="/explore-demo">
             <PafButton variant="primary" size="small">
-              Explore Demo
+              Explore a Demo
             </PafButton>
           </Link>
           <button
@@ -380,7 +380,10 @@ function PlatformStory() {
             <span className="reserve-loop-icon"><ClipboardCheck /></span>
             <small>Operations</small>
             <h3>The work happening today</h3>
-            <p>Assets, preventive maintenance, inspections, tickets, service records, vendors, warranties, and compliance documents.</p>
+            <p>Assets, preventive maintenance, inspections, tickets, service records, vendors, warranties, and 
+              <br />
+              compliance documents.
+             </p>
             <ul>
               <li><CheckCircle2 /> Build an asset-level history</li>
               <li><CheckCircle2 /> Keep teams and evidence connected</li>
@@ -396,7 +399,7 @@ function PlatformStory() {
             <span className="reserve-loop-icon"><BarChart3 /></span>
             <small>Capital planning</small>
             <h3>The costs coming tomorrow</h3>
-            <p>Condition, risk, remaining useful life, replacement timing, project cost, funding scenarios, and board-ready narratives.</p>
+            <p>Condition, risk, remaining useful life, replacement timing, project cost, funding scenarios, and board-ready&nbsp;narratives.</p>
             <ul>
               <li><CheckCircle2 /> See the effect at system and facility level</li>
               <li><CheckCircle2 /> Review changes before they become official</li>
@@ -501,7 +504,7 @@ function HowItWorks() {
         <div className="reserve-section-heading reserve-section-heading-center">
           <span className="reserve-kicker">How the loop works</span>
           <h2>From completed work to capital confidence.</h2>
-          <p>Predictaf keeps operations and reserves connected without turning every field event into an automatic financial change.</p>
+          <p>Predictaf keeps operations and reserves connected without   <br /> turning every field event into an automatic financial change.</p>
         </div>
 
         <div className="reserve-steps">
