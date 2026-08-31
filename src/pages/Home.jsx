@@ -337,7 +337,8 @@ function Hero() {
             </div>
           </div>
 
-          <div className="reserve-hero-visual">
+          {/* Does Not Cick Out */}
+          {/* <div className="reserve-hero-visual">
             <div className="reserve-visual-label reserve-visual-label-top">
               <CheckCircle2 /> Service history captured
             </div>
@@ -345,7 +346,23 @@ function Hero() {
             <div className="reserve-visual-label reserve-visual-label-bottom">
               <Layers3 /> System insight rolled up to facility plan
             </div>
-          </div>
+          </div> */}
+
+          {/* Clicks to Demo */}
+          <Link to="/explore-demo" className="reserve-hero-visual-link">
+            <div className="reserve-hero-visual">
+              <div className="reserve-visual-label reserve-visual-label-top">
+                <CheckCircle2 /> Service history captured
+              </div>
+
+              <ReserveDashboard />
+
+              <div className="reserve-visual-label reserve-visual-label-bottom">
+                <Layers3 /> System insight rolled up to facility plan
+              </div>
+            </div>
+          </Link>
+
         </div>
       </section>
 
