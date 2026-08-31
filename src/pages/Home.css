@@ -1,3 +1,9 @@
+
+body {
+  user-select: none;
+}
+
+
 .reserve-site {
   --reserve-navy: #071b31;
   --reserve-navy-soft: #0d2a4b;
@@ -20,8 +26,18 @@
   overflow: clip;
 }
 
+/* .reserve-hero-visual-link {
+  display: block;
+  color: inherit;
+  text-decoration: none;
+  cursor: pointer;
+  user-select: none;
+} */
 
-
+.reserve-hero-visual-link * {
+  user-select: none;
+  cursor: pointer;
+}
 
 
 .dark .reserve-site {
