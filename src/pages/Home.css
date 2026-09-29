@@ -1798,6 +1798,28 @@ body {
   font-size: 0.75rem;
 }
 
+.reserve-footer-membership {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+  margin-bottom: 22px;
+}
+
+.reserve-footer-membership-logo {
+  max-width: 100%;
+  padding: 12px;
+  border-radius: 6px;
+  background: #fff;
+}
+
+.reserve-footer-membership-logo img {
+  display: block;
+  width: 160px;
+  max-width: 100%;
+  height: auto;
+}
+
 .reserve-footer-grid > div:not(.reserve-footer-brand) {
   display: flex;
   flex-direction: column;

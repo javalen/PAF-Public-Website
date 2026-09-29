@@ -29,6 +29,7 @@ import { Pricing } from "../components/Pricing";
 import PafButton from "../components/ui/PafButton";
 import logoLight from "../assets/predictaf-logo.svg";
 import logoDark from "../assets/predictaf-logo-dark.svg";
+import caiLogo from "../assets/cai-logo.png";
 import appStoreBadge from "../assets/appStore.svg";
 import googlePlayBadge from "../assets/googlePlay.svg";
 import "./Home.css";
@@ -729,6 +730,18 @@ function SiteFooter() {
         <div className="reserve-footer-brand">
           <BrandLogo />
           <p>Facility Operations and Reserve Intelligence in One Connected Platform</p>
+          <div className="reserve-footer-membership">
+            <strong>Member Of</strong>
+            <div className="reserve-footer-membership-logo">
+              <img
+                src={caiLogo}
+                alt="Community Associations Institute (CAI)"
+                width="197"
+                height="80"
+                loading="lazy"
+              />
+            </div>
+          </div>
           <span>© {new Date().getFullYear()} Predictaf, Inc. All rights reserved.</span>
         </div>
         <div>

@@ -12,6 +12,7 @@ import iconDark from "../assets/predictaf-icon-dark.svg";
 
 import logoLight from "../assets/predictaf-logo.svg";
 import logoDark from "../assets/predictaf-logo-dark.svg";
+import caiLogo from "../assets/cai-logo.png";
 
 import linkedinIcon from "../assets/linkedin.svg";
 import facebookIcon from "../assets/facebook.svg";
@@ -24,6 +25,26 @@ import { pbWebClient } from "../api/pocketbase";
 const SCHEDULE_DEMO_URL =
   import.meta.env.VITE_SCHEDULE_DEMO_URL ||
   "https://calendar.app.google/p3Bi6LnTTzgfpo8M7";
+
+function CAIMembership() {
+  return (
+    <div className="space-y-3">
+      <h3 className="font-['Funnel_Display'] text-lg font-medium text-textSecondary dark:text-textSecondary-dark">
+        Member Of
+      </h3>
+      <div className="w-fit max-w-full rounded-md bg-white p-3">
+        <img
+          src={caiLogo}
+          alt="Community Associations Institute (CAI)"
+          width="197"
+          height="80"
+          className="h-auto w-[160px] max-w-full"
+          loading="lazy"
+        />
+      </div>
+    </div>
+  );
+}
 
 export function Footer() {
   const [open, setOpen] = useState(false);
@@ -130,6 +151,8 @@ export function Footer() {
               </Link>
             </div>
 
+            <CAIMembership />
+
             <div className="flex items-center gap-4 text-textSecondary dark:text-textSecondary-dark">
               <a
                 href="https://www.linkedin.com/company/predictaf/"
@@ -214,6 +237,7 @@ export function Footer() {
                   Privacy Policy
                 </button>
               </div>
+              <CAIMembership />
             </div>
 
             <div className="space-y-4">
