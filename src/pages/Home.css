@@ -70,6 +70,50 @@ body {
   margin: 0 auto;
 }
 
+.reserve-pilot-notice {
+  background: var(--reserve-navy);
+  color: #fff;
+}
+
+.reserve-pilot-notice .reserve-container {
+  display: flex;
+  min-height: 58px;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+  flex-wrap: wrap;
+  padding: 10px 0;
+}
+
+.reserve-pilot-notice span {
+  color: var(--reserve-lime);
+  font-family: "Funnel Display", sans-serif;
+  font-weight: 700;
+}
+
+.reserve-pilot-notice p {
+  margin: 0;
+  color: #dce9f6;
+  font-size: 0.9rem;
+}
+
+.reserve-pilot-notice a {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: #fff;
+  font-family: "Funnel Display", sans-serif;
+  font-size: 0.9rem;
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+.reserve-pilot-notice svg {
+  width: 15px;
+  height: 15px;
+}
+
 .reserve-kicker,
 .reserve-eyebrow {
   color: var(--reserve-blue);

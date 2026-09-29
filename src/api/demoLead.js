@@ -16,11 +16,11 @@ export const INTERACTIVE_DEMO_URL =
   import.meta.env.VITE_INTERACTIVE_DEMO_URL ||
   "https://demo.predictaf.com/auth?demo=1&autostart=1";
 
-export async function captureDemoLead({ name, email }) {
+async function captureLead({ name, email, source }) {
   const payload = {
     name: String(name || "").trim(),
     email: String(email || "").trim(),
-    source: "Demo",
+    source,
   };
 
   if (!payload.name || !payload.email) {
@@ -28,7 +28,7 @@ export async function captureDemoLead({ name, email }) {
   }
 
   if (!CLIENTS_SVR_URL || !CLIENTS_SVR_KEY) {
-    throw new Error("The demo service is not configured. Please try again later.");
+    throw new Error("The contact service is unavailable. Please try again later.");
   }
 
   const response = await fetch(
@@ -46,9 +46,17 @@ export async function captureDemoLead({ name, email }) {
   const data = await response.json().catch(() => null);
   if (!response.ok || data?.ok === false) {
     throw new Error(
-      data?.error || data?.message || "We could not start the demo yet.",
+      data?.error || data?.message || "We could not save your details yet.",
     );
   }
 
   return data;
+}
+
+export function captureDemoLead({ name, email }) {
+  return captureLead({ name, email, source: "Demo" });
+}
+
+export function capturePilotLead({ name, email }) {
+  return captureLead({ name, email, source: "Founding Community Pilot" });
 }

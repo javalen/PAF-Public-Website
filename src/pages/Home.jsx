@@ -747,6 +747,7 @@ function SiteFooter() {
         </div>
         <div>
           <strong>Get started</strong>
+          <Link to="/pilot/">Founding Community Pilot</Link>
           <Link to="/register">Start a free trial</Link>
           <Link to="/explore-demo">Explore a Demo</Link>
           <a href="#mobile-app">Download the mobile app</a>
@@ -763,6 +764,13 @@ export default function Home() {
     <div className="reserve-site">
       <SiteHeader />
       <main>
+        <div className="reserve-pilot-notice">
+          <div className="reserve-container">
+            <span>Founding Community Pilot</span>
+            <p>We’re inviting five HOA communities into a 90-day working partnership.</p>
+            <Link to="/pilot/">Explore the opportunity <ArrowRight aria-hidden="true" /></Link>
+          </div>
+        </div>
         <Hero />
         <PlatformStory />
         <ReserveLevels />
