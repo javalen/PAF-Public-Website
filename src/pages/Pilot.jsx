@@ -19,6 +19,11 @@ const SCHEDULE_URL =
   import.meta.env.VITE_SCHEDULE_DEMO_URL ||
   "https://calendar.app.google/p3Bi6LnTTzgfpo8M7";
 
+const PILOT_TITLE = "Founding Community Pilot | Predictaf";
+const PILOT_DESCRIPTION = "Five HOA communities. A 90-day working partnership to bring assets, maintenance, documents, work requests, and reserve priorities into view with Predictaf.";
+const HOME_TITLE = "Predictaf | CMMS + System & Facility Reserve Studies";
+const HOME_DESCRIPTION = "Predictaf connects CMMS operations with system-level and facility-level Reserve Studies, helping property teams turn maintenance evidence into clearer capital plans.";
+
 const outcomes = [
   {
     icon: Building2,
@@ -166,14 +171,20 @@ export default function Pilot() {
     const previousTitle = document.title;
     const description = document.querySelector('meta[name="description"]');
     const previousDescription = description?.content;
-    document.title = "Founding Community Pilot | Predictaf";
+    document.title = PILOT_TITLE;
     if (description) {
-      description.content = "Five HOA communities. A 90-day working partnership to bring assets, maintenance, documents, work requests, and reserve priorities into view with Predictaf.";
+      description.content = PILOT_DESCRIPTION;
     }
 
     return () => {
-      document.title = previousTitle;
-      if (description) description.content = previousDescription;
+      // A direct /pilot/ visit starts with pilot/index.html metadata. Restore
+      // the default site's metadata when navigating away in the SPA.
+      document.title = previousTitle === PILOT_TITLE ? HOME_TITLE : previousTitle;
+      if (description) {
+        description.content = previousDescription === PILOT_DESCRIPTION
+          ? HOME_DESCRIPTION
+          : previousDescription;
+      }
     };
   }, []);
 
