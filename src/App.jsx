@@ -18,6 +18,7 @@ import PublicQuotePage from "./components/pricing-wizard/PublicQuotePage";
 import NewsletterViewer from "./pages/NewsletterViewer";
 import SocialRedirect from "./pages/SocialRedirect";
 import ExploreDemo from "./pages/ExploreDemo";
+import Pilot from "./pages/Pilot";
 
 function App() {
   const [user, setUser] = useState();
@@ -26,6 +27,7 @@ function App() {
     { path: "/login", element: <Login /> },
     { path: "/register", element: <Register /> },
     { path: "/explore-demo", element: <ExploreDemo /> },
+    { path: "/pilot", element: <Pilot /> },
     { path: "/", element: <Home /> },
     { path: "/quickstart", element: <QuickStart /> },
     { path: "/support", element: <Support /> },
