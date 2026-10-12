@@ -1,6 +1,8 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import App from "./App.jsx";
+import { trackAiReferral } from "./lib/aiReferrals.js";
+trackAiReferral();
 
 // Import fonts
 import "@fontsource/roboto/400.css";

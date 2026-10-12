@@ -2,6 +2,7 @@ import { useState } from "react";
 import "./App.css";
 import { createBrowserRouter, Navigate, RouterProvider } from "react-router-dom";
 import Home from "./pages/Home";
+import Resources from "./pages/Resources";
 import AuthContext from "./auth/context";
 import Register from "./pages/Register";
 import Login from "./pages/Login";
@@ -29,6 +30,8 @@ function App() {
     { path: "/explore-demo", element: <ExploreDemo /> },
     { path: "/pilot", element: <Pilot /> },
     { path: "/", element: <Home /> },
+    { path: "/resources", element: <Resources /> },
+    { path: "/resources/:slug", element: <Resources /> },
     { path: "/quickstart", element: <QuickStart /> },
     { path: "/support", element: <Support /> },
     { path: "/privacy", element: <Privacy /> },

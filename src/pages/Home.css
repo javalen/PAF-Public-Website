@@ -2280,3 +2280,83 @@ body {
     transition-duration: 0.01ms !important;
   }
 }
+
+/* Full-width navigation keeps the action group at the right edge. */
+.reserve-header .reserve-header-inner {
+  width: 100%;
+  max-width: none;
+  padding-inline: clamp(20px, 2.5vw, 48px);
+  display: flex;
+  gap: clamp(20px, 2vw, 36px);
+}
+.reserve-header .reserve-brand { flex-shrink: 0; }
+.reserve-header .reserve-nav { justify-content: flex-start; }
+.reserve-header .reserve-header-actions { margin-left: auto; flex-shrink: 0; }
+.reserve-header a.reserve-login-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 42px;
+  height: 42px;
+  flex-shrink: 0;
+  border: 1px solid var(--reserve-line);
+  border-radius: 12px;
+  color: var(--reserve-blue);
+  background: var(--reserve-surface);
+}
+.reserve-login-icon svg { width: 20px; height: 20px; }
+.reserve-header a.reserve-login-icon:hover { background: var(--reserve-surface-soft); border-color: var(--reserve-blue); }
+.reserve-header a:focus-visible,.reserve-menu-button:focus-visible { outline: 2px solid var(--reserve-blue); outline-offset: 4px; }
+@media (max-width: 1280px) {
+  .reserve-header .reserve-nav { display: none; }
+  .reserve-header .reserve-menu-button { display: inline-flex; }
+  .reserve-mobile-menu {
+    display: block;
+    border-top: 1px solid var(--reserve-line);
+    background: var(--reserve-surface);
+    box-shadow: 0 18px 32px rgba(7, 27, 49, 0.12);
+  }
+
+  .reserve-mobile-menu .reserve-container {
+    display: grid;
+    padding: 16px 0 22px;
+  }
+
+  .reserve-mobile-menu a {
+    display: flex;
+    min-height: 48px;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid var(--reserve-line);
+    cursor: pointer;
+    font-family: "Funnel Display", sans-serif;
+  }
+
+  .reserve-mobile-menu svg {
+    width: 18px;
+  }
+
+  .reserve-mobile-actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-top: 16px;
+  }
+
+  .reserve-mobile-actions a {
+    justify-content: center;
+    border: 1px solid var(--reserve-line);
+    border-radius: 12px;
+  }
+
+
+  .reserve-mobile-actions { grid-template-columns: auto 1fr; }
+}
+@media (min-width: 641px) and (max-width: 960px) {
+  .reserve-header-actions > a { display: inline-flex; }
+}
+@media (max-width: 640px) {
+  .reserve-header .reserve-header-inner { padding-inline: 14px; gap: 12px; }
+  .reserve-mobile-actions { grid-template-columns: auto 1fr; }
+  .reserve-mobile-actions a:last-child { grid-column: auto; }
+}

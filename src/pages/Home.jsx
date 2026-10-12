@@ -15,6 +15,7 @@ import {
   Gauge,
   HardHat,
   Layers3,
+  LogIn,
   Menu,
   PlayCircle,
   RefreshCw,
@@ -33,6 +34,9 @@ import caiLogo from "../assets/cai-logo.png";
 import appStoreBadge from "../assets/appStore.svg";
 import googlePlayBadge from "../assets/googlePlay.svg";
 import "./Home.css";
+import "./Resources.css";
+import SearchMetadata from "../components/SearchMetadata";
+import { homeFaqs } from "../data/resources.js";
 
 const DEMO_URL = "https://calendar.app.google/p3Bi6LnTTzgfpo8M7";
 const STORY_IMAGE = "/reserve-operations-story.jpg";
@@ -46,6 +50,7 @@ const navItems = [
   { label: "Built For", href: "#who-its-for" },
   { label: "Mobile App", href: "#mobile-app" },
   { label: "Pricing", href: "#pricing" },
+  { label: "Resources", href: "/resources" },
 ];
 
 const systemRows = [
@@ -149,20 +154,8 @@ function SiteHeader() {
 
         <div className="reserve-header-actions">
           {/* <DarkModeToggle /> */}
-          <a href="/login" className="inline-flex">
-            <PafButton variant="underlined" size="small">
-              Log In
-            </PafButton>
-          </a>
-          <a
-            href={DEMO_URL}
-            target="_blank"
-            rel="noreferrer"
-          >
-            <PafButton variant="secondary" size="small">
-              Book a Demo
-            </PafButton>
-          </a>
+          <Link to="/login" className="reserve-login-icon" aria-label="Log in" title="Log in"><LogIn aria-hidden="true" /></Link>
+
           <Link className="inline-flex" to="/explore-demo">
             <PafButton variant="primary" size="small">
               Explore a Demo
@@ -190,18 +183,11 @@ function SiteHeader() {
               </a>
             ))}
             <div className="reserve-mobile-actions">
-              <a href="/login" className="inline-flex">
-                <PafButton variant="underlined" size="small">
-                  Log in
-                </PafButton>
-              </a>
-        
-              <a href={DEMO_URL} target="_blank" rel="noreferrer" className="inline-flex">
-                <PafButton variant="secondary" size="small">
-                  Book a demo
-                </PafButton>
-              </a>
-              
+              <Link to="/login" className="reserve-login-icon" aria-label="Log in" title="Log in"><LogIn aria-hidden="true" /></Link>
+
+
+              <Link to="/explore-demo"><PafButton variant="primary" size="small">Explore a Demo</PafButton></Link>
+
             </div>
           </div>
         </div>
@@ -298,10 +284,10 @@ function Hero() {
             <div className="reserve-eyebrow"><Sparkles /> CMMS + Reserve Intelligence</div>
             <h1>Every work order should make your reserve plan <em>smarter.</em></h1>
             <p>
-              Predictaf connects day-to-day facility operations with <strong>system-level</strong> and <strong>facility-level Reserve Studies</strong>—so the capital plan reflects what is actually happening across your property.
+              Predictaf is preventive maintenance and facility management software for HOA, multifamily, and commercial property teams. Track building assets, schedule maintenance, manage inspections and work orders, and connect service history to <strong>system-level</strong> and <strong>facility-level Reserve Studies</strong>.
             </p>
             <div className="reserve-hero-actions">
-         
+
               <a className="inline-flex" href={DEMO_URL} target="_blank" rel="noreferrer">
                 <PafButton
                   variant="secondary"
@@ -693,7 +679,7 @@ function ClosingCta() {
         <h2>Make every asset part of a smarter capital plan.</h2>
         <p>See how Predictaf connects CMMS, system-level Reserve Studies, and facility-level funding forecasts in one operational platform.</p>
         <div>
-         
+
           <a href={DEMO_URL} target="_blank" rel="noreferrer" className="inline-flex">
             <PafButton
               variant="secondary"
@@ -704,7 +690,7 @@ function ClosingCta() {
               Book a Demo
             </PafButton>
           </a> 
-          
+
           <Link className="inline-flex" to="/register">
             <PafButton
               variant="emphasis"
@@ -715,7 +701,7 @@ function ClosingCta() {
               Start a Free trial
             </PafButton>
           </Link>
-         
+
         </div>
         <small>No credit card required • Set up in minutes</small>
       </div>
@@ -755,6 +741,7 @@ function SiteFooter() {
           <strong>Company</strong>
           <Link to="/careers">Careers</Link>
           <Link to="/support">Support</Link>
+          <Link to="/resources">Maintenance resources</Link>
           <Link to="/privacy">Privacy</Link>
           <a href="https://www.youtube.com/@PredictiveAF" target="_blank" rel="noreferrer">YouTube</a>
         </div>
@@ -775,6 +762,7 @@ function SiteFooter() {
 export default function Home() {
   return (
     <div className="reserve-site">
+      <SearchMetadata />
       <SiteHeader />
       <main>
         <div className="reserve-pilot-notice">
@@ -794,6 +782,7 @@ export default function Home() {
         <MobileAppDownload />
         <Testimonial />
         <Pricing />
+        <section className="reserve-section"><div className="reserve-container aeo-faq"><span className="reserve-kicker">Answers for property teams</span><h2>Preventive maintenance and capital planning, connected.</h2><p>Know what equipment you have, replace manual inspection tracking with connected records, organize recurring maintenance, and keep capital assumptions grounded in asset history.</p>{homeFaqs.map(faq => <details key={faq.question}><summary>{faq.question}</summary><p>{faq.answer}</p></details>)}<p><Link to="/resources">Explore maintenance guides and software comparisons →</Link></p></div></section>
         <ClosingCta />
       </main>
       <SiteFooter />
