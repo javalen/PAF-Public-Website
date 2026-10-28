@@ -1,5 +1,6 @@
 import { Header } from "../components/Header";
 import { Footer } from "../components/Footer";
+import AIPrivacyDisclosure from "../components/AIPrivacyDisclosure";
 
 export default function Privacy() {
   return (
@@ -9,6 +10,7 @@ export default function Privacy() {
         <div className="font-bold text-center text-2xl sm:text-3xl mb-8">
           Predictaf, LLC Privacy Statement
         </div>
+        <p className="mb-6 text-center text-sm">AI-sharing disclosures updated October 28, 2026.</p>
       <div className="mt-5">
         Predictaf, LLC (Predictaf,” “we,” “our,” or “us”) values the privacy of
         individuals who use the Predictaf website, mobile application, software,
@@ -16,13 +18,15 @@ export default function Privacy() {
         Policy (the “Policy”) describes the information that we gather from
         visitors, users, and others who access or use the Application (“Users,”
         “you,” or “your”), how we use and disclose such information, and the
-        steps we take to protect such information. By using the Application, you
-        consent to the privacy practices described in this Policy. This Policy
+        steps we take to protect such information. Optional AI processing requires
+        the separate permission described below; using the Application or reading
+        this Policy does not provide that permission. This Policy
         is incorporated into and is subject to the Predictaf Terms of Use, as
         updated from time-to-time. Capitalized terms used but not defined in
         this Policy have the meaning given to them in the Terms of Use.
       </div>
       <div className="mt-3">
+        <AIPrivacyDisclosure />
         I. This Privacy Policy is provided to help you understand
         <div className="ml-5 mt-5">
           a. the Personal Information we collect, how we collect it, how we use
@@ -184,8 +188,9 @@ export default function Privacy() {
         <div className="ml-5 mt-5">
           b. Sharing Your Information
           <div className="ml-5 mt-5">
-            i. ‍If you use the Application, you are authorizing us to share
-            information:
+            i. We may share information as described below, subject to applicable
+            permission requirements. Sharing for optional AI processing requires
+            the separate permission described in “AI features and third-party processing.”
             <div className="mt-5 ml-5">
               1. that you direct us to disclose to others;{" "}
             </div>
@@ -509,7 +514,8 @@ export default function Privacy() {
           current language. Your continued use of the Application after the
           revised Policy has become effective indicates that you have read,
           understood, and agreed to the most current version of this Policy, as
-          posted on the website.
+          posted on the website. Continued use does not replace the separate
+          permission required for optional AI processing.
         </div>
       </div>
       <div className="mt-3">

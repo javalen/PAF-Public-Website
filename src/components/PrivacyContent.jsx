@@ -1,3 +1,5 @@
+import AIPrivacyDisclosure from "./AIPrivacyDisclosure";
+
 // Standalone Privacy Policy content for use inside a Modal
 export default function PrivacyContent() {
   return (
@@ -5,6 +7,7 @@ export default function PrivacyContent() {
       <div className="font-bold text-center text-xl mb-6">
         Predictaf, LLC Privacy Statement
       </div>
+      <p className="text-center text-sm">AI-sharing disclosures updated October 28, 2026.</p>
       <div>
         Predictaf, LLC ("Predictaf," "we," "our," or "us") values the privacy of
         individuals who use the Predictaf website, mobile application, software,
@@ -12,13 +15,15 @@ export default function PrivacyContent() {
         Policy (the "Policy") describes the information that we gather from
         visitors, users, and others who access or use the Application ("Users,"
         "you," or "your"), how we use and disclose such information, and the
-        steps we take to protect such information. By using the Application, you
-        consent to the privacy practices described in this Policy. This Policy
+        steps we take to protect such information. Optional AI processing requires
+        the separate permission described below; using the Application or reading
+        this Policy does not provide that permission. This Policy
         is incorporated into and is subject to the Predictaf Terms of Use, as
         updated from time-to-time. Capitalized terms used but not defined in
         this Policy have the meaning given to them in the Terms of Use.
       </div>
       <div>
+        <AIPrivacyDisclosure />
         I. This Privacy Policy is provided to help you understand
         <div className="ml-5 mt-3">
           a. the Personal Information we collect, how we collect it, how we use
@@ -152,7 +157,9 @@ export default function PrivacyContent() {
         <div className="ml-5 mt-3">
           b. Sharing Your Information
           <div className="ml-5 mt-3">
-            i. If you use the Application, you are authorizing us to share information:
+            i. We may share information as described below, subject to applicable
+            permission requirements. Sharing for optional AI processing requires
+            the separate permission described in “AI features and third-party processing.”
             <div className="ml-5 mt-3">1. that you direct us to disclose to others;</div>
             <div className="ml-5 mt-3">2. with our third-party business partners, vendors, contractors, and consultants who perform services on our behalf or who help us provide the Application, such as accounting, legal, managerial, technical, marketing, or analytic services;</div>
             <div className="ml-5 mt-3">3. if required to do so by law or in the good-faith belief that such action is necessary to comply with local, state, federal, or international laws, or to respond to a court order, judicial or other governmental subpoena or warrant, or in the event of bankruptcy Proceedings;</div>
@@ -215,7 +222,7 @@ export default function PrivacyContent() {
       </div>
       <div>
         X. Changes and Updates to the Policy
-        <div className="ml-5 mt-3">a. We reserve the right to change the provisions of this Policy at any time. Please revisit this page periodically to stay aware of the most current language. Your continued use of the Application after the revised Policy has become effective indicates that you have read, understood, and agreed to the most current version of this Policy.</div>
+        <div className="ml-5 mt-3">a. We reserve the right to change the provisions of this Policy at any time. Please revisit this page periodically to stay aware of the most current language. Your continued use of the Application after the revised Policy has become effective indicates that you have read, understood, and agreed to the most current version of this Policy. Continued use does not replace the separate permission required for optional AI processing.</div>
       </div>
       <div>
         XI. Contact
